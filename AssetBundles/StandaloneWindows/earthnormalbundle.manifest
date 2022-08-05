@@ -1,0 +1,48 @@
+ManifestFileVersion: 0
+CRC: 4093296721
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: a090a3b7272b63e92eded26cfff65336
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: ff414f606ea1972259b080d7bcf51689
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_2_4_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_4_4_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_1_5_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_4_6_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_3_2_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_3_4_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_4_7_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_4_8_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_2_8_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_3_1_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_1_8_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_1_2_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_3_5_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_1_3_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_3_8_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_1_1_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_2_2_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_1_7_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_4_3_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_4_5_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_2_3_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_4_1_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_4_2_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_3_6_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_3_3_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_2_6_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_1_6_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_2_7_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_3_7_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_1_4_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_2_1_normal.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Normal/earth_2_5_normal.png
+Dependencies: []

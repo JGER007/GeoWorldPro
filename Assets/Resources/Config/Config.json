@@ -1,0 +1,76 @@
+﻿{
+
+    "module": [
+        {
+            "name": "example",
+            "showname": "example",
+            "desc": "example",
+            "ui": "ExampleMainUI",
+            "assetbundle": "Module.example",
+            "version": 0.1,
+            "status": 1
+        },
+        {
+            "name": "geomap",
+            "showname": "geomap",
+            "desc": "example",
+            "ui": "GeoMapMainUI",
+            "assetbundle": "Module.geomap",
+            "version": 0.1,
+            "status": 1
+        }
+    ],
+    "ui": [
+        {
+            "PerfabName": "LoadingModuleUI",
+            "Desc": "加载信息界面",
+            "Path": "Perfabs/UI/LoadingModuleUI",
+            "assetbundle": "",
+            "version": 0.1,
+            "Type": 2
+        },
+        {
+            "PerfabName": "ModuleTranstionUI",
+            "Desc": "模块切换过渡动画",
+            "Path": "Perfabs/UI/ModuleTranstionUI",
+            "assetbundle": "",
+            "version": 0.1,
+            "Type": 2
+        },
+        {
+            "PerfabName": "LoadFromLocalUI",
+            "Desc": "从本地加载资源",
+            "Path": "Perfabs/UI/LoadFromLocalUI",
+            "assetbundle": "",
+            "version": 0.1,
+            "Type": 2
+        },
+        {
+            "PerfabName": "MsgItem",
+            "Desc": "提示信息",
+            "Path": "",
+            "assetbundle": "UI.MsgItem",
+            "version": 0.1,
+            "Type": 3
+        },
+        {
+            "PerfabName": "ExampleMainUI",
+            "Desc": "ExampleMainUI",
+            "Path": "",
+            "assetbundle": "UI.ExampleMainUI",
+            "version": 0.1,
+            "Type": 0
+        },
+        {
+            "PerfabName": "GeoMapMainUI",
+            "Desc": "GeoMapMainUI",
+            "Path": "",
+            "assetbundle": "UI.GeoMapMainUI",
+            "version": 0.1,
+            "Type": 0
+        }
+    ],
+    "msg": {
+        "TestMsg": "测试Msg"
+    }
+}

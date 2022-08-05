@@ -1,0 +1,4 @@
+repository "互动地球@LiuSen@cloud"
+  path "/"
+    br "/main"
+    co "/main"

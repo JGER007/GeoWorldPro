@@ -1,0 +1,63 @@
+ManifestFileVersion: 0
+CRC: 3713721981
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: d5942fda3f3f63dc7f1846e7e7f950cf
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: f1debe917ba79b65fb613904af673754
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 20
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 81
+  Script: {instanceID: 0}
+- Class: 108
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 6ce3c766268e64624aa8dc152b6ace03, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: aac99aa6ca980914f92180ddcb752ebb, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: b06c5ef98471a4a0896b496f3a3c06c9, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: faadf626f94e14acb9e3c33e1f0fc1e3, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: c6f0ddc92ea9a4caeb773f6e1d1a6277, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 0be62bb3cbdf24291b0b2eff022c95bf, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 42edc1a2ad881b241ba44022036979a8, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 718bcd33ff6154057af2531bbb1e3249, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 151ba94befcdec042a5196250d7d9830, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 31c45127fc8244962986914c13fafee3, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 124
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Res/Module/geomap.prefab
+Dependencies: []

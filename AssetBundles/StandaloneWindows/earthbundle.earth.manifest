@@ -1,0 +1,48 @@
+ManifestFileVersion: 0
+CRC: 3034014407
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: ea48c23be5469b6f6c42b437f036b711
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: ff414f606ea1972259b080d7bcf51689
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_2_6.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_4_3.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_3_8.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_3_5.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_2_5.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_2_4.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_2_2.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_3_4.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_2_7.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_3_6.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_4_5.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_2_1.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_1_3.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_1_2.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_2_3.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_3_1.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_3_3.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_4_8.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_1_6.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_4_1.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_3_2.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_4_2.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_2_8.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_1_1.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_1_8.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_1_4.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_3_7.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_4_7.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_4_4.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_4_6.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_1_7.png
+- Assets/Geo/Libs/Stagit3DEarth/Objects/Earth/Textures/Color/earth_1_5.png
+Dependencies: []
