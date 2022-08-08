@@ -1,3 +1,4 @@
+using com.frame;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,15 +20,24 @@ public class WorldMapGlobeControl : MonoBehaviour
     [SerializeField]
     private GameObject sunLight;
 
+    [SerializeField]
+    private GameObject cloulds;
+
+    private Material clouldsMat = null;
+
     public Action<string> onLatLonUpdate = null;
 
 
     private WorldMapGlobe worldMapGlobe;
+
+    private StyleEnum earthStyle;
+    private Camera mainCamera;
     // Start is called before the first frame update
 
     private bool initFlag = false;
     public void Init() 
     {
+        mainCamera = Camera.main;
         global();
         initFlag = true;
     }
@@ -35,6 +45,7 @@ public class WorldMapGlobeControl : MonoBehaviour
 
     private void global()  
     {
+        showCloulds(true);
         normalEarth.SetActive(false);
         sunLight.SetActive(false);
         globalLight.SetActive(true);
@@ -43,6 +54,7 @@ public class WorldMapGlobeControl : MonoBehaviour
 
     private void night() 
     {
+        showCloulds(false);
         normalEarth.SetActive(false);
         sunLight.SetActive(false);
         globalLight.SetActive(false);
@@ -51,6 +63,7 @@ public class WorldMapGlobeControl : MonoBehaviour
 
     private void nature() 
     {
+        showCloulds(false);
         normalEarth.SetActive(false);
         sunLight.SetActive(true);
         globalLight.SetActive(false);
@@ -58,17 +71,20 @@ public class WorldMapGlobeControl : MonoBehaviour
     }
 
 
+
     public void ChangeMapByStyle(StyleEnum style) 
     {
-        if(style == StyleEnum.自然)
+        earthStyle = style;
+        if (style == StyleEnum.自然)
         {
             nature();
+            
         }
         else if(style == StyleEnum.灯光模式)
         {
             night();
         }
-        else if (style == StyleEnum.默认)
+        else if (style == StyleEnum.卫星影像_离线)
         {
             global();
         }
@@ -90,8 +106,18 @@ public class WorldMapGlobeControl : MonoBehaviour
                 }
                 earthHD.SetActive(false);
             }
-            
         }
+    }
+
+    private void showCloulds(bool flag)
+    {
+        if(clouldsMat == null)
+        {
+            clouldsMat = Resources.Load<Material>("Materials/HighCloud");
+            cloulds.GetComponent<MeshRenderer>().material = clouldsMat;
+        }
+
+        cloulds.gameObject.SetActive(flag);
     }
 
 
@@ -110,6 +136,15 @@ public class WorldMapGlobeControl : MonoBehaviour
             {
                 onLatLonUpdate?.Invoke(WorldMapGlobe.calc.prettyCurrentLatLon);
                 nextLangLongUpdate = Time.time + langLongUpdateRate;
+            }
+        }
+
+        if(earthStyle == StyleEnum.卫星影像_离线)
+        {
+            if (mainCamera.transform.position.magnitude <= 51.5f)
+            {
+                EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.卫星影像);
+                //ChangeMapByStyle(StyleEnum.卫星影像);
             }
         }
     }

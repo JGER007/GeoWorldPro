@@ -97,7 +97,7 @@ public class MapStyleManager : IManager
 
 public enum StyleEnum
 {
-    默认,
+    卫星影像_离线,
     自然,
     灯光模式,  
     城市,

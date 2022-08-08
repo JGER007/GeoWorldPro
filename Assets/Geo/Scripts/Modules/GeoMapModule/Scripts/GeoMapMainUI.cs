@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using WPM;
+using static UnityEngine.UI.Dropdown;
 
 public class GeoMapMainUI : ModuleUI
 {
@@ -109,6 +110,18 @@ public class GeoMapMainUI : ModuleUI
             else
             {
                 infoUI.gameObject.SetActive(false);
+            }
+        }
+        else if(action == "style")
+        {
+            StyleEnum styleEnum = (StyleEnum)eventArgs.args[1];
+            foreach(OptionData option in styleDropDown.options)
+            {
+                if(option.text == styleEnum.ToString())
+                {
+                    styleDropDown.value = styleDropDown.options.IndexOf(option);
+                    return;
+                }
             }
         }
     }
