@@ -127,8 +127,9 @@ public class WorldMapGlobeControl : MonoBehaviour
     #region ∏¸–¬æ≠Œ≥∂»–≈œ¢
     private float nextLangLongUpdate = 0;
     private float langLongUpdateRate = 0.1f;
-    private float lastDis = 0;
-
+    private float lastCameraDis = 0;
+    private float dt;
+    private bool updateFlag = false;
 
     public WorldMapGlobe WorldMapGlobe { get => worldMapGlobe; set => worldMapGlobe = value; }
 
@@ -144,35 +145,46 @@ public class WorldMapGlobeControl : MonoBehaviour
             }
         }
 
-        float dis = mainCamera.transform.position.magnitude;
-        if(lastDis != dis)
-        {
-            lastDis = dis;
-            //Debug.Log("lastDis:" + lastDis);
-            worldMapGlobe.countryLabelsSize = 0.25f - (60.1f - dis) * 0.025f;
-            worldMapGlobe.cityIconSize = 1 - (60.1f - dis) * 0.1f;
-        }
-
+        dt = dt + Time.deltaTime;
         
-
-
-        if (earthStyle == StyleEnum.Œ¿–«”∞œÒ_¿Îœﬂ)
+        if(dt >0.05f)
         {
-            if (mainCamera.transform.position.magnitude <= 51.5f)
-            {
-                EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.Œ¿–«”∞œÒ);
-                //ChangeMapByStyle(StyleEnum.Œ¿–«”∞œÒ);
-            }
+            dt = 0;
+            float cameraDis = mainCamera.transform.position.magnitude;
             
-        }
-        else if (earthStyle == StyleEnum.Œ¿–«”∞œÒ)
-        {
-            if (mainCamera.transform.position.magnitude > 51.5f)
+            if (Mathf.Abs(lastCameraDis - cameraDis) > 0.05f)
             {
-                EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.Œ¿–«”∞œÒ_¿Îœﬂ);
-                //ChangeMapByStyle(StyleEnum.Œ¿–«”∞œÒ);
+                lastCameraDis = cameraDis;
+                updateFlag = true;
             }
-        }
+            else
+            {
+                if(updateFlag)
+                {
+                    updateFlag = false;
+                    worldMapGlobe.countryLabelsSize = 0.25f - (60.1f - cameraDis) * 0.025f;
+                    worldMapGlobe.cityIconSize = 1 - (60.1f - cameraDis) * 0.1f;
+                }
+            }
+
+            if (earthStyle == StyleEnum.Œ¿–«”∞œÒ_¿Îœﬂ)
+            {
+                if (cameraDis <= 51.5f)
+                {
+                    EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.Œ¿–«”∞œÒ);
+                    //ChangeMapByStyle(StyleEnum.Œ¿–«”∞œÒ);
+                }
+
+            }
+            else if (earthStyle == StyleEnum.Œ¿–«”∞œÒ)
+            {
+                if (cameraDis > 51.5f)
+                {
+                    EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.Œ¿–«”∞œÒ_¿Îœﬂ);
+                    //ChangeMapByStyle(StyleEnum.Œ¿–«”∞œÒ);
+                }
+            }
+        }    
     }
     #endregion
 }
