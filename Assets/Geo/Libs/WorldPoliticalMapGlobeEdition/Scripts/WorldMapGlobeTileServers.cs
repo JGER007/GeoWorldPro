@@ -390,13 +390,26 @@ namespace WPM {
                 case TILE_SERVER.Terrain:
                     //url = "https://t1.tianditu.gov.cn/ter_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=ter&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILECOL=" + ti.x + "&TILEROW=" + ti.y + "&TILEMATRIX=" + ti.zoomLevel + "&tk=4a698f637d68904fdf50e93b2f26925c";
                     //url = "http://t7.tianditu.gov.cn/ter_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=ter&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILEMATRIX=" + ti.zoomLevel + "&TILEROW=" + ti.y + "&TILECOL=" + ti.x + "&tk=4a698f637d68904fdf50e93b2f26925c";
-                    //url = "http://c.tile.opencyclemap.org/cycle/" + ti.zoomLevel + "/" + ti.x + "/" + ti.y + ".png";
+                    url = "http://c.tile.opencyclemap.org/cycle/" + ti.zoomLevel + "/" + ti.x + "/" + ti.y + ".png";
                     //url = "http://t7.tianditu.gov.cn/ter_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=ter&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILEMATRIX=" + ti.zoomLevel + "&TILEROW=" + ti.y + "&TILECOL=" + ti.x + "&tk=4a698f637d68904fdf50e93b2f26925c";
                     //url = "http://t0.tianditu.gov.cn/ter_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=img&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILEMATRIX=" + ti.zoomLevel +
                     //    "&TILEROW=" + ti.x + "&TILECOL=" + ti.y + "&tk=4a698f637d68904fdf50e93b2f26925c";
 
                     //
-                    url = "https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/tile/" + ti.zoomLevel + "/" + ti.y + "/" + ti.x ;
+                    //url = "https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/tile/" + ti.zoomLevel + "/" + ti.y + "/" + ti.x ;
+
+                    int x = ti.x;
+                    int y = ti.y;
+                    int sx = x >> 4;
+                    int sy = ((1 << ti.zoomLevel) - y) >> 4;
+                    //url = "https://p1.map.gtimg.com/demTiles/" + ti.zoomLevel + "/" + sx + "/" + sy + "/" + x + "_" + y + ".jpg" ;
+                    //url = "http://t7.tianditu.gov.cn/ter_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=ter&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILEMATRIX=" + ti.zoomLevel +
+                    //    "&TILEROW=" + ti.y + "&TILECOL=" + ti.x + "&tk=4a698f637d68904fdf50e93b2f26925c";
+
+
+                    //url = "https://tile.openstreetmap.org/" + ti.zoomLevel + "/" + ti.x + "/" + ti.y + ".png";
+                    //url = "http://rt0.map.gtimg.com/realtimerender?z=" + ti.zoomLevel + "&x=" + ti.x + "&y=" + -ti.y + "&type=vector&style=0" ;
+
                     break;
 
                 case TILE_SERVER.City:
@@ -452,7 +465,7 @@ namespace WPM {
                 url += "?" + _tileServerAPIKey;
             }
             Debug.Log(url);*/
-            Debug.Log(url);
+            //Debug.Log(url);
 
             if (OnTileURLRequest != null) {
                 url = OnTileURLRequest(url, server, ti.zoomLevel, ti.x, ti.y);

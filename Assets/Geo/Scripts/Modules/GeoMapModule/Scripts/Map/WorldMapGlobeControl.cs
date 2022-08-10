@@ -23,6 +23,9 @@ public class WorldMapGlobeControl : MonoBehaviour
     [SerializeField]
     private GameObject cloulds;
 
+    [SerializeField]
+    private GameObject surfaces; 
+
     private Material clouldsMat = null;
 
     public Action<string> onLatLonUpdate = null;
@@ -45,7 +48,7 @@ public class WorldMapGlobeControl : MonoBehaviour
 
     private void global()  
     {
-        showCloulds(true);
+        ShowCloulds(true);
         normalEarth.SetActive(false);
         sunLight.SetActive(false);
         globalLight.SetActive(true);
@@ -54,7 +57,7 @@ public class WorldMapGlobeControl : MonoBehaviour
 
     private void night() 
     {
-        showCloulds(false);
+        ShowCloulds(false);
         normalEarth.SetActive(false);
         sunLight.SetActive(false);
         globalLight.SetActive(false);
@@ -63,11 +66,16 @@ public class WorldMapGlobeControl : MonoBehaviour
 
     private void nature() 
     {
-        showCloulds(false);
+        ShowCloulds(false);
         normalEarth.SetActive(false);
         sunLight.SetActive(true);
         globalLight.SetActive(false);
         earthHD.SetActive(true);
+    }
+
+    public void ShowSurface(bool isShow)
+    {
+        transform.Find("Surfaces").gameObject.SetActive(isShow);
     }
 
 
@@ -75,12 +83,7 @@ public class WorldMapGlobeControl : MonoBehaviour
     public void ChangeMapByStyle(StyleEnum style) 
     {
         earthStyle = style;
-        if (style == StyleEnum.自然)
-        {
-            nature();
-            
-        }
-        else if(style == StyleEnum.灯光模式)
+        if(style == StyleEnum.灯光模式)
         {
             night();
         }
@@ -109,21 +112,23 @@ public class WorldMapGlobeControl : MonoBehaviour
         }
     }
 
-    private void showCloulds(bool flag)
+    public void ShowCloulds(bool flag)
     {
         if(clouldsMat == null)
         {
             clouldsMat = Resources.Load<Material>("Materials/HighCloud");
             cloulds.GetComponent<MeshRenderer>().material = clouldsMat;
         }
-
         cloulds.gameObject.SetActive(flag);
+
     }
 
 
     #region 更新经纬度信息
     private float nextLangLongUpdate = 0;
     private float langLongUpdateRate = 0.1f;
+    private float lastDis = 0;
+
 
     public WorldMapGlobe WorldMapGlobe { get => worldMapGlobe; set => worldMapGlobe = value; }
 
@@ -139,11 +144,32 @@ public class WorldMapGlobeControl : MonoBehaviour
             }
         }
 
-        if(earthStyle == StyleEnum.卫星影像_离线)
+        float dis = mainCamera.transform.position.magnitude;
+        if(lastDis != dis)
+        {
+            lastDis = dis;
+            //Debug.Log("lastDis:" + lastDis);
+            worldMapGlobe.countryLabelsSize = 0.25f - (60.1f - dis) * 0.025f;
+            worldMapGlobe.cityIconSize = 1 - (60.1f - dis) * 0.1f;
+        }
+
+        
+
+
+        if (earthStyle == StyleEnum.卫星影像_离线)
         {
             if (mainCamera.transform.position.magnitude <= 51.5f)
             {
                 EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.卫星影像);
+                //ChangeMapByStyle(StyleEnum.卫星影像);
+            }
+            
+        }
+        else if (earthStyle == StyleEnum.卫星影像)
+        {
+            if (mainCamera.transform.position.magnitude > 51.5f)
+            {
+                EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.卫星影像_离线);
                 //ChangeMapByStyle(StyleEnum.卫星影像);
             }
         }

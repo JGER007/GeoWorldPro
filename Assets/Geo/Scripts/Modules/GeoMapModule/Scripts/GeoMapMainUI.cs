@@ -71,6 +71,7 @@ public class GeoMapMainUI : ModuleUI
 
         worldMapGlobeControl = FindObjectOfType<WorldMapGlobeControl>();
         worldMapGlobeControl.onLatLonUpdate = onLatLonUpdate;
+        //operateUITran.transform.localPosition = new Vector3(-25, -30, 0);
     }
 
     private void onLatLonUpdate(string obj)
@@ -80,9 +81,9 @@ public class GeoMapMainUI : ModuleUI
 
     private void initoperateUIPose()
     {
-        openPose = new Vector3(1895, 1050, 0); //operateUITran.transform.position;//parent.TransformPoint( new Vector3(-25, -30, 0));
-        closePose = new Vector3(2310, 1050, 0); //operateUITran.parent.TransformPoint(new Vector3(235, -30, 0));
-        //Debug.Log("operateUITran.transform.position:" + operateUITran.transform.position);
+        openPose = operateUITran.localPosition; 
+        closePose = openPose; 
+        closePose.x = openPose.x + 413;
     }
 
     private void setOpenFlag(bool flag)
@@ -90,8 +91,6 @@ public class GeoMapMainUI : ModuleUI
         if(openFlag != flag)
         {
             openFlag = flag;
-            //closeBtn.gameObject.SetActive(false);
-            //openBtn.gameObject.SetActive(false);
             tweenMove();
         }
     }
@@ -129,6 +128,12 @@ public class GeoMapMainUI : ModuleUI
     private void onToggleValueChanged(string action,bool isOn)  
     {
         EventUtil.DispatchEvent(GlobalEvent.UI_TO_Module_Action, action, isOn);
+
+        if(!isOn && (action == "Province" || action == "City"))
+        {
+            infoUI.gameObject.SetActive(false);
+        }
+
     }
 
     private void onStyleDropDownValueChanged()
@@ -148,7 +153,7 @@ public class GeoMapMainUI : ModuleUI
     {
         System.Action<ITween<Vector3>> updateCirclePos = (t) =>
         {
-            operateUITran.position = t.CurrentValue;
+            operateUITran.localPosition = t.CurrentValue;
         };
 
         System.Action<ITween<Vector3>> circleMoveCompleted = (t) =>
@@ -157,7 +162,7 @@ public class GeoMapMainUI : ModuleUI
             openBtn.gameObject.SetActive(!openFlag);
         };
 
-        Vector3 currentPos = operateUITran.position;
+        Vector3 currentPos = operateUITran.localPosition;
         Vector3 startPos = openPose;
         Vector3 endPos = closePose;
         if (openFlag)

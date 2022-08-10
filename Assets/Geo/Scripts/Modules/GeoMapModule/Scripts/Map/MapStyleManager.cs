@@ -81,7 +81,7 @@ public class MapStyleManager : IManager
                 break;
 
             case StyleEnum.自然风光:
-                tILE_SERVER = TILE_SERVER.NaturalScenery;
+                tILE_SERVER = TILE_SERVER.MapsForFree;
                 break;
 
         }
@@ -98,7 +98,6 @@ public class MapStyleManager : IManager
 public enum StyleEnum
 {
     卫星影像_离线,
-    自然,
     灯光模式,  
     城市,
     卫星影像,

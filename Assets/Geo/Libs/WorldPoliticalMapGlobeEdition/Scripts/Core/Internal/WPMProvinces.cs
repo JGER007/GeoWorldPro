@@ -732,12 +732,12 @@ namespace WPM {
 
         }
 
-        void HideProvinceRegionHighlight() {
+        public void HideProvinceRegionHighlight() {
             if (provinceCountryOutlineRef != null && _countryRegionHighlighted == null)
                 provinceCountryOutlineRef.SetActive(false);
             if (_provinceHighlightedIndex < 0)
                 return;
-            if (_provinceHighlightedIndex == selectProvincIndex)
+            if (_provinceHighlightedIndex == selectProvincIndex )
                 return;
 
             if (_provinceRegionHighlighted != null && provinceRegionHighlightedObj != null) {
@@ -750,16 +750,16 @@ namespace WPM {
             }
             hudMatProvince.mainTexture = null;
 
-            /*
-            // Raise exit event
-            if (OnProvinceExit != null)
-                OnProvinceExit(_provinceHighlightedIndex, _provinceRegionHighlightedIndex);
+           /*
+                // Raise exit event
+                if (OnProvinceExit != null)
+                    OnProvinceExit(_provinceHighlightedIndex, _provinceRegionHighlightedIndex);
 
-            _provinceHighlighted = null;
-            _provinceHighlightedIndex = -1;
-            _provinceRegionHighlighted = null;
-            _provinceRegionHighlightedIndex = -1;
-            */
+                _provinceHighlighted = null;
+                _provinceHighlightedIndex = -1;
+                _provinceRegionHighlighted = null;
+                _provinceRegionHighlightedIndex = -1;
+            }*/
         }
 
         void ProvinceSubstractProvinceEnclaves(int provinceIndex, Region region, Poly2Tri.Polygon poly) {

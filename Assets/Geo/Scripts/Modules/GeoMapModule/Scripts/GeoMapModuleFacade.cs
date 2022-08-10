@@ -47,6 +47,7 @@ public class GeoMapModuleFacade : BaseModuleFacade
         FlyToCountry("ÖÐ¹ú");
     }
 
+    /**
     public void ShowProvinceNames() 
     {
         // First we ensure only states for USA are shown
@@ -70,7 +71,7 @@ public class GeoMapModuleFacade : BaseModuleFacade
             Color color = Color.white; //new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
             worldMapGlobe.AddText(province.name, province.localPosition, color);
         }
-    }
+    }*/
 
 
     // Sample code to show how to:
@@ -168,12 +169,19 @@ public class GeoMapModuleFacade : BaseModuleFacade
             worldMapGlobe.showInlandFrontiers = countryFlag;
             worldMapGlobe.enableCountryHighlight = countryFlag;
             worldMapGlobe.highlightAllCountryRegions = countryFlag;
+            
         }
         else if(action == "Province")
         {
             provinceFlag = (bool)eventArgs.args[1];
             worldMapGlobe.showProvinces = provinceFlag;
             worldMapGlobe.showProvinceCountryOutline = provinceFlag;
+
+            if(!provinceFlag)
+            {
+                worldMapGlobe.HideProvinces();
+            }
+            worldMapGlobeControl.ShowSurface(provinceFlag);
             /*
             if(provinceFlag)
             {
@@ -191,6 +199,11 @@ public class GeoMapModuleFacade : BaseModuleFacade
         {
             string style = eventArgs.args[1].ToString();
             mapStyleManager.ChangeMapByStyle(style);
+        }
+
+        if(countryFlag || provinceFlag || cityFlag)
+        {
+            worldMapGlobeControl.ShowCloulds(false);
         }
     }
 
