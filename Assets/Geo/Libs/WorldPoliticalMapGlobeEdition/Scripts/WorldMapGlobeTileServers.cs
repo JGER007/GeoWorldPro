@@ -388,34 +388,20 @@ namespace WPM {
                     break;
 
                 case TILE_SERVER.Terrain:
-                    //url = "https://t1.tianditu.gov.cn/ter_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=ter&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILECOL=" + ti.x + "&TILEROW=" + ti.y + "&TILEMATRIX=" + ti.zoomLevel + "&tk=4a698f637d68904fdf50e93b2f26925c";
-                    //url = "http://t7.tianditu.gov.cn/ter_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=ter&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILEMATRIX=" + ti.zoomLevel + "&TILEROW=" + ti.y + "&TILECOL=" + ti.x + "&tk=4a698f637d68904fdf50e93b2f26925c";
-                    url = "http://c.tile.opencyclemap.org/cycle/" + ti.zoomLevel + "/" + ti.x + "/" + ti.y + ".png";
-                    //url = "http://t7.tianditu.gov.cn/ter_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=ter&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILEMATRIX=" + ti.zoomLevel + "&TILEROW=" + ti.y + "&TILECOL=" + ti.x + "&tk=4a698f637d68904fdf50e93b2f26925c";
-                    //url = "http://t0.tianditu.gov.cn/ter_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=img&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILEMATRIX=" + ti.zoomLevel +
-                    //    "&TILEROW=" + ti.x + "&TILECOL=" + ti.y + "&tk=4a698f637d68904fdf50e93b2f26925c";
-
-                    //
-                    //url = "https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/tile/" + ti.zoomLevel + "/" + ti.y + "/" + ti.x ;
-
+                    //腾讯瓦片计算方法：URL = z  /  Math.Floor(x / 16.0)  / Math.Floor(y / 16.0) / x_y.png，其中x,y,z为TMS瓦片坐标参数。
                     int x = ti.x;
                     int y = ti.y;
-                    int sx = x >> 4;
-                    int sy = ((1 << ti.zoomLevel) - y) >> 4;
-                    //url = "https://p1.map.gtimg.com/demTiles/" + ti.zoomLevel + "/" + sx + "/" + sy + "/" + x + "_" + y + ".jpg" ;
-                    //url = "http://t7.tianditu.gov.cn/ter_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=ter&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILEMATRIX=" + ti.zoomLevel +
-                    //    "&TILEROW=" + ti.y + "&TILECOL=" + ti.x + "&tk=4a698f637d68904fdf50e93b2f26925c";
-
-
-                    //url = "https://tile.openstreetmap.org/" + ti.zoomLevel + "/" + ti.x + "/" + ti.y + ".png";
-                    //url = "http://rt0.map.gtimg.com/realtimerender?z=" + ti.zoomLevel + "&x=" + ti.x + "&y=" + -ti.y + "&type=vector&style=0" ;
-
+                    int z = ti.zoomLevel;
+                    y = int.Parse(Math.Pow(2, z).ToString()) - 1 - y;
+                    int sx = x >> 4; //Mathf.FloorToInt(x / 16.0f);
+                    int sy = y >> 4;//Mathf.FloorToInt(y / 16.0f); 
+                    //p0-p3
+                    url = "https://p0.map.gtimg.com/demTiles/" + z + "/" + sx + "/" + sy + "/" + x + "_" + y + ".jpg";
                     break;
 
                 case TILE_SERVER.City:
                     //url = "https://wprd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=8&x=" + ti.x + "&y=" + ti.y + "&z=" + ti.zoomLevel + "&scl=1&ltype=0";
-                    //腾讯地图矢量：
-                    //url = "http://rt0.map.gtimg.com/realtimerender?z=" + ti.zoomLevel + "&x=" + ti.x + "&y=" + (-ti.y) +"&type=vector&style=0";
+
                     //高德影像-城市路网
                     url = "https://webst01.is.autonavi.com/appmaptile?style=7&x=" + ti.x + "&y=" + ti.y + "&z=" + ti.zoomLevel;
                     //url = "http://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/" + ti.zoomLevel + "/" + ti.y + "/" + ti.x;

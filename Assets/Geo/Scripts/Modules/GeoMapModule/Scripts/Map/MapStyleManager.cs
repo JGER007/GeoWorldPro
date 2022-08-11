@@ -23,7 +23,8 @@ public class MapStyleManager : IManager
        StyleEnum styleEnum = (StyleEnum)Enum.Parse(typeof(StyleEnum), style);
         WorldMapGlobe.instance.HideCountrySurfaces();
         TILE_SERVER tILE_SERVER = getTitleServer(styleEnum);
-        if(tILE_SERVER != TILE_SERVER.None)
+        _worldMapGlobeControl.ShowCloulds(false);
+        if (tILE_SERVER != TILE_SERVER.None)
         {
             WorldMapGlobe.instance.showTiles = true;
             WorldMapGlobe.instance.tileServer = tILE_SERVER;
@@ -40,6 +41,10 @@ public class MapStyleManager : IManager
                     Color color = getCountryColor(countryName);
                     WorldMapGlobe.instance.ToggleCountrySurface(countryName, true, color);
                 }
+            }
+            else if(styleEnum == StyleEnum.云层模式)
+            {
+                _worldMapGlobeControl.ShowCloulds(true);
             }
         }
         _worldMapGlobeControl.ChangeMapByStyle(styleEnum);
@@ -68,15 +73,15 @@ public class MapStyleManager : IManager
         TILE_SERVER tILE_SERVER = TILE_SERVER.None;
         switch(style)
         {
-            case StyleEnum.城市:
+            case StyleEnum.城市模式:
                 tILE_SERVER = TILE_SERVER.City;
                 break;
 
-            case StyleEnum.卫星影像:
+            case StyleEnum.卫星地图:
                 tILE_SERVER = TILE_SERVER.Satellite;
                 break;
 
-            case StyleEnum.地形:
+            case StyleEnum.地形地势:
                 tILE_SERVER = TILE_SERVER.Terrain;
                 break;
 
@@ -97,12 +102,13 @@ public class MapStyleManager : IManager
 
 public enum StyleEnum
 {
-    卫星影像_离线,
-    灯光模式,  
-    城市,
-    卫星影像,
-    地形,
+    自然模式,
+    国家模块,
+    云层模式,
+    城市灯光,
+    城市模式,
     自然风光,
-    国家模块 
+    卫星地图,
+    地形地势
 }
 

@@ -72,6 +72,8 @@ public class GeoMapMainUI : ModuleUI
         worldMapGlobeControl = FindObjectOfType<WorldMapGlobeControl>();
         worldMapGlobeControl.onLatLonUpdate = onLatLonUpdate;
         //operateUITran.transform.localPosition = new Vector3(-25, -30, 0);
+
+        styleDropDown.value = 0;
     }
 
     private void onLatLonUpdate(string obj)

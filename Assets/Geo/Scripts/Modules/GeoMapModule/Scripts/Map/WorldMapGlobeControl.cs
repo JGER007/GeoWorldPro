@@ -41,14 +41,15 @@ public class WorldMapGlobeControl : MonoBehaviour
     public void Init() 
     {
         mainCamera = Camera.main;
-        global();
+        worldMapGlobe.cursorColor = Color.white;
+        //global();
         initFlag = true;
     }
 
 
     private void global()  
     {
-        ShowCloulds(true);
+        //ShowCloulds(true);
         normalEarth.SetActive(false);
         sunLight.SetActive(false);
         globalLight.SetActive(true);
@@ -57,7 +58,7 @@ public class WorldMapGlobeControl : MonoBehaviour
 
     private void night() 
     {
-        ShowCloulds(false);
+        //ShowCloulds(false);
         normalEarth.SetActive(false);
         sunLight.SetActive(false);
         globalLight.SetActive(false);
@@ -66,7 +67,7 @@ public class WorldMapGlobeControl : MonoBehaviour
 
     private void nature() 
     {
-        ShowCloulds(false);
+        //ShowCloulds(false);
         normalEarth.SetActive(false);
         sunLight.SetActive(true);
         globalLight.SetActive(false);
@@ -78,16 +79,14 @@ public class WorldMapGlobeControl : MonoBehaviour
         transform.Find("Surfaces").gameObject.SetActive(isShow);
     }
 
-
-
     public void ChangeMapByStyle(StyleEnum style) 
     {
         earthStyle = style;
-        if(style == StyleEnum.灯光模式)
+        if(style == StyleEnum.城市灯光)
         {
             night();
         }
-        else if (style == StyleEnum.卫星影像_离线)
+        else if (style == StyleEnum.自然模式 || style == StyleEnum.云层模式)
         {
             global();
         }
@@ -167,20 +166,20 @@ public class WorldMapGlobeControl : MonoBehaviour
                 }
             }
 
-            if (earthStyle == StyleEnum.卫星影像_离线)
+            if (earthStyle == StyleEnum.自然模式)
             {
                 if (cameraDis <= 51.5f)
                 {
-                    EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.卫星影像);
+                    EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.卫星地图);
                     //ChangeMapByStyle(StyleEnum.卫星影像);
                 }
 
             }
-            else if (earthStyle == StyleEnum.卫星影像)
+            else if (earthStyle == StyleEnum.卫星地图)
             {
                 if (cameraDis > 51.5f)
                 {
-                    EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.卫星影像_离线);
+                    EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.自然模式);
                     //ChangeMapByStyle(StyleEnum.卫星影像);
                 }
             }
