@@ -63,7 +63,7 @@ public class MapStyleManager : IManager
             return countryColorDic[countryName];
         }
 
-        Color color = new Color(UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f));
+        Color color = _worldMapGlobeControl.GetColor();//new Color(UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f));
         countryColorDic.Add(countryName, color);
         return color;
     }

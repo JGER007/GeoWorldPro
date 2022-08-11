@@ -451,7 +451,7 @@ namespace WPM {
                 url += "?" + _tileServerAPIKey;
             }
             Debug.Log(url);*/
-            //Debug.Log(url);
+            Debug.Log(url);
 
             if (OnTileURLRequest != null) {
                 url = OnTileURLRequest(url, server, ti.zoomLevel, ti.x, ti.y);

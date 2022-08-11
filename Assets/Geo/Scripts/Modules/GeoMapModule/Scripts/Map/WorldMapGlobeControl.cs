@@ -24,7 +24,10 @@ public class WorldMapGlobeControl : MonoBehaviour
     private GameObject cloulds;
 
     [SerializeField]
-    private GameObject surfaces; 
+    private GameObject surfaces;
+
+    [SerializeField]
+    private Color[] countryColors; 
 
     private Material clouldsMat = null;
 
@@ -44,6 +47,12 @@ public class WorldMapGlobeControl : MonoBehaviour
         worldMapGlobe.cursorColor = Color.white;
         //global();
         initFlag = true;
+    }
+
+    public Color GetColor()
+    {
+        int index = UnityEngine.Random.Range(0, 1000)%25;
+        return countryColors[index];
     }
 
 

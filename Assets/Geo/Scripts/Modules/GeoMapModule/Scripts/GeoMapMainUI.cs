@@ -141,6 +141,15 @@ public class GeoMapMainUI : ModuleUI
     private void onStyleDropDownValueChanged()
     {
         string styleName = styleDropDown.options[ styleDropDown.value].text;
+
+        /*
+        if(styleName == StyleEnum.城市模式.ToString())
+        {
+            countryToggle.isOn = false;
+            provinceToggle.isOn = false;
+            cityToggle.isOn = false;
+        }*/
+
         EventUtil.DispatchEvent(GlobalEvent.UI_TO_Module_Action, "Style", styleName);
     }
 
