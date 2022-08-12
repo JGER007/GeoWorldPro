@@ -32,7 +32,7 @@ public class ModuleManagerFactory : Singleton<ModuleManagerFactory>
 
         if (baseModuleManager != null)
         {
-            AssetManager.Instance.LoadAssetPerfab (new AssetVO (configVO), baseModuleManager.StartModule);
+            AssetManager.Instance.LoadAssetPerfab (new AssetVO (configVO,true), baseModuleManager.StartModule);
         }
         return baseModuleManager;
     }

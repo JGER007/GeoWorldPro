@@ -252,7 +252,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UiType: 0
   UIPerfabName: 
-  images: []
 --- !u!1 &1974057276272503242
 GameObject:
   m_ObjectHideFlags: 0

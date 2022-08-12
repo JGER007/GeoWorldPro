@@ -24,7 +24,7 @@ public class WorldMapGlobeControl : MonoBehaviour
 
     [SerializeField]
     private Color[] countryColors;
-    private MeshRenderer worldMapGlobeBackFacesMeshRenderer; 
+    private Material worldMapGlobeBackFacesMeshMat = null ; 
 
 
     public Action<string> onLatLonUpdate = null;
@@ -114,13 +114,17 @@ public class WorldMapGlobeControl : MonoBehaviour
         }
         else if (style == StyleEnum.¹ú¼ÒÄ£¿é)
         {
-            transform.Find("WorldMapGlobeBackFaces").GetComponent<MeshRenderer>().material.SetColor("_Color", new Color(0,0.21f,0.42f));
+            ShowSurface(true);
+            if (worldMapGlobeBackFacesMeshMat == null)
+            {
+                worldMapGlobeBackFacesMeshMat = transform.Find("WorldMapGlobeBackFaces").GetComponent<MeshRenderer>().material;
+                worldMapGlobeBackFacesMeshMat.SetColor("_Color", new Color(0, 0.21f, 0.42f));
+            }
             earthHD.SetActive(false);
             normalEarth.SetActive(false);
         }
         else
         {
-            
             earthHD.SetActive(false);
             normalEarth.SetActive(false);
         }
@@ -165,8 +169,8 @@ public class WorldMapGlobeControl : MonoBehaviour
                 if(updateFlag)
                 {
                     updateFlag = false;
-                    worldMapGlobe.countryLabelsSize = 0.25f - (60.1f - cameraDis) * 0.025f;
-                    worldMapGlobe.cityIconSize = 1 - (60.1f - cameraDis) * 0.1f;
+                    worldMapGlobe.countryLabelsSize = 0.25f - (60.1f - cameraDis) * 0.05f;
+                    worldMapGlobe.cityIconSize = 1 - (60.1f - cameraDis) * 0.3f;
                 }
             }
 

@@ -41,6 +41,12 @@ public class PopupUIManager : Singleton<PopupUIManager>, IManager
     private void onPopUpUI (CustomEventArgs eventArgs)
     {
         string popUpUIName = eventArgs.args [0].ToString ();
+
+        if(popUpUIName == UIManager.LoadingModuleUI)
+        {
+            return;
+        }
+
         bool isFull = false;
         if (eventArgs.args.Length >= 2)
         {

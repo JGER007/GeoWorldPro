@@ -28,6 +28,11 @@ public class MapStyleManager : IManager
         {
             WorldMapGlobe.instance.showTiles = true;
             WorldMapGlobe.instance.tileServer = tILE_SERVER;
+
+            EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "Toggle", "Country", false);
+            EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "Toggle", "Province", false);
+            EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "Toggle", "City", false);
+
         }
         else
         {
@@ -41,8 +46,9 @@ public class MapStyleManager : IManager
                     Color color = getCountryColor(countryName);
                     WorldMapGlobe.instance.ToggleCountrySurface(countryName, true, color);
                 }
-
                 EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "Toggle", "Country", true);
+                EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "Toggle", "Province", false);
+                EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "Toggle", "City", false);
             }
         }
         _worldMapGlobeControl.ChangeMapByStyle(styleEnum);

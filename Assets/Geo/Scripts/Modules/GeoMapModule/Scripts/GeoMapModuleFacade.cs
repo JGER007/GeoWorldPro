@@ -49,7 +49,7 @@ public class GeoMapModuleFacade : BaseModuleFacade
         FlyToCountry("中国");
     }
 
-    /*
+    /**
     private void onEnterCountry(int countryIndex, int regionIndex)
     {
         Debug.Log("Entered country (" + countryIndex + ") " + worldMapGlobe.countries[countryIndex].name + ",regionIndex:" + regionIndex);
@@ -158,6 +158,7 @@ public class GeoMapModuleFacade : BaseModuleFacade
         
         if (action == "Country")
         {
+            /**
             if(worldMapGlobe.showProvinces || worldMapGlobe.showCities)
             {
                 zhCountry.labelVisible = false;
@@ -165,7 +166,7 @@ public class GeoMapModuleFacade : BaseModuleFacade
             else
             {
                 zhCountry.labelVisible = true;
-            }
+            }*/
             
             countryFlag = (bool)eventArgs.args[1];
             worldMapGlobe.showFrontiers = countryFlag;
@@ -174,7 +175,6 @@ public class GeoMapModuleFacade : BaseModuleFacade
             worldMapGlobe.showInlandFrontiers = countryFlag;
             worldMapGlobe.enableCountryHighlight = countryFlag;
             worldMapGlobe.highlightAllCountryRegions = countryFlag;
-            
         }
         else if(action == "Province")
         {
@@ -186,7 +186,7 @@ public class GeoMapModuleFacade : BaseModuleFacade
             {
                 worldMapGlobe.HideProvinces();
             }
-            worldMapGlobeControl.ShowSurface(provinceFlag);
+            //worldMapGlobeControl.ShowSurface(provinceFlag);
             /*
             if(provinceFlag)
             {
@@ -291,8 +291,15 @@ public class InfoVO
 
         if (cityVO != null)
         {
-            info = info + "\n户籍人口：" + cityVO.Population + "(万)";
-            info = info + "\n面积：" + cityVO.Area + "(平方公里)";
+            if(!string.IsNullOrEmpty(cityVO.Population))
+            {
+                info = info + "\n户籍人口：" + cityVO.Population + "(万)";
+            }
+
+            if (!string.IsNullOrEmpty(cityVO.Area))
+            {
+                info = info + "\n面积：" + cityVO.Area + "(平方公里)";
+            }
 
             if(!string.IsNullOrEmpty(cityVO.WaterResources))
             {

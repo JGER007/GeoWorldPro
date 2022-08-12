@@ -4,8 +4,9 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: TileOverlayAlpha
   m_Shader: {fileID: 4800000, guid: 08b3c4f91d5ce485f89896a0ed77b0eb, type: 3}
   m_ShaderKeywords: 
@@ -94,3 +95,4 @@ Material:
     - _ParentCoords1: {r: 0, g: 0, b: 1, a: 1}
     - _ParentCoords2: {r: 0, g: 0, b: 1, a: 1}
     - _ParentCoords3: {r: 0, g: 0, b: 1, a: 1}
+  m_BuildTextureStacks: []

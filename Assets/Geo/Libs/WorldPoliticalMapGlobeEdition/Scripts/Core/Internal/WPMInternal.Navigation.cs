@@ -91,7 +91,7 @@ namespace WPM {
         }
 
         void RotateCameraAroundAxis(float angle) {
-            angle *= Time.deltaTime * 60f;
+            angle *= Time.deltaTime * 600f;
 
             Vector3 axis = (transform.position - pivotTransform.position).normalized;
             if (_navigationMode == NAVIGATION_MODE.EARTH_ROTATES) {
