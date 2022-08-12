@@ -1009,7 +1009,7 @@ namespace WPM {
 
             if (string.IsNullOrEmpty(url)) {
                 _concurrentLoads--;
-                Debug.LogError("Tile server url not set. Aborting");
+                //Debug.LogError("Tile server url not set. Aborting");
                 yield break;
             }
 

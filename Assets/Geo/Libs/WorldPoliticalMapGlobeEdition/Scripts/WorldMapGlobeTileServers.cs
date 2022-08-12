@@ -389,20 +389,24 @@ namespace WPM {
 
                 case TILE_SERVER.Terrain:
                     int z = ti.zoomLevel;
-                    //Debug.Log("Z:" + z);
-                    if (z > 15)
+                    if(z <=15)
                     {
-                        z = 15;
+                        //腾讯瓦片计算方法：URL = z  /  Math.Floor(x / 16.0)  / Math.Floor(y / 16.0) / x_y.png，其中x,y,z为TMS瓦片坐标参数。
+                        int x = ti.x;
+                        int y = ti.y;
+
+                        y = int.Parse(Math.Pow(2, z).ToString()) - 1 - y;
+                        int sx = x >> 4; //Mathf.FloorToInt(x / 16.0f);
+                        int sy = y >> 4;//Mathf.FloorToInt(y / 16.0f); 
+                                        //p0-p3
+                        url = "https://p0.map.gtimg.com/demTiles/" + z + "/" + sx + "/" + sy + "/" + x + "_" + y + ".jpg";
+
                     }
-                    //腾讯瓦片计算方法：URL = z  /  Math.Floor(x / 16.0)  / Math.Floor(y / 16.0) / x_y.png，其中x,y,z为TMS瓦片坐标参数。
-                    int x = ti.x;
-                    int y = ti.y;
+                    else
+                    {
+                        url = "";
+                    }
                     
-                    y = int.Parse(Math.Pow(2, z).ToString()) - 1 - y;
-                    int sx = x >> 4; //Mathf.FloorToInt(x / 16.0f);
-                    int sy = y >> 4;//Mathf.FloorToInt(y / 16.0f); 
-                    //p0-p3
-                    url = "https://p0.map.gtimg.com/demTiles/" + z + "/" + sx + "/" + sy + "/" + x + "_" + y + ".jpg";
                     break;
 
                 case TILE_SERVER.City:
@@ -457,7 +461,7 @@ namespace WPM {
                 url += "?" + _tileServerAPIKey;
             }
             Debug.Log(url);*/
-            Debug.Log(url);
+            //Debug.Log(url);
 
             if (OnTileURLRequest != null) {
                 url = OnTileURLRequest(url, server, ti.zoomLevel, ti.x, ti.y);
