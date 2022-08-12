@@ -897,7 +897,6 @@ namespace WPM {
             
             // Gets the max distance from the map
             float minRadius = GetMinEarthRadius();
-
             Vector3 dir = (pivotTransform.position - transform.position).normalized;
             float distance = Mathf.Max(distanceToCenter, minRadius);
 

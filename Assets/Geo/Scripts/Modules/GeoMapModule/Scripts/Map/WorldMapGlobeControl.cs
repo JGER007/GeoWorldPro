@@ -20,16 +20,12 @@ public class WorldMapGlobeControl : MonoBehaviour
     [SerializeField]
     private GameObject sunLight;
 
-    [SerializeField]
-    private GameObject cloulds;
-
-    [SerializeField]
     private GameObject surfaces;
 
     [SerializeField]
-    private Color[] countryColors; 
+    private Color[] countryColors;
+    private MeshRenderer worldMapGlobeBackFacesMeshRenderer; 
 
-    private Material clouldsMat = null;
 
     public Action<string> onLatLonUpdate = null;
 
@@ -45,8 +41,10 @@ public class WorldMapGlobeControl : MonoBehaviour
     {
         mainCamera = Camera.main;
         worldMapGlobe.cursorColor = Color.white;
+        
         //global();
         initFlag = true;
+        nature();
     }
 
     public Color GetColor()
@@ -74,6 +72,17 @@ public class WorldMapGlobeControl : MonoBehaviour
         earthHD.SetActive(true);
     }
 
+    private void clould(float clouldAlpha) 
+    {
+        normalEarth.SetActive(true);
+        sunLight.SetActive(true);
+        globalLight.SetActive(false);
+        earthHD.SetActive(false);
+        worldMapGlobe.earthStyle = EARTH_STYLE.NaturalHighRes16KScenic;
+        showClouldByValue(clouldAlpha);
+    }
+
+
     private void nature() 
     {
         //ShowCloulds(false);
@@ -91,45 +100,31 @@ public class WorldMapGlobeControl : MonoBehaviour
     public void ChangeMapByStyle(StyleEnum style) 
     {
         earthStyle = style;
-        if(style == StyleEnum.城市灯光)
+        if (style == StyleEnum.城市灯光)
         {
             night();
         }
-        else if (style == StyleEnum.自然模式 || style == StyleEnum.云层模式)
+        else if (style == StyleEnum.自然模式)
         {
             global();
         }
+        else if (style == StyleEnum.云层模式 || style == StyleEnum.自然风光)
+        {
+            clould(style == StyleEnum.云层模式 ? 1 : 0);
+        }
+        else if (style == StyleEnum.国家模块)
+        {
+            transform.Find("WorldMapGlobeBackFaces").GetComponent<MeshRenderer>().material.SetColor("_Color", new Color(0,0.21f,0.42f));
+            earthHD.SetActive(false);
+            normalEarth.SetActive(false);
+        }
         else
         {
-            nature();
-            Country zhCountry = worldMapGlobe.GetCountry("中国");
-            if (style == StyleEnum.国家模块)
-            {
-                zhCountry.labelVisible = true;
-                worldMapGlobe.showCountryNames = true;
-                earthHD.SetActive(true);
-            }
-            else
-            {
-                if(worldMapGlobe.showProvinces || worldMapGlobe.showCities)
-                {
-                    zhCountry.labelVisible = false;
-                }
-                earthHD.SetActive(false);
-            }
+            
+            earthHD.SetActive(false);
+            normalEarth.SetActive(false);
         }
-    }
-
-    public void ShowCloulds(bool flag)
-    {
-        if(clouldsMat == null)
-        {
-            clouldsMat = Resources.Load<Material>("Materials/HighCloud");
-            cloulds.GetComponent<MeshRenderer>().material = clouldsMat;
-        }
-        cloulds.gameObject.SetActive(flag);
-
-    }
+     }
 
 
     #region 更新经纬度信息
@@ -175,24 +170,49 @@ public class WorldMapGlobeControl : MonoBehaviour
                 }
             }
 
+
             if (earthStyle == StyleEnum.自然模式)
             {
                 if (cameraDis <= 51.5f)
                 {
                     EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.卫星地图);
-                    //ChangeMapByStyle(StyleEnum.卫星影像);
                 }
 
             }
             else if (earthStyle == StyleEnum.卫星地图)
             {
-                if (cameraDis > 51.5f)
+                if (cameraDis > 52f)
                 {
                     EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.自然模式);
-                    //ChangeMapByStyle(StyleEnum.卫星影像);
+                }
+            }
+
+            ///地形地势瓦片与自然风光模式切换
+            if (earthStyle == StyleEnum.自然风光 || earthStyle == StyleEnum.云层模式)
+            {
+                if (cameraDis <= 51.5f)
+                {
+                    showClouldByValue(0);
+                    EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.地形地势);
+                }
+
+            }
+            else if (earthStyle == StyleEnum.地形地势)
+            {
+                if (cameraDis > 52f)
+                {
+                    //clould(0);
+                    EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.自然风光);
                 }
             }
         }    
     }
+
+    private void showClouldByValue(float value)
+    {
+        worldMapGlobe.cloudsAlpha = value;
+        worldMapGlobe.cloudsShadowStrength = value;
+    }
+
     #endregion
 }

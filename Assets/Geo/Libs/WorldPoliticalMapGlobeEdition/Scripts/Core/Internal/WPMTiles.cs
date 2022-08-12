@@ -146,7 +146,7 @@ namespace WPM {
                 tileMatTransRef = Resources.Load<Material>("Materials/TileOverlayTrans") as Material;
             }
             cameraPlanes = new Plane[6];
-
+            
             if (_earthRenderer != null && _earthRenderer.sharedMaterial != null) {
                 currentEarthTexture = (Texture2D)_earthRenderer.sharedMaterial.mainTexture;
             } else {
@@ -1077,7 +1077,12 @@ namespace WPM {
             if (ti.source != TILE_SOURCE.Resources) {
                 downloadedBytes = www.bytesDownloaded;
                 textureBytes = www.bytes;
-                ti.texture = www.textureNonReadable;
+                if(www.textureNonReadable.width >10)
+                {
+                    ti.texture = www.textureNonReadable;
+                }
+                
+
                 www.Dispose();
                 www = null;
 

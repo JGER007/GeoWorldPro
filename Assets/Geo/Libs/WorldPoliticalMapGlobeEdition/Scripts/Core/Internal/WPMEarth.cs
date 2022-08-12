@@ -408,8 +408,8 @@ namespace WPM {
                             if (skyRenderer.sharedMaterial != earthGlowScatterMat) {
                                 skyRenderer.sharedMaterial = earthGlowScatterMat;
                             }
-                            skyRenderer.transform.localScale = Misc.Vector3one * 1.025f;
-                            // Updates sky shader params
+                            float ascale = (mainCamera.transform.position.magnitude -50) /10;
+                            skyRenderer.transform.localScale = Misc.Vector3one * (1+0.002f*ascale);
                             UpdateGlowScatterMaterial();
                         } else {
                             if (skyRenderer.sharedMaterial != earthGlowMat) {

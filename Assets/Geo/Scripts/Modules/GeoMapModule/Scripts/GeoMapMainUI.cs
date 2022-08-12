@@ -99,7 +99,7 @@ public class GeoMapMainUI : ModuleUI
 
     private void onModuleAction(CustomEventArgs eventArgs)
     {
-        string action = (string)eventArgs.args[0];
+        string action = ((string)eventArgs.args[0]).ToLower();
         if (action == "info")
         {
             InfoVO infoVO = (InfoVO)eventArgs.args[1];
@@ -112,6 +112,33 @@ public class GeoMapMainUI : ModuleUI
             {
                 infoUI.gameObject.SetActive(false);
             }
+        }
+        else if(action == "toggle")
+        {
+            if(eventArgs.args.Length >= 3)
+            {
+                Toggle toggle = null;
+                string toggleName = (string)eventArgs.args[1];
+                if (toggleName == "Country")
+                {
+                    toggle = countryToggle;
+                }
+                else if (toggleName == "Province")
+                {
+                    toggle = provinceToggle;
+                }
+                else if (toggleName == "City")
+                {
+                    toggle = cityToggle;
+                }
+
+                bool isOn = (bool)eventArgs.args[2];
+                if(toggle != null)
+                {
+                    toggle.isOn = isOn;
+                }
+            }
+            
         }
         else if(action == "style")
         {

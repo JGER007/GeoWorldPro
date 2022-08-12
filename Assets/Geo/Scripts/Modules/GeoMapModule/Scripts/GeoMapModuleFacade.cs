@@ -32,6 +32,8 @@ public class GeoMapModuleFacade : BaseModuleFacade
         mapStyleManager.InitManager();
         worldMapGlobe.earthStyle = EARTH_STYLE.Natural;
 
+        //worldMapGlobe.OnCountryEnter += onEnterCountry;
+
         /**
         worldMapGlobe.OnCountryEnter += (int countryIndex, int regionIndex) => Debug.Log("Entered country (" + countryIndex + ") " + worldMapGlobe.countries[countryIndex].name + ",regionIndex:" + regionIndex);
         worldMapGlobe.OnCountryExit += (int countryIndex, int r1024egionIndex) => Debug.Log("Exited country " + worldMapGlobe.countries[countryIndex].name);
@@ -46,6 +48,12 @@ public class GeoMapModuleFacade : BaseModuleFacade
         zhCountry = worldMapGlobe.GetCountry("中国");
         FlyToCountry("中国");
     }
+
+    /*
+    private void onEnterCountry(int countryIndex, int regionIndex)
+    {
+        Debug.Log("Entered country (" + countryIndex + ") " + worldMapGlobe.countries[countryIndex].name + ",regionIndex:" + regionIndex);
+    }*/
 
     /**
     public void ShowProvinceNames() 
@@ -80,9 +88,7 @@ public class GeoMapModuleFacade : BaseModuleFacade
     public void FlyToCountry(string countryName)
     {
         int countryIndex = worldMapGlobe.GetCountryIndex(countryName);
-        //float zoomLevel = worldMapGlobe.GetCountryMainRegionZoomExtents(countryIndex);
         worldMapGlobe.FlyToCountry(countryIndex, 2f, 0f, 0.5f);
-        //worldMapGlobe.BlinkCountry(countryIndex, Color.black, Color.green, 4, 2.5f, true);
     }
 
     public void FlyToCity(string cityName)
@@ -95,7 +101,6 @@ public class GeoMapModuleFacade : BaseModuleFacade
     {
         if(worldMapGlobe.showCountryNames)
         {
-            //Debug.Log("Clicked country " + worldMapGlobe.countries[countryIndex].name + ",regionIndex:" + regionIndex);
             Country country = worldMapGlobe.countries[countryIndex];
             InfoVO infoVO = new InfoVO();
             infoVO.SetData(country);
@@ -201,10 +206,11 @@ public class GeoMapModuleFacade : BaseModuleFacade
             mapStyleManager.ChangeMapByStyle(style);
         }
 
+        /*
         if(countryFlag || provinceFlag || cityFlag)
         {
             worldMapGlobeControl.ShowCloulds(false);
-        }
+        }*/
     }
 
     public override void OnQuit()

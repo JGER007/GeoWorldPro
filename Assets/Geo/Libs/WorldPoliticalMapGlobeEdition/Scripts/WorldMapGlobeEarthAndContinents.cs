@@ -499,7 +499,7 @@ namespace WPM {
 
         [SerializeField]
         EARTH_STYLE
-            _earthStyle = EARTH_STYLE.Natural;
+            _earthStyle = EARTH_STYLE.NaturalHighRes16KScenic;
 
         public EARTH_STYLE earthStyle {
             get {

@@ -1,3 +1,4 @@
+using com.frame;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,7 +24,6 @@ public class MapStyleManager : IManager
        StyleEnum styleEnum = (StyleEnum)Enum.Parse(typeof(StyleEnum), style);
         WorldMapGlobe.instance.HideCountrySurfaces();
         TILE_SERVER tILE_SERVER = getTitleServer(styleEnum);
-        _worldMapGlobeControl.ShowCloulds(false);
         if (tILE_SERVER != TILE_SERVER.None)
         {
             WorldMapGlobe.instance.showTiles = true;
@@ -41,10 +41,8 @@ public class MapStyleManager : IManager
                     Color color = getCountryColor(countryName);
                     WorldMapGlobe.instance.ToggleCountrySurface(countryName, true, color);
                 }
-            }
-            else if(styleEnum == StyleEnum.云层模式)
-            {
-                _worldMapGlobeControl.ShowCloulds(true);
+
+                EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "Toggle", "Country", true);
             }
         }
         _worldMapGlobeControl.ChangeMapByStyle(styleEnum);
@@ -63,8 +61,7 @@ public class MapStyleManager : IManager
             return countryColorDic[countryName];
         }
 
-        Color color = _worldMapGlobeControl.GetColor();//new Color(UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f));
-        countryColorDic.Add(countryName, color);
+        Color color = _worldMapGlobeControl.GetColor();
         return color;
     }
 
@@ -85,7 +82,7 @@ public class MapStyleManager : IManager
                 tILE_SERVER = TILE_SERVER.Terrain;
                 break;
 
-            case StyleEnum.自然风光:
+            case StyleEnum.地形地貌:
                 tILE_SERVER = TILE_SERVER.MapsForFree;
                 break;
 
@@ -109,6 +106,7 @@ public enum StyleEnum
     城市模式,
     自然风光,
     卫星地图,
-    地形地势
+    地形地势,
+    地形地貌
 }
 

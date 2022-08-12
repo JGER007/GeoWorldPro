@@ -42,7 +42,7 @@ namespace WPM {
         const string WPM_OVERLAY_NAME = "WorldMapGlobe Overlay";
         const float MIN_FIELD_OF_VIEW = 10.0f;
         const float MAX_FIELD_OF_VIEW = 85.0f;
-        const float MIN_ZOOM_DISTANCE = 0.0001f;
+        const float MIN_ZOOM_DISTANCE = 0.00001f;
         // 0.58f;
         const float EARTH_RADIUS_KM = 6371f;
         const int SMOOTH_STRAIGHTEN_ON_POLES = -1;
@@ -475,7 +475,8 @@ namespace WPM {
             Camera cam = mainCamera;
             if (cam != null) {
                 if (_allowUserZoom) {
-                    float minClipPlane = Mathf.Abs(transform.lossyScale.x / 100f);
+                    float minClipPlane = Mathf.Abs(transform.lossyScale.x / 100000f);
+                    //Debug.Log("minClipPlane:" + minClipPlane + ",cam.nearClipPlane:" + cam.nearClipPlane);
                     if (cam.nearClipPlane > minClipPlane) {
                         cam.nearClipPlane = minClipPlane;
                     }
