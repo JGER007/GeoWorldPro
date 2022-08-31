@@ -20,6 +20,9 @@ public class WorldMapGlobeControl : MonoBehaviour
     [SerializeField]
     private GameObject sunLight;
 
+    [SerializeField]
+    private bool latLonFlag = true;
+
     private GameObject surfaces;
 
     [SerializeField]
@@ -34,8 +37,10 @@ public class WorldMapGlobeControl : MonoBehaviour
 
     private StyleEnum earthStyle;
     private Camera mainCamera;
-    // Start is called before the first frame update
+    
 
+    // Start is called before the first frame update
+    
     private bool initFlag = false;
     public void Init() 
     {
@@ -45,6 +50,8 @@ public class WorldMapGlobeControl : MonoBehaviour
         //global();
         initFlag = true;
         nature();
+        worldMapGlobe.showLatitudeLines = latLonFlag;
+        worldMapGlobe.showLongitudeLines = latLonFlag;
     }
 
     public Color GetColor()
@@ -207,6 +214,26 @@ public class WorldMapGlobeControl : MonoBehaviour
                 {
                     //clould(0);
                     EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.自然风光);
+                }
+            }
+
+            if (cameraDis > 52f)
+            {
+                WorldMapGlobe.showCursor = true;
+
+                if(latLonFlag)
+                {
+                    worldMapGlobe.showLatitudeLines = true;
+                    worldMapGlobe.showLongitudeLines = true;
+                }
+            }
+            else
+            {
+                WorldMapGlobe.showCursor = false;
+                if (latLonFlag)
+                {
+                    worldMapGlobe.showLatitudeLines = false;
+                    worldMapGlobe.showLongitudeLines = false;
                 }
             }
         }    

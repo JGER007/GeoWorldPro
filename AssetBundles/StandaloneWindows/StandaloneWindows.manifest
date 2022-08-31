@@ -1,26 +1,19 @@
 ManifestFileVersion: 0
-CRC: 409040386
+CRC: 3512560233
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: earthbundle.earth
-      Dependencies: {}
-    Info_1:
-      Name: earthnormalbundle
-      Dependencies: {}
-    Info_2:
       Name: assets.res.ui.examplemainui
       Dependencies: {}
-    Info_3:
+    Info_1:
       Name: assets.res.ui.geomapmainui
       Dependencies: {}
-    Info_4:
+    Info_2:
       Name: assets.res.ui.msgitem
       Dependencies: {}
-    Info_5:
+    Info_3:
       Name: assets.res.module.example
       Dependencies: {}
-    Info_6:
+    Info_4:
       Name: assets.res.module.geomap
-      Dependencies:
-        Dependency_0: earthnormalbundle
+      Dependencies: {}

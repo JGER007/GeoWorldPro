@@ -68,7 +68,7 @@ namespace com.frame
 
         public void LoadAssetPerfab (AssetVO assetVO, Action<GameObject> perfabCallBack)
         {
-#if UNITY_STANDALONE
+#if UNITY_EDITOR //UNITY_STANDALONE
             LoadAsset(assetVO, perfabCallBack);
 #else
             LoadAssetBundle (assetVO, perfabCallBack);
@@ -76,9 +76,9 @@ namespace com.frame
         }
         public void LoadAsset (AssetVO assetVO, Action<GameObject> callBack)
         {
-#if UNITY_STANDALONE
+#if UNITY_EDITOR//UNITY_STANDALONE
             string assetName = "Assets/Res/" + assetVO.AssetPath.Replace ('.', '/') + ".prefab";
-            //Debug.Log (assetName);
+            Debug.Log (assetName);
             GameObject assetres = AssetDatabase.LoadAssetAtPath<GameObject> (assetName);
 
             if (assetres == null)

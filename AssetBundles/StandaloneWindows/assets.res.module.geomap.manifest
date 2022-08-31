@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 2408911622
+CRC: 3678355394
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: b93d12e3cf8daa37c438fe9f138ff66a
+    Hash: 6adb4f3ece91953b542211943bb50c4a
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 46698b163b5ef8b9e0f23aca30ddbc88
+    Hash: ddcd6b0e96ff54b71d8d31552ea86851
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -36,6 +36,8 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 6ce3c766268e64624aa8dc152b6ace03, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: aac99aa6ca980914f92180ddcb752ebb, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: b06c5ef98471a4a0896b496f3a3c06c9, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: faadf626f94e14acb9e3c33e1f0fc1e3, type: 3}
@@ -44,11 +46,13 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 0be62bb3cbdf24291b0b2eff022c95bf, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: 62df38ed073a74d4c92c28035436bf01, type: 3}
+  Script: {fileID: 11500000, guid: 42edc1a2ad881b241ba44022036979a8, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 718bcd33ff6154057af2531bbb1e3249, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 151ba94befcdec042a5196250d7d9830, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 31c45127fc8244962986914c13fafee3, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 124
@@ -56,5 +60,4 @@ ClassTypes:
 SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/Res/Module/geomap.prefab
-Dependencies:
-- E:/Profile/Desktop/GithubProjects/GeoGlobePro/AssetBundles/StandaloneWindows/earthnormalbundle
+Dependencies: []
