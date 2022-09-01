@@ -1322,7 +1322,7 @@ namespace WPM {
                 return false;
 
             string url = GetTileURL(_tileServer, ti);
-            Debug.Log("ReloadTextureFromCacheOrMarkForDownload:" + url);
+            //Debug.Log("ReloadTextureFromCacheOrMarkForDownload:" + url);
             if (string.IsNullOrEmpty(url)) {
                 return false;
             }

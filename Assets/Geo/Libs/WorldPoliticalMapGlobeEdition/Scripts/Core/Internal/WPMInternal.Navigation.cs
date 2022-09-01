@@ -463,6 +463,7 @@ namespace WPM {
             Vector3 pos = targetPosition - cam.transform.forward * camDistanceToTargetPosition;
             cam.transform.position = pos;
             Vector3 orbitAxis = (pivotTransform.position - targetPosition).normalized;
+
             RotateAround(cam.transform, targetPosition, orbitAxis, currentYaw);
 
             // If camera gets below minimum distance to globe, shift it above

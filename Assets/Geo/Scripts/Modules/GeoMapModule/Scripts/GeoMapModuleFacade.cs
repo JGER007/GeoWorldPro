@@ -184,7 +184,8 @@ public class GeoMapModuleFacade : BaseModuleFacade
 
             if(!provinceFlag)
             {
-                worldMapGlobe.HideProvinces();
+                //worldMapGlobe.HideProvinces();
+                worldMapGlobe.HideProvinceRegionHighlights(true);
             }
             //worldMapGlobeControl.ShowSurface(provinceFlag);
             /*

@@ -23,6 +23,9 @@ public class WorldMapGlobeControl : MonoBehaviour
     [SerializeField]
     private bool latLonFlag = true;
 
+    [SerializeField]
+    private float tileDis = 9.0f; 
+
     private GameObject surfaces;
 
     [SerializeField]
@@ -54,7 +57,7 @@ public class WorldMapGlobeControl : MonoBehaviour
         worldMapGlobe.showLongitudeLines = latLonFlag;
     }
 
-    public Color GetColor()
+    public Color GetColorIndex()
     {
         int index = UnityEngine.Random.Range(0, 1000)%25;
         return countryColors[index];
@@ -165,7 +168,7 @@ public class WorldMapGlobeControl : MonoBehaviour
         {
             dt = 0;
             float cameraDis = mainCamera.transform.position.magnitude;
-            
+            //Debug.Log("cameraDis:" + cameraDis);
             if (Mathf.Abs(lastCameraDis - cameraDis) > 0.05f)
             {
                 lastCameraDis = cameraDis;
@@ -176,15 +179,59 @@ public class WorldMapGlobeControl : MonoBehaviour
                 if(updateFlag)
                 {
                     updateFlag = false;
-                    worldMapGlobe.countryLabelsSize = 0.25f - (60.1f - cameraDis) * 0.05f;
-                    worldMapGlobe.cityIconSize = 1 - (60.1f - cameraDis) * 0.3f;
+                    worldMapGlobe.countryLabelsSize = 0.25f - (15.25f - cameraDis) * 0.05f;
+                    worldMapGlobe.cityIconSize = 1 - (15.25f - cameraDis) * 0.3f;
                 }
             }
 
 
+            if(cameraDis <= tileDis)
+            {
+                if (earthStyle == StyleEnum.自然模式)
+                {
+                    EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.卫星地图);
+                }
+
+                if (earthStyle == StyleEnum.自然风光 || earthStyle == StyleEnum.云层模式)
+                {
+                    showClouldByValue(0);
+                    EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.地形地势);
+                }
+
+                //------
+                WorldMapGlobe.showCursor = false;
+                if (latLonFlag)
+                {
+                    worldMapGlobe.showLatitudeLines = false;
+                    worldMapGlobe.showLongitudeLines = false;
+                }
+            }
+            else
+            {
+                if (earthStyle == StyleEnum.卫星地图)
+                {
+                    EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.自然模式);
+                }
+
+                if (earthStyle == StyleEnum.地形地势)
+                {
+                    EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.自然风光);
+                }
+                
+
+                //------
+                WorldMapGlobe.showCursor = true;
+                if (latLonFlag)
+                {
+                    worldMapGlobe.showLatitudeLines = true;
+                    worldMapGlobe.showLongitudeLines = true;
+                }
+            }
+
+            /**
             if (earthStyle == StyleEnum.自然模式)
             {
-                if (cameraDis <= 51.5f)
+                if (cameraDis <= tileDis)
                 {
                     EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.卫星地图);
                 }
@@ -192,7 +239,7 @@ public class WorldMapGlobeControl : MonoBehaviour
             }
             else if (earthStyle == StyleEnum.卫星地图)
             {
-                if (cameraDis > 52f)
+                if (cameraDis > tileDis)
                 {
                     EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.自然模式);
                 }
@@ -201,7 +248,7 @@ public class WorldMapGlobeControl : MonoBehaviour
             ///地形地势瓦片与自然风光模式切换
             if (earthStyle == StyleEnum.自然风光 || earthStyle == StyleEnum.云层模式)
             {
-                if (cameraDis <= 51.5f)
+                if (cameraDis <= tileDis)
                 {
                     showClouldByValue(0);
                     EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.地形地势);
@@ -210,14 +257,14 @@ public class WorldMapGlobeControl : MonoBehaviour
             }
             else if (earthStyle == StyleEnum.地形地势)
             {
-                if (cameraDis > 52f)
+                if (cameraDis > tileDis)
                 {
                     //clould(0);
                     EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.自然风光);
                 }
             }
 
-            if (cameraDis > 52f)
+            if (cameraDis > tileDis)
             {
                 WorldMapGlobe.showCursor = true;
 
@@ -235,7 +282,7 @@ public class WorldMapGlobeControl : MonoBehaviour
                     worldMapGlobe.showLatitudeLines = false;
                     worldMapGlobe.showLongitudeLines = false;
                 }
-            }
+            }*/
         }    
     }
 

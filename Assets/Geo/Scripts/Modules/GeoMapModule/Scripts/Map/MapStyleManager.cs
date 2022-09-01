@@ -15,7 +15,6 @@ public class MapStyleManager : IManager
     public void InitManager(Transform container = null)
     {
         countryColorDic = new Dictionary<string, Color>();
-        //WorldMapGlobe.instance.earthStyle = EARTH_STYLE.Nature_No_Cloud;
         _worldMapGlobeControl.Init();
     }
 
@@ -67,7 +66,7 @@ public class MapStyleManager : IManager
             return countryColorDic[countryName];
         }
 
-        Color color = _worldMapGlobeControl.GetColor();
+        Color color = _worldMapGlobeControl.GetColorIndex();
         return color;
     }
 

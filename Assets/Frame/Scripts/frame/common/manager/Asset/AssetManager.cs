@@ -78,7 +78,7 @@ namespace com.frame
         {
 #if UNITY_EDITOR//UNITY_STANDALONE
             string assetName = "Assets/Res/" + assetVO.AssetPath.Replace ('.', '/') + ".prefab";
-            Debug.Log (assetName);
+            //Debug.Log (assetName);
             GameObject assetres = AssetDatabase.LoadAssetAtPath<GameObject> (assetName);
 
             if (assetres == null)
