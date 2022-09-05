@@ -127,11 +127,13 @@ namespace WPM {
         void InitTileSystem() {
             _tileServerCopyrightNotice = GetTileServerCopyrightNotice(_tileServer);
 
-            cachePath = Application.persistentDataPath + "/TilesCache";
+            //cachePath = Application.persistentDataPath + "/TilesCache";
+            cachePath = Application.streamingAssetsPath + "/TilesCache";
+            //Debug.Log("cachePath:" + cachePath);
             if (!Directory.Exists(cachePath)) {
                 Directory.CreateDirectory(cachePath);
             }
-            //Debug.Log("cachePath:" + cachePath);
+            Debug.Log("cachePath:" + cachePath);
             if (!Application.isPlaying)
                 return;
 
@@ -1088,7 +1090,9 @@ namespace WPM {
 
                 // Check texture consistency
                 if (ti.loadedFromCache || _tileEnableLocalCache) {
+                    //Debug.Log("url:" +url + ",_tileEnableLocalCache:" + _tileEnableLocalCache);
                     filePath = GetLocalFilePathForURL(url, ti);
+                    //Debug.Log("filePath:" + filePath );
                 }
 
                 if (ti.loadedFromCache && ti.texture.width <= 16) { // Invalid texture in local cache, retry
@@ -1287,6 +1291,8 @@ namespace WPM {
 
         CustomWWW getCachedWWW(string url, TileInfo ti) {
             string filePath = GetLocalFilePathForURL(url, ti);
+            //Debug.Log("getCachedWWW url:" + url);
+            //Debug.Log("getCachedWWW filePath:" + filePath);
             CustomWWW www;
             bool useCached = false;
             useCached = _tileEnableLocalCache && System.IO.File.Exists(filePath);

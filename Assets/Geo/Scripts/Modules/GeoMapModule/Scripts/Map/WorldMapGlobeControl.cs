@@ -20,8 +20,9 @@ public class WorldMapGlobeControl : MonoBehaviour
     [SerializeField]
     private GameObject sunLight;
 
-    [SerializeField]
-    private bool latLonFlag = true;
+    private bool latLonFlag = false;
+
+    private bool showCursorFlag = false;
 
     [SerializeField]
     private float tileDis = 9.0f; 
@@ -40,27 +41,34 @@ public class WorldMapGlobeControl : MonoBehaviour
 
     private StyleEnum earthStyle;
     private Camera mainCamera;
-    
 
-    // Start is called before the first frame update
-    
     private bool initFlag = false;
     public void Init() 
     {
         mainCamera = Camera.main;
         worldMapGlobe.cursorColor = Color.white;
-        
-        //global();
         initFlag = true;
         nature();
-        worldMapGlobe.showLatitudeLines = latLonFlag;
-        worldMapGlobe.showLongitudeLines = latLonFlag;
+        SetLatLonLineFlag(false);
     }
 
     public Color GetColorIndex()
     {
         int index = UnityEngine.Random.Range(0, 1000)%25;
         return countryColors[index];
+    }
+
+    public void SetLatLonLineFlag(bool flag)
+    {
+        latLonFlag = flag;
+        worldMapGlobe.showLatitudeLines = latLonFlag;
+        worldMapGlobe.showLongitudeLines = latLonFlag;
+    }
+
+    public void SetShowCursorFlag(bool flag)
+    {
+        showCursorFlag = flag;
+        worldMapGlobe.showCursor = showCursorFlag;
     }
 
 
@@ -168,7 +176,6 @@ public class WorldMapGlobeControl : MonoBehaviour
         {
             dt = 0;
             float cameraDis = mainCamera.transform.position.magnitude;
-            //Debug.Log("cameraDis:" + cameraDis);
             if (Mathf.Abs(lastCameraDis - cameraDis) > 0.05f)
             {
                 lastCameraDis = cameraDis;
@@ -208,19 +215,22 @@ public class WorldMapGlobeControl : MonoBehaviour
             }
             else
             {
+                /**
                 if (earthStyle == StyleEnum.卫星地图)
                 {
                     EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.自然模式);
                 }
-
+                
                 if (earthStyle == StyleEnum.地形地势)
                 {
                     EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.自然风光);
+                }*/
+                //------
+                if(showCursorFlag)
+                {
+                    WorldMapGlobe.showCursor = true;
                 }
                 
-
-                //------
-                WorldMapGlobe.showCursor = true;
                 if (latLonFlag)
                 {
                     worldMapGlobe.showLatitudeLines = true;

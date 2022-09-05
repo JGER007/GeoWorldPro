@@ -82,13 +82,17 @@ public class GeoMapModuleFacade : BaseModuleFacade
     }*/
 
 
-    // Sample code to show how to:
-    // 1.- Navigate and center a country in the map
-    // 2.- Add a blink effect to one country (can be used on any number of countries)
     public void FlyToCountry(string countryName)
     {
         int countryIndex = worldMapGlobe.GetCountryIndex(countryName);
-        worldMapGlobe.FlyToCountry(countryIndex, 2f, 0f, 0.5f);
+        
+        ///Country zhcountry = worldMapGlobe.GetCountry(countryIndex);
+        //Country ydcountry = worldMapGlobe.GetCountry("印度");
+        //worldMapGlobe.AddLine(new Vector2[] { zhcountry.latlonCenter, ydcountry.latlonCenter }, Color.blue,0.05f);
+        //worldMapGlobe.AddText("Distances", zhcountry.latlonCenter, Color.red,0.1f);
+
+
+        worldMapGlobe.FlyToCountry(countryIndex, 2f, 1f, 0.5f);
     }
 
     public void FlyToCity(string cityName)
@@ -158,16 +162,6 @@ public class GeoMapModuleFacade : BaseModuleFacade
         
         if (action == "Country")
         {
-            /**
-            if(worldMapGlobe.showProvinces || worldMapGlobe.showCities)
-            {
-                zhCountry.labelVisible = false;
-            }
-            else
-            {
-                zhCountry.labelVisible = true;
-            }*/
-            
             countryFlag = (bool)eventArgs.args[1];
             worldMapGlobe.showFrontiers = countryFlag;
             worldMapGlobe.showCountryNames = countryFlag;
@@ -187,13 +181,6 @@ public class GeoMapModuleFacade : BaseModuleFacade
                 //worldMapGlobe.HideProvinces();
                 worldMapGlobe.HideProvinceRegionHighlights(true);
             }
-            //worldMapGlobeControl.ShowSurface(provinceFlag);
-            /*
-            if(provinceFlag)
-            {
-                zhCountry.labelVisible = false;
-                ShowProvinceNames();
-            }*/
         }
         else if (action == "City")
         {
@@ -206,12 +193,26 @@ public class GeoMapModuleFacade : BaseModuleFacade
             string style = eventArgs.args[1].ToString();
             mapStyleManager.ChangeMapByStyle(style);
         }
-
-        /*
-        if(countryFlag || provinceFlag || cityFlag)
+        else if(action == "Compass")
         {
-            worldMapGlobeControl.ShowCloulds(false);
-        }*/
+            FlyToCountry("中国");
+        }
+        else if(action == "LatLonLine")
+        {
+            bool isOn = (bool)eventArgs.args[1];
+            worldMapGlobeControl.SetLatLonLineFlag(isOn);
+        }
+        else if (action == "LatLon")
+        {
+            bool isOn = (bool)eventArgs.args[1];
+            worldMapGlobeControl.SetShowCursorFlag(isOn);
+        }
+        else if (action == "Rule")
+        {
+            bool isOn = (bool)eventArgs.args[1];
+            
+        }
+
     }
 
     public override void OnQuit()
@@ -271,10 +272,32 @@ public class InfoVO
     }
 
 
+    public string getPositionInfo()
+    {
+        string info = Continent + ">" + Country;
+        if (!string.IsNullOrEmpty(Province))
+        {
+            info = info + ">" + Province;
+            if (provinceDataVO != null)
+            {
+                info = info + "(" + provinceDataVO.Abbreviation + ")";
+            }
+            //info = "位置:" + info;
+        }
+
+        if (!string.IsNullOrEmpty(City))
+        {
+            info = info + ">" + City;
+        }
+
+        return info;
+    }
 
     public string GetInfo()
     {
-        string info = Continent + ">" + Country;
+        string info = "";
+        /**
+        //Continent + ">" + Country;
         if(!string.IsNullOrEmpty(Province))
         {
             info = info + ">" + Province ;
@@ -288,7 +311,7 @@ public class InfoVO
         if (!string.IsNullOrEmpty(City))
         {
             info = info + ">" + City;
-        }
+        }*/
 
         if (cityVO != null)
         {
@@ -315,7 +338,7 @@ public class InfoVO
         else if(provinceDataVO != null)
         {
             info = info + "\n人口：" + provinceDataVO.Population + "(人)";//+ "(万)";
-            /*
+            /**
             info = info + "\n面积：" + provinceDataVO.Area + "(平方公里)";
 
             if (!string.IsNullOrEmpty(provinceDataVO.WaterResources))

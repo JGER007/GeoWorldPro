@@ -11,25 +11,42 @@ using static UnityEngine.UI.Dropdown;
 public class GeoMapMainUI : ModuleUI
 {
     [SerializeField]
+    private Toggle continentToggle;
+    [SerializeField]
     private Toggle countryToggle;
     [SerializeField]
     private Toggle provinceToggle;
     [SerializeField]
     private Toggle cityToggle;
+
     [SerializeField]
     private Button closeBtn;
     [SerializeField]
     private Button openBtn;
     [SerializeField]
-    private Text latLonTxt;
+    private Button compassBtn; 
+    [SerializeField]
+    private ToolUI toolUI; 
+
+    private Text seletModeTxt;
+
+
+    [SerializeField]
+    private Toggle modelToggle; 
+    [SerializeField]
+    private GameObject modeList;
+
+    private Toggle[] modeListToggles;
 
     [SerializeField]
     private Transform operateUITran;
 
+    [SerializeField]
+    private Color modeLightColor; 
+
     private bool openFlag = true;
 
-    [SerializeField]
-    private Dropdown styleDropDown;
+    
     [SerializeField]
     private List<string> styles;
 
@@ -52,44 +69,105 @@ public class GeoMapMainUI : ModuleUI
         base.InitUI();
         initoperateUIPose();
         infoUI.gameObject.SetActive(false);
-
-        closeBtn.gameObject.SetActive(true);
-
-        closeBtn.onClick.AddListener(delegate { setOpenFlag(false); });
-        openBtn.onClick.AddListener(delegate { setOpenFlag(true); });
-        openFlag = true;
-
-        styleDropDown.onValueChanged.AddListener(delegate { onStyleDropDownValueChanged(); });
-
-        countryToggle.onValueChanged.AddListener(delegate { onToggleValueChanged("Country", countryToggle.isOn); });
-
-        provinceToggle.onValueChanged.AddListener(delegate { onToggleValueChanged("Province", provinceToggle.isOn); });
-
-        cityToggle.onValueChanged.AddListener(delegate { onToggleValueChanged("City", cityToggle.isOn); });
+        initOperateUI();
 
         EventUtil.AddListener(GlobalEvent.Module_TO_UI_Action ,onModuleAction);
 
         worldMapGlobeControl = FindObjectOfType<WorldMapGlobeControl>();
         worldMapGlobeControl.onLatLonUpdate = onLatLonUpdate;
-        //operateUITran.transform.localPosition = new Vector3(-25, -30, 0);
 
-        styleDropDown.value = 0;
+        initModeUI();
+
+        toolUI.InitUI();
     }
 
-    private void onLatLonUpdate(string obj)
+    private void initModeUI()
     {
-        latLonTxt.text = obj;
+        modeList.SetActive(modelToggle.isOn);
+
+        seletModeTxt = modelToggle.transform.Find("Text").GetComponent<Text>();
+        seletModeTxt.gameObject.SetActive(false);
+
+        modelToggle.onValueChanged.AddListener(delegate { onModelValueChanged(); });
+
+        modeListToggles = modeList.GetComponentsInChildren<Toggle>();
+        foreach(Toggle modeListToggle in modeListToggles)
+        {
+            modeListToggle.onValueChanged.AddListener(delegate { onModelListToggleValueChanged(modeListToggle); });
+        }
+    }
+
+    private void onModelListToggleValueChanged(Toggle toggle) 
+    {
+        Text label = toggle.transform.Find("Label").GetComponent<Text>();
+        if (toggle.isOn)
+        {
+            if (!seletModeTxt.gameObject.activeSelf)
+            {
+                seletModeTxt.gameObject.SetActive(true);
+            }
+            seletModeTxt.text = label.text;
+            label.color = modeLightColor;
+
+            EventUtil.DispatchEvent(GlobalEvent.UI_TO_Module_Action, "Style", toggle.name);
+        }
+        else
+        {
+            label.color = Color.white;
+        }
+    }
+
+    private void onModelValueChanged()
+    {
+        modeList.SetActive(modelToggle.isOn);
+    }
+
+    private void initOperateUI()
+    {
+        closeBtn.gameObject.SetActive(true);
+        closeBtn.onClick.AddListener(delegate { setOpenFlag(false); });
+        openBtn.onClick.AddListener(delegate { setOpenFlag(true); });
+
+        compassBtn.onClick.AddListener(delegate { onCompassBtnClick();  });
+        openFlag = true;
+
+        initoperateToggles();
+    }
+
+    private void onCompassBtnClick()
+    {
+        EventUtil.DispatchEvent(GlobalEvent.UI_TO_Module_Action, "Compass");
+    }
+
+    private void initoperateToggles()
+    {
+        continentToggle.onValueChanged.AddListener(delegate { onToggleValueChanged("Continent", countryToggle.isOn); });
+        countryToggle.onValueChanged.AddListener(delegate { onToggleValueChanged("Country", countryToggle.isOn); });
+        provinceToggle.onValueChanged.AddListener(delegate { onToggleValueChanged("Province", provinceToggle.isOn); });
+        cityToggle.onValueChanged.AddListener(delegate { onToggleValueChanged("City", cityToggle.isOn); });
+    }
+
+    private void onLatLonUpdate(string value)
+    {
+        toolUI.ShowLatLon(value);
     }
 
     private void initoperateUIPose()
     {
+
         openPose = operateUITran.localPosition; 
         closePose = openPose; 
-        closePose.x = openPose.x + 413;
+        closePose.x = openPose.x + 100;
     }
 
     private void setOpenFlag(bool flag)
     {
+
+        if(!flag)
+        {
+            modelToggle.isOn = false;
+        }
+
         if(openFlag != flag)
         {
             openFlag = flag;
@@ -143,11 +221,12 @@ public class GeoMapMainUI : ModuleUI
         else if(action == "style")
         {
             StyleEnum styleEnum = (StyleEnum)eventArgs.args[1];
-            foreach(OptionData option in styleDropDown.options)
+
+            foreach (Toggle modeListToggle in modeListToggles)
             {
-                if(option.text == styleEnum.ToString())
+                if(modeListToggle.name == styleEnum.ToString())
                 {
-                    styleDropDown.value = styleDropDown.options.IndexOf(option);
+                    modeListToggle.isOn = true;
                     return;
                 }
             }
@@ -163,21 +242,6 @@ public class GeoMapMainUI : ModuleUI
             infoUI.gameObject.SetActive(false);
         }
 
-    }
-
-    private void onStyleDropDownValueChanged()
-    {
-        string styleName = styleDropDown.options[ styleDropDown.value].text;
-
-        /*
-        if(styleName == StyleEnum.城市模式.ToString())
-        {
-            countryToggle.isOn = false;
-            provinceToggle.isOn = false;
-            cityToggle.isOn = false;
-        }*/
-
-        EventUtil.DispatchEvent(GlobalEvent.UI_TO_Module_Action, "Style", styleName);
     }
 
 

@@ -12,6 +12,9 @@ public class InfoUI : MonoBehaviour
     private Text infoTxt;
 
     [SerializeField]
+    private Text positionInfo; 
+
+    [SerializeField]
     private Text tipTxt;
 
     private string tipCity = "数据来源：中国城市统计年鉴2020";
@@ -20,6 +23,7 @@ public class InfoUI : MonoBehaviour
     public void SetInfo(InfoVO infoVO)
     {
         titleTxt.text = infoVO.Tilte;
+        positionInfo.text = infoVO.getPositionInfo();
         infoTxt.text = infoVO.GetInfo();
         tipTxt.gameObject.SetActive(true);
         if (infoVO.Country == "中国")
