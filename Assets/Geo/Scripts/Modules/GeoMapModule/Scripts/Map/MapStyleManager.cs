@@ -112,6 +112,7 @@ public enum StyleEnum
     自然风光,
     卫星地图,
     地形地势,
-    地形地貌
+    地形地貌,
+    None
 }
 

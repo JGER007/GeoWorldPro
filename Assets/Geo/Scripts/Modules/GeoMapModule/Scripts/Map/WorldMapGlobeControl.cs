@@ -31,6 +31,10 @@ public class WorldMapGlobeControl : MonoBehaviour
 
     [SerializeField]
     private Color[] countryColors;
+
+    [SerializeField]
+    private Color[] continentColors; 
+
     private Material worldMapGlobeBackFacesMeshMat = null ; 
 
 
@@ -50,6 +54,12 @@ public class WorldMapGlobeControl : MonoBehaviour
         initFlag = true;
         nature();
         SetLatLonLineFlag(false);
+
+        //worldMapGlobe.ToggleContinentSurface("—«÷ﬁ", true, Color.blue);
+        //worldMapGlobe.ToggleContinentSurface("∑«÷ﬁ", true, Color.yellow);
+        //worldMapGlobe.ToggleContinentSurface("√¿÷ﬁ", true, Color.yellow);
+
+        
     }
 
     public Color GetColorIndex()

@@ -56,6 +56,8 @@ public class GeoMapMainUI : ModuleUI
     private Vector3 openPose;
     private Vector3 closePose;
 
+    private StyleEnum currStyleEnum = StyleEnum.None;
+
 
     private WorldMapGlobeControl worldMapGlobeControl;
 
@@ -67,7 +69,7 @@ public class GeoMapMainUI : ModuleUI
     public override void InitUI()
     {
         base.InitUI();
-        initoperateUIPose();
+        initOperateUIPose();
         infoUI.gameObject.SetActive(false);
         initOperateUI();
 
@@ -117,9 +119,23 @@ public class GeoMapMainUI : ModuleUI
         }
     }
 
+    /// <summary>
+    /// 打开关闭地球风格界面
+    /// </summary>
     private void onModelValueChanged()
     {
         modeList.SetActive(modelToggle.isOn);
+        if(!modelToggle.isOn)
+        {
+            //currStyleEnum = StyleEnum.None;
+            modelToggle.transform.Find("Text").GetComponent<Text>().color = Color.grey;
+        }
+        else
+        {
+            showCurrStyle();
+            modelToggle.transform.Find("Text").GetComponent<Text>().color = modeLightColor;
+        }
+        //modelToggle.transform.Find("Text").GetComponent<Text>().gameObject.SetActive(modelToggle.isOn);
     }
 
     private void initOperateUI()
@@ -152,14 +168,20 @@ public class GeoMapMainUI : ModuleUI
         toolUI.ShowLatLon(value);
     }
 
-    private void initoperateUIPose()
+    /// <summary>
+    /// 初始化右侧列表打开、关闭的位置
+    /// </summary>
+    private void initOperateUIPose()
     {
-
         openPose = operateUITran.localPosition; 
         closePose = openPose; 
         closePose.x = openPose.x + 100;
     }
 
+    /// <summary>
+    /// 设置右侧列表打开关闭标志
+    /// </summary>
+    /// <param name="flag"></param>
     private void setOpenFlag(bool flag)
     {
 
@@ -175,9 +197,14 @@ public class GeoMapMainUI : ModuleUI
         }
     }
 
+    /// <summary>
+    /// 模块事件处理
+    /// </summary>
+    /// <param name="eventArgs"></param>
     private void onModuleAction(CustomEventArgs eventArgs)
     {
         string action = ((string)eventArgs.args[0]).ToLower();
+        //省份、城市信息展示
         if (action == "info")
         {
             InfoVO infoVO = (InfoVO)eventArgs.args[1];
@@ -193,6 +220,7 @@ public class GeoMapMainUI : ModuleUI
         }
         else if(action == "toggle")
         {
+            ///洲、国家、省份、城市
             if(eventArgs.args.Length >= 3)
             {
                 Toggle toggle = null;
@@ -220,15 +248,19 @@ public class GeoMapMainUI : ModuleUI
         }
         else if(action == "style")
         {
-            StyleEnum styleEnum = (StyleEnum)eventArgs.args[1];
+            currStyleEnum = (StyleEnum)eventArgs.args[1];
+            showCurrStyle();
+        }
+    }
 
-            foreach (Toggle modeListToggle in modeListToggles)
+    private void showCurrStyle()
+    {
+        foreach (Toggle modeListToggle in modeListToggles)
+        {
+            if (modeListToggle.name == currStyleEnum.ToString())
             {
-                if(modeListToggle.name == styleEnum.ToString())
-                {
-                    modeListToggle.isOn = true;
-                    return;
-                }
+                modeListToggle.isOn = true;
+                return;
             }
         }
     }
