@@ -33,7 +33,10 @@ public class WorldMapGlobeControl : MonoBehaviour
     private Color[] countryColors;
 
     [SerializeField]
-    private Color[] continentColors; 
+    private Color[] continentColors;
+
+    [SerializeField]
+    private string[] continentNames; 
 
     private Material worldMapGlobeBackFacesMeshMat = null ; 
 
@@ -54,12 +57,8 @@ public class WorldMapGlobeControl : MonoBehaviour
         initFlag = true;
         nature();
         SetLatLonLineFlag(false);
-
-        //worldMapGlobe.ToggleContinentSurface("亚洲", true, Color.blue);
-        //worldMapGlobe.ToggleContinentSurface("非洲", true, Color.yellow);
-        //worldMapGlobe.ToggleContinentSurface("美洲", true, Color.yellow);
-
         
+        //ShowColorfulContinents();
     }
 
     public Color GetColorIndex()
@@ -157,6 +156,22 @@ public class WorldMapGlobeControl : MonoBehaviour
             normalEarth.SetActive(false);
         }
      }
+
+    /// <summary>
+    /// 展示洲区块信息
+    /// </summary>
+    public void ShowColorfulContinents()  
+    {
+        for(int i=0;i< continentNames.Length;i++)
+        {
+            string continentName = continentNames[i];
+            Color color = continentColors[i];
+
+            worldMapGlobe.ToggleContinentSurface(continentName, true, color);
+        }
+
+        
+    }
 
 
     #region 更新经纬度信息

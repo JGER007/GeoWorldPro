@@ -133,7 +133,7 @@ namespace WPM {
             if (!Directory.Exists(cachePath)) {
                 Directory.CreateDirectory(cachePath);
             }
-            Debug.Log("cachePath:" + cachePath);
+            //Debug.Log("cachePath:" + cachePath);
             if (!Application.isPlaying)
                 return;
 

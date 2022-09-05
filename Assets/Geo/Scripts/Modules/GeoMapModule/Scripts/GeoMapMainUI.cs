@@ -36,6 +36,9 @@ public class GeoMapMainUI : ModuleUI
     [SerializeField]
     private GameObject modeList;
 
+    [SerializeField]
+    private GameObject modeContent; 
+
     private Toggle[] modeListToggles;
 
     [SerializeField]
@@ -85,7 +88,7 @@ public class GeoMapMainUI : ModuleUI
 
     private void initModeUI()
     {
-        modeList.SetActive(modelToggle.isOn);
+        modeContent.SetActive(modelToggle.isOn);
 
         seletModeTxt = modelToggle.transform.Find("Text").GetComponent<Text>();
         seletModeTxt.gameObject.SetActive(false);
@@ -124,11 +127,12 @@ public class GeoMapMainUI : ModuleUI
     /// </summary>
     private void onModelValueChanged()
     {
-        modeList.SetActive(modelToggle.isOn);
+        modeContent.SetActive(modelToggle.isOn);
         if(!modelToggle.isOn)
         {
             //currStyleEnum = StyleEnum.None;
             modelToggle.transform.Find("Text").GetComponent<Text>().color = Color.grey;
+           
         }
         else
         {

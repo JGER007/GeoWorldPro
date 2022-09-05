@@ -195,6 +195,7 @@ public class GeoMapModuleFacade : BaseModuleFacade
         }
         else if(action == "Compass")
         {
+            worldMapGlobe.ZoomTo(1.5f);
             FlyToCountry("ÖÐ¹ú");
         }
         else if(action == "LatLonLine")
