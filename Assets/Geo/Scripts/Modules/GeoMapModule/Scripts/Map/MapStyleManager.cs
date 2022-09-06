@@ -100,6 +100,18 @@ public class MapStyleManager : IManager
     {
         
     }
+
+    public bool IshowPoliticalBorder(string style) 
+    {
+        if(style == StyleEnum.默认模式.ToString() ||
+            style == StyleEnum.自然模式.ToString() ||
+            style == StyleEnum.国家模块.ToString())
+        {
+            return false;
+        }
+
+        return true;
+    }
 }
 
 public enum StyleEnum
@@ -113,6 +125,7 @@ public enum StyleEnum
     卫星地图,
     地形地势,
     地形地貌,
+    默认模式,
     None
 }
 

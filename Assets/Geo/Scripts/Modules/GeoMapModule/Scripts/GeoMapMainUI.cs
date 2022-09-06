@@ -59,7 +59,7 @@ public class GeoMapMainUI : ModuleUI
     private Vector3 openPose;
     private Vector3 closePose;
 
-    private StyleEnum currStyleEnum = StyleEnum.None;
+    private StyleEnum currStyleEnum = StyleEnum.默认模式;
 
 
     private WorldMapGlobeControl worldMapGlobeControl;
@@ -96,14 +96,26 @@ public class GeoMapMainUI : ModuleUI
         modelToggle.onValueChanged.AddListener(delegate { onModelValueChanged(); });
 
         modeListToggles = modeList.GetComponentsInChildren<Toggle>();
-        foreach(Toggle modeListToggle in modeListToggles)
+        Toggle defaultToggle = modeListToggles[0];
+
+
+        foreach (Toggle modeListToggle in modeListToggles)
         {
             modeListToggle.onValueChanged.AddListener(delegate { onModelListToggleValueChanged(modeListToggle); });
+
+            if(modeListToggle.name == "默认模式")
+            {
+                defaultToggle = modeListToggle;
+            }
         }
+        defaultToggle.isOn = true;
     }
+
+    private Toggle currToggle;
 
     private void onModelListToggleValueChanged(Toggle toggle) 
     {
+        currToggle = toggle;
         Text label = toggle.transform.Find("Label").GetComponent<Text>();
         if (toggle.isOn)
         {
@@ -114,12 +126,18 @@ public class GeoMapMainUI : ModuleUI
             seletModeTxt.text = label.text;
             label.color = modeLightColor;
 
-            EventUtil.DispatchEvent(GlobalEvent.UI_TO_Module_Action, "Style", toggle.name);
+            //EventUtil.DispatchEvent(GlobalEvent.UI_TO_Module_Action, "Style", toggle.name);
+            Invoke("delayChangeToStyle", 0.1f);
         }
         else
         {
             label.color = Color.white;
         }
+    }
+
+    private void delayChangeToStyle()
+    {
+        EventUtil.DispatchEvent(GlobalEvent.UI_TO_Module_Action, "Style", currToggle.name);
     }
 
     /// <summary>
@@ -130,7 +148,6 @@ public class GeoMapMainUI : ModuleUI
         modeContent.SetActive(modelToggle.isOn);
         if(!modelToggle.isOn)
         {
-            //currStyleEnum = StyleEnum.None;
             modelToggle.transform.Find("Text").GetComponent<Text>().color = Color.grey;
            
         }
@@ -139,7 +156,6 @@ public class GeoMapMainUI : ModuleUI
             showCurrStyle();
             modelToggle.transform.Find("Text").GetComponent<Text>().color = modeLightColor;
         }
-        //modelToggle.transform.Find("Text").GetComponent<Text>().gameObject.SetActive(modelToggle.isOn);
     }
 
     private void initOperateUI()
@@ -161,7 +177,7 @@ public class GeoMapMainUI : ModuleUI
 
     private void initoperateToggles()
     {
-        continentToggle.onValueChanged.AddListener(delegate { onToggleValueChanged("Continent", countryToggle.isOn); });
+        continentToggle.onValueChanged.AddListener(delegate { onToggleValueChanged("Continent", continentToggle.isOn); });
         countryToggle.onValueChanged.AddListener(delegate { onToggleValueChanged("Country", countryToggle.isOn); });
         provinceToggle.onValueChanged.AddListener(delegate { onToggleValueChanged("Province", provinceToggle.isOn); });
         cityToggle.onValueChanged.AddListener(delegate { onToggleValueChanged("City", cityToggle.isOn); });
@@ -241,9 +257,13 @@ public class GeoMapMainUI : ModuleUI
                 {
                     toggle = cityToggle;
                 }
+                else if (toggleName == "Continent")
+                {
+                    toggle = continentToggle;
+                }
 
                 bool isOn = (bool)eventArgs.args[2];
-                if(toggle != null)
+                if (toggle != null)
                 {
                     toggle.isOn = isOn;
                 }

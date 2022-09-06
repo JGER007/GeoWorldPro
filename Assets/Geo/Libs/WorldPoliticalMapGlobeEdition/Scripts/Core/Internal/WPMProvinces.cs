@@ -69,8 +69,6 @@ namespace WPM {
 
         #endregion
 
-
-
         #region System initialization
 
         /// <summary>
@@ -681,6 +679,7 @@ namespace WPM {
         }
 
         public void HighlightProvinceRegion(int provinceIndex, int regionIndex, bool refreshGeometry) {
+            Debug.Log("HighlightProvinceRegion provinceIndex:"+ provinceIndex + ",regionIndex:" + regionIndex);
             if (provinceRegionHighlightedObj != null) {
                 if (!refreshGeometry && _provinceHighlightedIndex == provinceIndex && _provinceRegionHighlightedIndex == regionIndex)
                     return;

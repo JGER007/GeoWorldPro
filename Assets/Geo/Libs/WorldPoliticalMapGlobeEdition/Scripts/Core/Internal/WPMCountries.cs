@@ -714,7 +714,7 @@ namespace WPM {
             frontiersLayer.transform.SetParent(transform, false);
             frontiersLayer.transform.localPosition = Misc.Vector3zero;
             frontiersLayer.transform.localRotation = Misc.QuaternionZero; //Quaternion.Euler (Misc.Vector3zero);
-            frontiersLayer.transform.localScale = _earthInvertedMode ? Misc.Vector3one * 0.995f : Misc.Vector3one * 1.0002f;
+            frontiersLayer.transform.localScale = _earthInvertedMode ? Misc.Vector3one * 0.995f : Misc.Vector3one ;
 
             // Choose a frontiers mat
             if (_frontiersColor.a < 1f) {
@@ -785,6 +785,8 @@ namespace WPM {
             } else {
                 inlandFrontiersMatCurrent = inlandFrontiersMatOpaque;
             }
+            //Debug.Log("_inlandFrontiersColor.a:" + _inlandFrontiersColor.a);
+
             inlandFrontiersMatCurrent.color = _inlandFrontiersColor;
 
             for (int k = 0; k < inlandFrontiers.Length; k++) {

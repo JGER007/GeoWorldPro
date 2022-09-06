@@ -19,6 +19,7 @@ namespace com.frame.ui
         public static string ModuleTranstionUI = "ModuleTranstionUI";
         public static string LoadFromLocalUI = "LoadFromLocalUI";
         public static string LoadingModuleUI = "LoadingModuleUI";
+        public static string TileLoadAndUnzipUI = "TileLoadAndUnzipUI"; 
         public static string MsgItem = "MsgItem";
         //产生的UI实例
         private Dictionary<string, GameObject> uIDic = null;

@@ -128,8 +128,8 @@ namespace WPM {
             _tileServerCopyrightNotice = GetTileServerCopyrightNotice(_tileServer);
 
             //cachePath = Application.persistentDataPath + "/TilesCache";
-            cachePath = Application.streamingAssetsPath + "/TilesCache";
-            //Debug.Log("cachePath:" + cachePath);
+            cachePath = Application.persistentDataPath + "/TilesCache";
+            Debug.Log("TilesCache cachePath:" + cachePath);
             if (!Directory.Exists(cachePath)) {
                 Directory.CreateDirectory(cachePath);
             }

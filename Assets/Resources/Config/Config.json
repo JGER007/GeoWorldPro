@@ -46,6 +46,14 @@
             "Type": 2
         },
         {
+            "PerfabName": "TileLoadAndUnzipUI",
+            "Desc": "瓦片资源处理",
+            "Path": "Perfabs/UI/TileLoadAndUnzipUI",
+            "assetbundle": "",
+            "version": 0.1,
+            "Type": 2
+        },
+        {
             "PerfabName": "MsgItem",
             "Desc": "提示信息",
             "Path": "",

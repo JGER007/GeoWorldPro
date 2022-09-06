@@ -624,6 +624,8 @@ namespace WPM {
 
         void CheckMouseOver() {
             // Check if it's really outside of sphere
+          
+
             _mouseEnterGlobeThisFrame = false;
             if (GetGlobeIntersection(out sphereCurrentHitPos)) {
                 if (!_mouseIsOver) {
@@ -655,6 +657,8 @@ namespace WPM {
                     CheckMousePos();
                 }
 
+                if (!showProvinces) return;
+
                 // Remember the last element clicked & trigger events
                 bool isClick = dragDampingStart == 0 && (leftMouseButtonClick || rightMouseButtonClick);
                 bool isRelease = leftMouseButtonRelease || rightMouseButtonRelease;
@@ -673,7 +677,37 @@ namespace WPM {
                             {
                                 OnCountryClick(_countryHighlightedIndex, _countryRegionHighlightedIndex);
                             }
+
+                            if(GetCountry(_countryHighlightedIndex).name != "中国")
+                            {
+                                if(OnProvinceClick !=null)
+                                {
+                                    OnProvinceClick(-1,-1);
+                                }
+
+                                if (OnCityClick != null)
+                                {
+                                    OnCityClick(-1);
+                                }
+                                return;
+                            }
                         }
+                    }
+                    else
+                    {
+                        if (OnProvinceClick != null)
+                        {
+                            OnProvinceClick(-1, -1);
+                        }
+
+                        if (OnCityClick != null)
+                        {
+                            OnCityClick(-1);
+                        }
+                        _provinceHighlightedIndex = -1;
+                        _provinceRegionHighlightedIndex = -1;
+                        HideProvinceRegionHighlights(false);
+                        return;
                     }
                     _provinceLastClicked = _provinceHighlightedIndex;
                     _provinceRegionLastClicked = _provinceRegionHighlightedIndex;
@@ -890,10 +924,10 @@ namespace WPM {
                 // subtle/slow continuous rotation
                 if (!constraintPositionEnabled) {
                     if (_autoRotationSpeed != 0) {
-                        transform.Rotate(Misc.Vector3up, -_autoRotationSpeed * Time.deltaTime * 60f);
+                        transform.Rotate(Misc.Vector3up, -_autoRotationSpeed * Time.deltaTime * 45f);
                     }
                     if (_cameraAutoRotationSpeed != 0) {
-                        mainCamera.transform.RotateAround(transform.position, transform.up, -_cameraAutoRotationSpeed * Time.deltaTime * 60f);
+                        mainCamera.transform.RotateAround(transform.position, transform.up, -_cameraAutoRotationSpeed * Time.deltaTime * 45f);
                     }
                 }
             }
@@ -1499,6 +1533,7 @@ namespace WPM {
 
             // Performs zoom in / out
             if (zoomDistance != 0) {
+                //Debug.Log("zoomDistance:" + zoomDistance + ", mainCamera sqrMagnitude:" + mainCamera.transform.position.sqrMagnitude);
                 PerformZoomInOut(zoomDistance);
             }
 

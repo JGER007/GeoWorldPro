@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 922420101
+CRC: 3012690673
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -9,14 +9,11 @@ AssetBundleManifest:
       Name: assets.res.ui.geomapmainui
       Dependencies: {}
     Info_2:
-      Name: assets.res.ui.geomapmainui_old
-      Dependencies: {}
-    Info_3:
       Name: assets.res.ui.msgitem
       Dependencies: {}
-    Info_4:
+    Info_3:
       Name: assets.res.module.example
       Dependencies: {}
-    Info_5:
+    Info_4:
       Name: assets.res.module.geomap
       Dependencies: {}

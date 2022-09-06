@@ -105,7 +105,15 @@ namespace WPM {
             Vector3 vector = zoomDir * (Vector3.Distance(transform.position, pivotTransform.position) * distance * zoomSpeed * Time.deltaTime * 60f);
             
             if (_zoomMode == ZOOM_MODE.CAMERA_MOVES) {
-                pivotTransform.position = pivotTransform.position - vector;
+                Vector3 targetPosition = pivotTransform.position - vector;
+
+                if (targetPosition.sqrMagnitude > 56.29f)
+                {
+                    pivotTransform.position = targetPosition;
+                }
+
+                //pivotTransform.position = pivotTransform.position - vector;
+
             } else {
                 transform.position = transform.position + vector;
             }

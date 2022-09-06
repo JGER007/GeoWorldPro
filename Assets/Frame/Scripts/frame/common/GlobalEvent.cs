@@ -34,5 +34,7 @@ namespace com.frame
         //场景模块调用UI界面
         public static string Module_TO_UI_Action = "Module_TO_UI_Action";
 
+
+        public static string Tiles_Unzip_Finish = "Tiles_Unzip_Finish";
     }
 }

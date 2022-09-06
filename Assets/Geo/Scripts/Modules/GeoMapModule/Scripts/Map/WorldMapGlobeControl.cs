@@ -11,6 +11,10 @@ public class WorldMapGlobeControl : MonoBehaviour
     private GameObject earthHD;
 
     [SerializeField]
+    private GameObject worldMapGlobeEarthContinent;  
+    
+
+    [SerializeField]
     private GameObject normalEarth;
 
 
@@ -55,10 +59,14 @@ public class WorldMapGlobeControl : MonoBehaviour
         mainCamera = Camera.main;
         worldMapGlobe.cursorColor = Color.white;
         initFlag = true;
-        nature();
-        SetLatLonLineFlag(false);
         
-        //ShowColorfulContinents();
+        SetLatLonLineFlag(false);
+    }
+
+    public void ShowContinent(bool flag)
+    {
+        worldMapGlobeEarthContinent.SetActive(flag);
+        worldMapGlobe.allowUserZoom = !flag;
     }
 
     public Color GetColorIndex()
@@ -126,20 +134,26 @@ public class WorldMapGlobeControl : MonoBehaviour
 
     public void ChangeMapByStyle(StyleEnum style) 
     {
+        worldMapGlobe.ZoomTo(1.3333f,2);
         earthStyle = style;
-        if (style == StyleEnum.城市灯光)
+       
+        if (earthStyle == StyleEnum.城市灯光)
         {
             night();
         }
-        else if (style == StyleEnum.自然模式)
+        else if(earthStyle == StyleEnum.默认模式)
+        {
+            nature();
+        }
+        else if (earthStyle == StyleEnum.自然模式)
         {
             global();
         }
-        else if (style == StyleEnum.云层模式 || style == StyleEnum.自然风光)
+        else if (earthStyle == StyleEnum.云层模式 || earthStyle == StyleEnum.自然风光)
         {
-            clould(style == StyleEnum.云层模式 ? 1 : 0);
+            clould(earthStyle == StyleEnum.云层模式 ? 1 : 0);
         }
-        else if (style == StyleEnum.国家模块)
+        else if (earthStyle == StyleEnum.国家模块)
         {
             ShowSurface(true);
             if (worldMapGlobeBackFacesMeshMat == null)
@@ -155,7 +169,9 @@ public class WorldMapGlobeControl : MonoBehaviour
             earthHD.SetActive(false);
             normalEarth.SetActive(false);
         }
-     }
+    }
+
+
 
     /// <summary>
     /// 展示洲区块信息
