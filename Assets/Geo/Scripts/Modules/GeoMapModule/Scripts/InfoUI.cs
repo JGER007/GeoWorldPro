@@ -6,6 +6,12 @@ using UnityEngine.UI;
 public class InfoUI : MonoBehaviour
 {
     [SerializeField]
+    private GameObject BG01;
+
+    [SerializeField]
+    private GameObject BG02; 
+
+    [SerializeField]
     private Text titleTxt;
 
     [SerializeField]
@@ -24,8 +30,22 @@ public class InfoUI : MonoBehaviour
     {
         titleTxt.text = infoVO.Tilte;
         positionInfo.text = infoVO.getPositionInfo();
-        infoTxt.text = infoVO.GetInfo();
+        string info = infoVO.GetInfo();
+        infoTxt.text = info;
         tipTxt.gameObject.SetActive(true);
+
+        if(!string.IsNullOrEmpty(info))
+        {
+            BG01.SetActive(true);
+            BG02.SetActive(false);
+        }
+        else
+        {
+            BG01.SetActive(false);
+            BG02.SetActive(true);
+        }
+
+
         if (infoVO.Country == "ÖÐ¹ú")
         {
             if (infoVO.cityVO != null)

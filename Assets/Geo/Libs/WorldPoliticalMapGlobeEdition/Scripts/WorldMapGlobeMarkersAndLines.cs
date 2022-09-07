@@ -323,17 +323,18 @@ namespace WPM {
 
 
         #region Public API area
-
         /// <summary>
         /// Adds a text label over the globe.
         /// </summary>
         /// <returns>The TextMesh component attached to the label gameobject.</returns>
         /// <param name="sphereLocation">Sphere location.</param>
         /// <param name="name">Text label.</param>
-        public TextMesh AddText(string name, Vector3 sphereLocation, Color color, float scale = 0.004f, Font font = null, FontStyle fontStyle = FontStyle.Normal) {
+        public TextMesh AddText(string name, Vector3 sphereLocation, Color color, float scale = 0.002f, Font font = null, FontStyle fontStyle = FontStyle.Normal) {
             if (fontMaterial == null) {
                 fontMaterial = Instantiate<Material>(Resources.Load<Material>("Materials/Font"));
+                fontMaterial.shader = Shader.Find("TextMeshPro/Mobile/Distance Field");
             }
+
             GameObject go = new GameObject(name);
             go.layer = gameObject.layer;
             go.transform.SetParent(transform, false);

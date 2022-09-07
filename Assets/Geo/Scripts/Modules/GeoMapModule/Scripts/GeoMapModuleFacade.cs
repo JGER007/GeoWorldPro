@@ -20,6 +20,8 @@ public class GeoMapModuleFacade : BaseModuleFacade
 
     private int selectProvinceindex = -1;
 
+    private Transform provinceNamesContainer = null;
+
     //private Country zhCountry ;
 
     public override void InitModuleFacade()
@@ -86,43 +88,43 @@ public class GeoMapModuleFacade : BaseModuleFacade
         Debug.Log("Entered country (" + countryIndex + ") " + worldMapGlobe.countries[countryIndex].name + ",regionIndex:" + regionIndex);
     }*/
 
-    /**
-    public void ShowProvinceNames() 
+    
+    private void showProvinceNames() 
     {
-        // First we ensure only states for USA are shown
-        int countryChinaIndex = worldMapGlobe.GetCountryIndex("ÖÐ¹ú");
-        for (int k = 0; k < worldMapGlobe.countries.Length; k++)
+        if(provinceNamesContainer == null)
         {
-            if (k != countryChinaIndex)
+            provinceNamesContainer = new GameObject("ProvinceNamesContainer").transform;
+            provinceNamesContainer.SetParent(worldMapGlobe.transform);
+            provinceNamesContainer.transform.localPosition = Vector3.zero;
+            provinceNamesContainer.transform.localEulerAngles = Vector3.zero;
+        }
+        else
+        {
+            provinceNamesContainer.gameObject.SetActive(true);
+            return;
+        }
+
+        foreach(Country country in worldMapGlobe.countries)
+        {
+            if(country.provinces != null)
             {
-                worldMapGlobe.countries[k].allowShowProvinces = false;
+                for (int p = 0; p < country.provinces.Length; p++)
+                {
+                    Province state = country.provinces[p];
+                    Color color = Color.white; //new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+                    TextMesh textMesh = worldMapGlobe.AddText(state.name, state.localPosition, color);
+                    textMesh.transform.SetParent(provinceNamesContainer);
+                }
             }
         }
-        worldMapGlobe.showProvinces = true;
-        worldMapGlobe.drawAllProvinces = true;
 
-        // Now, hide all country names and show states for USA
-        //worldMapGlobe.showCountryNames = false;
-        Country chinaCountry = worldMapGlobe.countries[countryChinaIndex];
-        for (int p = 0; p < chinaCountry.provinces.Length; p++)
-        {
-            Province province = chinaCountry.provinces[p];
-            Color color = Color.white; //new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
-            worldMapGlobe.AddText(province.name, province.localPosition, color);
-        }
-    }*/
+        
+    }
 
 
     public void FlyToCountry(string countryName)
     {
         int countryIndex = worldMapGlobe.GetCountryIndex(countryName);
-        
-        ///Country zhcountry = worldMapGlobe.GetCountry(countryIndex);
-        //Country ydcountry = worldMapGlobe.GetCountry("Ó¡¶È");
-        //worldMapGlobe.AddLine(new Vector2[] { zhcountry.latlonCenter, ydcountry.latlonCenter }, Color.blue,0.05f);
-        //worldMapGlobe.AddText("Distances", zhcountry.latlonCenter, Color.red,0.1f);
-
-
         worldMapGlobe.FlyToCountry(countryIndex, 2f, 1f, 0.5f);
     }
 
@@ -151,7 +153,6 @@ public class GeoMapModuleFacade : BaseModuleFacade
             {
                 EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "info", null);
             }
-            
         }
         
 
@@ -233,7 +234,13 @@ public class GeoMapModuleFacade : BaseModuleFacade
             {
                 //worldMapGlobe.HideProvinces();
                 worldMapGlobe.HideProvinceRegionHighlights(true);
+                //provinceNamesContainer?.gameObject.SetActive(false);
             }
+            
+            /*else
+            {
+                showProvinceNames();
+            }*/
         }
         else if (action == "City")
         {

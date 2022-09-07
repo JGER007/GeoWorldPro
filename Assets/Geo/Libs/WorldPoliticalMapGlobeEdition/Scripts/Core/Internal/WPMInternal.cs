@@ -577,7 +577,9 @@ namespace WPM {
             if ((mouseStartedDragging || !mouseIsOverUIElement) && Application.isPlaying) {
                 if (_earthInvertedMode) {
                     CheckUserInteractionInvertedMode();
-                } else {
+                } 
+                else 
+                {
                     CheckUserInteractionNormalMode();
                 }
             }
@@ -678,6 +680,7 @@ namespace WPM {
                                 OnCountryClick(_countryHighlightedIndex, _countryRegionHighlightedIndex);
                             }
 
+                            /**
                             if(GetCountry(_countryHighlightedIndex).name != "中国")
                             {
                                 if(OnProvinceClick !=null)
@@ -690,7 +693,7 @@ namespace WPM {
                                     OnCityClick(-1);
                                 }
                                 return;
-                            }
+                            }*/
                         }
                     }
                     else
@@ -1297,9 +1300,9 @@ namespace WPM {
             if (mouseStartedDragging && _dragMaxDuration > 0 && (leftMouseButtonPressed || rightMouseButtonPressed) && Time.time > mouseStartedDraggingTime + dragMaxDuration) {
                 gestureAborted = true;
             }
-
             // if mouse/finger is over map, implement drag and rotation of the world
             bool canOrbit = (rightMouseButtonPressed && _rightButtonDragBehaviour == DRAG_BEHAVIOUR.CameraOrbit && !leftMouseButtonClick);
+            
             // If touch released while was zooming, reset state
             if (pinchZooming && input.touchCount == 0) {
                 mouseStartedDragging = false;
@@ -1332,8 +1335,11 @@ namespace WPM {
                         hasDragged = false;
                         dragDampingStart = 0;
                         gestureAborted = false;
-                    } else if (!lockPan && mouseStartedDragging && (leftMouseButtonPressed || touchPadTouchStays) && input.touchCount < 2) {
-                        if (_dragConstantSpeed) {
+                    } 
+                    else if (!lockPan && mouseStartedDragging && (leftMouseButtonPressed || touchPadTouchStays) && input.touchCount < 2) 
+                    {
+                        if (_dragConstantSpeed) 
+                        {
                             if (_mouseIsOver) {
                                 if (_rotationAxisAllowed == ROTATION_AXIS_ALLOWED.X_AXIS_ONLY) {
                                     mouseDragStartCursorLocation.y = 0;
@@ -1360,7 +1366,9 @@ namespace WPM {
                                     }
                                 }
                             }
-                        } else if (!gestureAborted) {
+                        } 
+                        else if (!gestureAborted) 
+                        {
                             float distFactor = Mathf.Min((GetCameraDistance() - radius) / radius, 1f);
 #if VR_GOOGLE
 																												dragDirection = (mouseDragStart - (Vector3)GvrController.TouchPos);
@@ -1382,17 +1390,26 @@ namespace WPM {
 
 #else
                             dragDirection = mouseDragStart - input.mousePosition;
-                            if (_rotationAxisAllowed == ROTATION_AXIS_ALLOWED.X_AXIS_ONLY) {
+                            mouseDragStart = input.mousePosition;
+                            if (_rotationAxisAllowed == ROTATION_AXIS_ALLOWED.X_AXIS_ONLY) 
+                            {
                                 dragDirection.y = 0;
-                            } else {
+                            } 
+                            else 
+                            {
                                 dragDirection.y = ApplyDragThreshold(dragDirection.y, _mouseDragThreshold);
                             }
-                            if (_rotationAxisAllowed == ROTATION_AXIS_ALLOWED.Y_AXIS_ONLY) {
+                            if (_rotationAxisAllowed == ROTATION_AXIS_ALLOWED.Y_AXIS_ONLY) 
+                            {
                                 dragDirection.x = 0;
-                            } else {
+                            } 
+                            else 
+                            {
                                 dragDirection.x = ApplyDragThreshold(dragDirection.x, _mouseDragThreshold);
                             }
-                            dragDirection *= 0.01f * distFactor * dragSensibility * Time.deltaTime * 60f;
+
+                            //dragDirection *= 0.01f * distFactor * dragSensibility * Time.deltaTime * 60f;
+                            dragDirection *=  0.2F*distFactor * dragSensibility * Time.deltaTime * 60f;
 #endif
                             if (dragDirection.x != 0 || dragDirection.y != 0) {
                                 hasDragged = true;
@@ -1412,7 +1429,8 @@ namespace WPM {
                             }
                         }
                         StopAnyNavigation();
-                    } else if (mouseStartedDragging && canOrbit) {
+                    } 
+                    else if (mouseStartedDragging && canOrbit) {
                         Vector3 orbitDirection = mouseDragStart - input.mousePosition;
 
                         orbitDirection.y = ApplyDragThreshold(orbitDirection.y, _mouseDragThreshold);
@@ -1451,12 +1469,15 @@ namespace WPM {
             }
 
             // auto drag on screen edges
-            if (_dragOnScreenEdges && !leftMouseButtonPressed && !flyToActive) {
+            if (_dragOnScreenEdges && !leftMouseButtonPressed && !flyToActive) 
+            {
                 PerformDragOnScreenEdges();
             }
 
+            
             // click and thrown (only in constant drag speed)
-            if (dragAngle > 0.001f && (!_mouseIsOver || !leftMouseButtonPressed)) {
+            if (dragAngle > 0.001f && (!_mouseIsOver || !leftMouseButtonPressed)) 
+            {
                 if (mouseStartedDragging) {
                     mouseStartedDragging = false;
                     dragDampingStart = Time.time;
@@ -1464,18 +1485,21 @@ namespace WPM {
                 PerformClickAndThrow();
             }
 
+            
             // Check rotation keys
             if (_allowUserKeys && _allowUserRotation) {
                 CheckRotationKeys();
             }
 
+            
             // Perform drag damping
-            if (dragDampingStart > 0 && (gestureAborted || (!leftMouseButtonPressed && !rightMouseButtonPressed))) {
+            if (dragDampingStart > 0 && (gestureAborted || (!leftMouseButtonPressed && !rightMouseButtonPressed))) 
+            {
                 PerformDragDamping(cam);
             }
-
             // Check angle constraint
-            if (constraintPositionEnabled) {
+            if (constraintPositionEnabled) 
+            {
                 CheckAngleConstraint();
             }
 
@@ -1634,7 +1658,6 @@ namespace WPM {
                                 dragDirection.y = 0;
                             else if (_rotationAxisAllowed == ROTATION_AXIS_ALLOWED.Y_AXIS_ONLY)
                                 dragDirection.x = 0;
-
 
                             if (dragDirection.x != 0 && dragDirection.y != 0) {
                                 dragDirection *= Time.deltaTime * 60f;

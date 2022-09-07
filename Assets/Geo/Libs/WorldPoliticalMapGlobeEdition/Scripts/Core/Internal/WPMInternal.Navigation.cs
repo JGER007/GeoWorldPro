@@ -240,14 +240,20 @@ namespace WPM {
                 t = 1f;
             }
 
-            if (_navigationMode == NAVIGATION_MODE.EARTH_ROTATES) {
+            if (_navigationMode == NAVIGATION_MODE.EARTH_ROTATES) 
+            {
                 transform.Rotate(cam.transform.up, dragDirection.x * t, Space.World);
                 Vector3 axisY = Vector3.Cross(transform.position - cam.transform.position, cam.transform.up);
                 transform.Rotate(axisY, dragDirection.y * t, Space.World);
-            } else {
-                if (_rotationAxisAllowed == ROTATION_AXIS_ALLOWED.X_AXIS_ONLY) {
+            } 
+            else 
+            {
+                if (_rotationAxisAllowed == ROTATION_AXIS_ALLOWED.X_AXIS_ONLY) 
+                {
                     pivotTransform.RotateAround(transform.position, cam.transform.up, -dragDirection.x * t);
-                } else {
+                } 
+                else 
+                {
                     RotateAround(pivotTransform, transform.position, cam.transform.up, -dragDirection.x * t);
                     RotateAround(pivotTransform, transform.position, cam.transform.right, dragDirection.y * t);
                 }
@@ -413,9 +419,7 @@ namespace WPM {
         }
 
         void PerformOrbit(Camera cam) {
-
             if (yawTransform == null) return;
-
             Vector3 targetPosition = GetOrbitTargetPositionWS();
             float camDistanceToTargetPosition = Vector3.Distance(pivotTransform.position, targetPosition);
 
@@ -471,7 +475,6 @@ namespace WPM {
             Vector3 pos = targetPosition - cam.transform.forward * camDistanceToTargetPosition;
             cam.transform.position = pos;
             Vector3 orbitAxis = (pivotTransform.position - targetPosition).normalized;
-
             RotateAround(cam.transform, targetPosition, orbitAxis, currentYaw);
 
             // If camera gets below minimum distance to globe, shift it above
