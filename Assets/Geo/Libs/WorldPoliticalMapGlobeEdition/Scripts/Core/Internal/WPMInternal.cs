@@ -615,10 +615,10 @@ namespace WPM {
                 }
             }
 
-            if (!mouseIsOverUIElement && Application.isPlaying) {
+            if (!mouseIsOverUIElement && Application.isPlaying) 
+            {
                 CheckEventsOverMap();
             }
-
         }
 
 
@@ -764,6 +764,23 @@ namespace WPM {
                     OnDrag(_cursorLocation);
                 }
                 _cursorLastLocation = _cursorLocation;
+            }
+            else
+            {
+                if (leftMouseButtonClick || rightMouseButtonClick)
+                {
+                    HideProvinceRegionHighlights(false);
+
+                    if (OnProvinceClick != null)
+                    {
+                        OnProvinceClick(-1, -1);
+                    }
+                    
+                    if (OnCityClick != null)
+                    {
+                        OnCityClick(-1);
+                    }
+                }
             }
 
             if (leftMouseButtonRelease && OnMouseRelease != null)
@@ -924,10 +941,10 @@ namespace WPM {
                 // subtle/slow continuous rotation
                 if (!constraintPositionEnabled) {
                     if (_autoRotationSpeed != 0) {
-                        transform.Rotate(Misc.Vector3up, -_autoRotationSpeed * Time.deltaTime * 45f);
+                        transform.Rotate(Misc.Vector3up, -_autoRotationSpeed * Time.deltaTime * 20f);
                     }
                     if (_cameraAutoRotationSpeed != 0) {
-                        mainCamera.transform.RotateAround(transform.position, transform.up, -_cameraAutoRotationSpeed * Time.deltaTime * 45f);
+                        mainCamera.transform.RotateAround(transform.position, transform.up, -_cameraAutoRotationSpeed * Time.deltaTime * 20f);
                     }
                 }
             }

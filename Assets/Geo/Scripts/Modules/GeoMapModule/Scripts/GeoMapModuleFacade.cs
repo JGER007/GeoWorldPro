@@ -20,7 +20,7 @@ public class GeoMapModuleFacade : BaseModuleFacade
 
     private int selectProvinceindex = -1;
 
-    private Country zhCountry ;
+    //private Country zhCountry ;
 
     public override void InitModuleFacade()
     {
@@ -48,8 +48,8 @@ public class GeoMapModuleFacade : BaseModuleFacade
 
         worldMapGlobe.OnCountryClick += OnCountryClick;
         worldMapGlobe.OnCountryPointerUp += OnCountryPointerUp;
-        zhCountry = worldMapGlobe.GetCountry("中国");
-        zhCountry.labelVisible = true;
+        //zhCountry = worldMapGlobe.GetCountry("中国");
+        //zhCountry.labelVisible = true;
         worldMapGlobe.ZoomTo(1.333f);
         FlyToCountry("中国");
     }
@@ -242,7 +242,7 @@ public class GeoMapModuleFacade : BaseModuleFacade
             {
                 toggleContinent();
             }
-            zhCountry.labelVisible = false;
+            
             worldMapGlobe.showCities = cityFlag;
         }
         else if (action == "Style")

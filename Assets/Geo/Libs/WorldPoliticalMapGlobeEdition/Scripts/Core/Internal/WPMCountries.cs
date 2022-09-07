@@ -271,6 +271,13 @@ namespace WPM {
                 if (countryInfoLength >= 9) {
                     country.labelVisible = "1".Equals(countryInfo[8]);
                 }
+
+                if(name == "中国")
+                {
+                    country.hidden = false;
+                    country.labelVisible = true;
+                }
+
                 country.regionsRect2D = new Rect(minCountry.x, minCountry.y, Math.Abs(maxCountry.x - minCountry.x), Mathf.Abs(maxCountry.y - minCountry.y));
                 newCountries.Add(country);
             }
