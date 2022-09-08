@@ -42,7 +42,8 @@ public class InfoUI : MonoBehaviour
         else
         {
             BG01.SetActive(false);
-            BG02.SetActive(true);
+            BG02.SetActive(true); 
+            tipTxt.gameObject.SetActive(false);
         }
 
 

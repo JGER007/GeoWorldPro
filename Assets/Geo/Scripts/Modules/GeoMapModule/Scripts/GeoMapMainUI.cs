@@ -29,7 +29,8 @@ public class GeoMapMainUI : ModuleUI
     private ToolUI toolUI; 
 
     private Text seletModeTxt;
-
+    [SerializeField]
+    private GameObject Loading;
 
     [SerializeField]
     private Toggle modelToggle; 
@@ -125,14 +126,23 @@ public class GeoMapMainUI : ModuleUI
             }
             seletModeTxt.text = label.text;
             label.color = modeLightColor;
-
-            //EventUtil.DispatchEvent(GlobalEvent.UI_TO_Module_Action, "Style", toggle.name);
-            Invoke("delayChangeToStyle", 0.1f);
+            //Invoke("delayChangeToStyle", 0.1f);
+            StartCoroutine(ChangeToStyle());
         }
         else
         {
             label.color = Color.white;
         }
+    }
+
+    IEnumerator ChangeToStyle()
+    {
+        //Loading.SetActive(true);
+        yield return new WaitForEndOfFrame();
+        EventUtil.DispatchEvent(GlobalEvent.UI_TO_Module_Action, "Style", currToggle.name);
+        //yield return new WaitForSeconds(1);
+        //Loading.SetActive(false);
+        yield return null;
     }
 
     private void delayChangeToStyle()
@@ -177,10 +187,10 @@ public class GeoMapMainUI : ModuleUI
 
     private void initoperateToggles()
     {
-        continentToggle.onValueChanged.AddListener(delegate { onToggleValueChanged("Continent", continentToggle.isOn); });
-        countryToggle.onValueChanged.AddListener(delegate { onToggleValueChanged("Country", countryToggle.isOn); });
-        provinceToggle.onValueChanged.AddListener(delegate { onToggleValueChanged("Province", provinceToggle.isOn); });
-        cityToggle.onValueChanged.AddListener(delegate { onToggleValueChanged("City", cityToggle.isOn); });
+        continentToggle.onValueChanged.AddListener(delegate { StartCoroutine(OnToggleValueChanged("Continent", continentToggle.isOn)); });
+        countryToggle.onValueChanged.AddListener(delegate { StartCoroutine(OnToggleValueChanged("Country", countryToggle.isOn)); });
+        provinceToggle.onValueChanged.AddListener(delegate { StartCoroutine(OnToggleValueChanged("Province", provinceToggle.isOn)); });
+        cityToggle.onValueChanged.AddListener(delegate { StartCoroutine(OnToggleValueChanged("City", cityToggle.isOn)); });
     }
 
     private void onLatLonUpdate(string value)
@@ -289,15 +299,15 @@ public class GeoMapMainUI : ModuleUI
         }
     }
 
-    private void onToggleValueChanged(string action,bool isOn)  
+    IEnumerator  OnToggleValueChanged(string action,bool isOn)  
     {
-        EventUtil.DispatchEvent(GlobalEvent.UI_TO_Module_Action, action, isOn);
-
         if(!isOn && (action == "Province" || action == "City"))
         {
             infoUI.gameObject.SetActive(false);
         }
-
+        yield return new WaitForSeconds(0.1f);
+        EventUtil.DispatchEvent(GlobalEvent.UI_TO_Module_Action, action, isOn);
+        yield return null;
     }
 
 

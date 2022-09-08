@@ -148,12 +148,13 @@ namespace WPM {
                 tileMatTransRef = Resources.Load<Material>("Materials/TileOverlayTrans") as Material;
             }
             cameraPlanes = new Plane[6];
-            
+            currentEarthTexture = (Texture2D)Resources.Load<Texture>("Textures/Earth/Tile");
+            /*
             if (_earthRenderer != null && _earthRenderer.sharedMaterial != null) {
                 currentEarthTexture = (Texture2D)_earthRenderer.sharedMaterial.mainTexture;
             } else {
                 currentEarthTexture = Texture2D.whiteTexture;
-            }
+            }*/
 
             _tileSize = 0;
 
@@ -286,7 +287,15 @@ namespace WPM {
             }
         }
 
+        private float lastUpdateTilesTime;
         void LateUpdateTiles() {
+
+            if(Time.time - lastUpdateTilesTime < 0.1f)
+            {
+                return;
+            }
+            lastUpdateTilesTime = Time.time;
+
             if (!Application.isPlaying || cachedTiles == null)
                 return;
 
@@ -294,8 +303,10 @@ namespace WPM {
                 lastDisposalTime = Time.time;
                 MonitorInactiveTiles();
             }
+            
 
-            if (shouldCheckTiles || flyToActive) {
+            if (shouldCheckTiles || flyToActive) 
+            {
 
                 shouldCheckTiles = false;
                 currentCamera = mainCamera; // for optimization purposes
@@ -305,7 +316,6 @@ namespace WPM {
                 currentLatLon = Conversion.GetLatLonFromUnitSpherePoint(GetCurrentMapLocation());
 
                 _currentZoomLevel = GetCenterTileZoomLevel();
-
                 ToggleFrontiers();
 
                 int startingZoomLevel = TILE_MIN_ZOOM_LEVEL - 1;
@@ -1021,7 +1031,7 @@ namespace WPM {
             string filePath = "";
             byte[] textureBytes = null;
             ti.source = TILE_SOURCE.Unknown;
-
+     
             // Check if tile is given by external event
             if (OnTileRequest != null) {
                 if (OnTileRequest(ti.zoomLevel, ti.x, ti.y, out ti.texture, out error) && ti.texture != null) {
