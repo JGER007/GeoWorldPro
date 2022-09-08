@@ -1,4 +1,6 @@
 using ICSharpCode.SharpZipLib.Zip;
+using System;
+using System.Collections;
 using System.IO;
 using UnityEngine;
 
@@ -116,31 +118,29 @@ public class ZipWrapper : MonoBehaviour
     /// <param name="_password">解压密码</param>
     /// <param name="_unzipCallback">UnzipCallback对象，负责回调</param>
     /// <returns></returns>
-    public static bool UnzipFile(string _filePathName, string _outputPath, string _password = null, UnzipCallback _unzipCallback = null)
+    public void UnzipFile(string _filePathName, string _outputPath, string _password = null, UnzipCallback _unzipCallback = null, Action<int> unZipProcessAction=null)
     {
         if (string.IsNullOrEmpty(_filePathName) || string.IsNullOrEmpty(_outputPath))
         {
             if (null != _unzipCallback)
                 _unzipCallback.OnFinished(false);
-
-            return false;
+            return ;
         }
-
         try
         {
-            return UnzipFile(File.OpenRead(_filePathName), _outputPath, _password, _unzipCallback);
+            Stream _inputStream = File.OpenRead(_filePathName);
+
+
+            StartCoroutine(UnzipFile(_inputStream, _outputPath, _password, _unzipCallback, unZipProcessAction));
         }
         catch (System.Exception _e)
         {
             Debug.LogError("[ZipUtility.UnzipFile]: " + _e.ToString());
-
             if (null != _unzipCallback)
                 _unzipCallback.OnFinished(false);
-
-            return false;
         }
     }
-
+    /*
     /// <summary>
     /// 解压Zip包
     /// </summary>
@@ -158,8 +158,10 @@ public class ZipWrapper : MonoBehaviour
 
             return false;
         }
+        Stream _inputStream = new MemoryStream(_fileBytes);
+        UnzipFile(_inputStream, _outputPath, _password, _unzipCallback);
 
-        bool result = UnzipFile(new MemoryStream(_fileBytes), _outputPath, _password, _unzipCallback);
+        
         if (!result)
         {
             if (null != _unzipCallback)
@@ -167,7 +169,7 @@ public class ZipWrapper : MonoBehaviour
         }
 
         return result;
-    }
+    }*/
 
     /// <summary>
     /// 解压Zip包
@@ -177,14 +179,13 @@ public class ZipWrapper : MonoBehaviour
     /// <param name="_password">解压密码</param>
     /// <param name="_unzipCallback">UnzipCallback对象，负责回调</param>
     /// <returns></returns>
-    public static bool UnzipFile(Stream _inputStream, string _outputPath, string _password = null, UnzipCallback _unzipCallback = null)
+    IEnumerator UnzipFile(Stream _inputStream, string _outputPath, string _password = null, UnzipCallback _unzipCallback = null, Action<int> unZipProcessAction = null)
     {
         if ((null == _inputStream) || string.IsNullOrEmpty(_outputPath))
         {
             if (null != _unzipCallback)
                 _unzipCallback.OnFinished(false);
-
-            return false;
+            yield return null;
         }
 
         // 创建文件目录
@@ -193,11 +194,13 @@ public class ZipWrapper : MonoBehaviour
 
         // 解压Zip包
         ZipEntry entry = null;
+        int fileCount = 0;
+        float lastTime = Time.time;
         using (ZipInputStream zipInputStream = new ZipInputStream(_inputStream))
         {
             if (!string.IsNullOrEmpty(_password))
                 zipInputStream.Password = _password;
-            Debug.Log("zipInputStream.Length:" + zipInputStream.Length);
+            
             while (null != (entry = zipInputStream.GetNextEntry()))
             {
                 if (string.IsNullOrEmpty(entry.Name))
@@ -205,9 +208,8 @@ public class ZipWrapper : MonoBehaviour
 
                 if ((null != _unzipCallback) && !_unzipCallback.OnPreUnzip(entry))
                     continue;   // 过滤
-
                 string filePathName = Path.Combine(_outputPath, entry.Name);
-
+                fileCount++;
                 // 创建文件目录
                 if (entry.IsDirectory)
                 {
@@ -215,6 +217,7 @@ public class ZipWrapper : MonoBehaviour
                     continue;
                 }
 
+                /**
                 // 写入文件
                 try
                 {
@@ -234,24 +237,50 @@ public class ZipWrapper : MonoBehaviour
                                 break;
                             }
                         }
+    
+                        Debug.Log(entry.Name);
                     }
                 }
                 catch (System.Exception _e)
                 {
-                    Debug.LogError("[ZipUtility.UnzipFile]: " + _e.ToString());
+                    Debug.Log("解压出错:" + _e.ToString());
+                }*/
 
-                    if (null != _unzipCallback)
-                        _unzipCallback.OnFinished(false);
+                using (FileStream fileStream = File.Create(filePathName))
+                {
+                    byte[] bytes = new byte[1024];
+                    while (true)
+                    {
+                        int count = zipInputStream.Read(bytes, 0, bytes.Length);
+                        if (count > 0)
+                        {
+                            fileStream.Write(bytes, 0, count);
+                        }
+                        else
+                        {
+                            if (null != _unzipCallback)
+                                _unzipCallback.OnPostUnzip(entry);
 
-                    return false;
+                            break;
+                        } 
+                    }
+                }
+
+                if(fileCount %10 == 0)
+                {
+                    yield return new WaitForEndOfFrame();
+                    unZipProcessAction?.Invoke(fileCount);
                 }
             }
         }
+        unZipProcessAction?.Invoke(fileCount);
+        Debug.Log(fileCount);
 
+        yield return new WaitForSeconds(0.5F);
         if (null != _unzipCallback)
             _unzipCallback.OnFinished(true);
 
-        return true;
+        yield return null;
     }
 
     /// <summary>
@@ -264,7 +293,6 @@ public class ZipWrapper : MonoBehaviour
     /// <returns></returns>
     private static bool ZipFile(string _filePathName, string _parentRelPath, ZipOutputStream _zipOutputStream, ZipCallback _zipCallback = null)
     {
-
         //Crc32 crc32 = new Crc32();
         ZipEntry entry = null;
         FileStream fileStream = null;

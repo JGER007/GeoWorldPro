@@ -9,11 +9,13 @@ using UnityEngine;
 public class TilesLoadAndUnzipManager :MonoBehaviour
 {
    
-    public Action<bool> OnTilesUnZipFinished; 
+    public Action<bool> OnTilesUnZipFinished;
+
+    public Action<bool> OnTilesUnZipProcess; 
     #region unzip
 
 
-    public void UnZipTiles()
+    public void UnZipTiles(Action<int> unZipProcessAction)
     {
         bool isUnZip = false;
         if (Directory.Exists(Application.persistentDataPath + "/TilesCache"))
@@ -30,31 +32,30 @@ public class TilesLoadAndUnzipManager :MonoBehaviour
         {
             string zipFilePath = Application.persistentDataPath + "/TilesCache.zip";
             string zipOutputPath = Application.persistentDataPath;
-            ZipWrapper.UnzipFile(zipFilePath, zipOutputPath, null, new UnzipCallback());
+
+            UnzipCallback unzipCallback = new UnzipCallback();
+            FindObjectOfType<ZipWrapper>().UnzipFile(zipFilePath, zipOutputPath, null, new UnzipCallback(), unZipProcessAction);
         }
-       
     }
 
     public class UnzipCallback : ZipWrapper.UnzipCallback
     {
+        //int count;
         public override bool OnPreUnzip(ZipEntry _entry)
         {
-            //Debug.Log("OnPreUnzip Name£º " + _entry.Name);
-            //Debug.Log("OnPreUnzip IsFile£º" + _entry.IsFile);
             return base.OnPreUnzip(_entry);
         }
 
         public override void OnPostUnzip(ZipEntry _entry)
         {
-            //Debug.Log("OnPostUnzip Name£º " + _entry.Name);
+            //Debug.Log(count++);
             base.OnPostUnzip(_entry);
         }
 
         public override void OnFinished(bool _result)
         {
-            //Debug.Log("OnUnZipFinished _result£º " + _result);
             base.OnFinished(_result);
-            EventUtil.DispatchEvent(GlobalEvent.Tiles_Unzip_Finish, _result);
+            EventUtil.DispatchEvent(GlobalEvent.Tiles_Unzip_Finish);
         }
     }
     #endregion

@@ -7,7 +7,7 @@ public class Test_ZipWrapper : MonoBehaviour
     void Start()
     {
         //Test_Zip();
-        Test_UnZip();
+        //Test_UnZip();
     }
 
     #region Test_Zip
@@ -56,7 +56,7 @@ public class Test_ZipWrapper : MonoBehaviour
         string zipFilePath = Application.streamingAssetsPath + "/TilesCache.zip";
         string zipOutputPath = Application.streamingAssetsPath ;
 
-        ZipWrapper.UnzipFile(zipFilePath, zipOutputPath, "LS123456", new UnzipCallback());
+        //ZipWrapper.UnzipFile(zipFilePath, zipOutputPath, "LS123456", new UnzipCallback());
     }
 
     public class UnzipCallback : ZipWrapper.UnzipCallback

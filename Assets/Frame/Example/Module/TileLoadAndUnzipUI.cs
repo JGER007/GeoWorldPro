@@ -30,7 +30,6 @@ public class TileLoadAndUnzipUI : PopUpUI
         }
         else
         {
-
             loadTileZip();
         }
     }
@@ -46,7 +45,8 @@ public class TileLoadAndUnzipUI : PopUpUI
         string zipFilePath = Application.persistentDataPath + "/TilesCache.zip";
         string zipOutputPath = Application.persistentDataPath;
         //ZipWrapper.UnzipFile(zipFilePath, zipOutputPath, "LS123456", new UnzipCallback());
-        string url = "http://192.168.10.31/TilesCache.zip";
+
+        string url = "http://192.168.10.31:81/TilesCache.zip";
         //url = "http://vpn.prismostudio.cn:8001/TilesCache.zip";
         StartCoroutine(LoadAndUnzip(url, zipFilePath, zipOutputPath));
     }
@@ -59,7 +59,7 @@ public class TileLoadAndUnzipUI : PopUpUI
         while (!www.isDone)
         {
             int progress = (((int)(www.progress * 100)) % 100);
-            TipText.text = "瓦片资源加载进度:" + progress + "%";
+            TipText.text = "瓦片资源加载:" + progress + "%";
             LoadProgressBar.value = www.progress;
             yield return 1;
         }
@@ -69,7 +69,7 @@ public class TileLoadAndUnzipUI : PopUpUI
         }
         else
         {
-            TipText.text = "瓦片资源加载进度:100%";
+            TipText.text = "瓦片资源加载完成";
             LoadProgressBar.value = 1;
 
             var data = www.bytes;
@@ -98,17 +98,30 @@ public class TileLoadAndUnzipUI : PopUpUI
     }
 
 
-    
+    string unzipTextFormat = "瓦片资源解压:{0}/19554";
     private void delayUnzip()
     {
-        LoadProgressBar.gameObject.SetActive(false);
-        TipText.text = "瓦片资源解压中...";
+        LoadProgressBar.value = 0;
+        TipText.text = string.Format(unzipTextFormat,0);
         Invoke("UnZipTiles", 0.2f);
     }
 
     private void UnZipTiles()
     {
-        tilesLoadAndUnzipManager.UnZipTiles();
+        tilesLoadAndUnzipManager.UnZipTiles(unzipProcess);
+    }
+
+    private void unzipProcess (int fileCount)
+    {
+        LoadProgressBar.value = fileCount/19554.0f;
+        if(fileCount >= 19554)
+        {
+            TipText.text = "瓦片资源解压完成";
+        }
+        else
+        {
+            TipText.text = string.Format(unzipTextFormat, fileCount);
+        }
     }
 
     /// <summary>UI退出</summary>
