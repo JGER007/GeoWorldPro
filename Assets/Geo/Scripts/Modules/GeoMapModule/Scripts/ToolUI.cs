@@ -28,7 +28,7 @@ public class ToolUI : BaseUI
 
         Rule = transform.Find("Rule").GetComponent<Toggle>();
         Rule.isOn = false;
-        LatLonLine.onValueChanged.AddListener(delegate { onRuleValueChanged(); });
+        Rule.onValueChanged.AddListener(delegate {  onRuleValueChanged(); });
 
     }
 
@@ -54,7 +54,10 @@ public class ToolUI : BaseUI
 
     public void ShowLatLon(string value)
     {
-        LatLonTxt.text = value;
+        if (LatLon.isOn)
+        {
+            LatLonTxt.text = value;
+        }
     }
 
 }

@@ -191,7 +191,8 @@ namespace WPM {
             if (_earthInvertedMode) {
                 sphereOverlayLayer.transform.localScale = Misc.Vector3one * (0.998f - _labelsElevation * 0.5f);
             } else {
-                sphereOverlayLayer.transform.localScale = Misc.Vector3one * (1.01f + _labelsElevation * 0.05f);
+                //sphereOverlayLayer.transform.localScale = Misc.Vector3one * (1.01f + _labelsElevation * 0.05f);
+                sphereOverlayLayer.transform.localScale = Misc.Vector3one * (1f + _labelsElevation * 0.05f);
             }
         }
 

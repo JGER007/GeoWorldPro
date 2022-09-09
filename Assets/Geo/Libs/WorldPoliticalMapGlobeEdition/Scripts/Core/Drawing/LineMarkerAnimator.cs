@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 namespace WPM {
 
@@ -81,7 +82,9 @@ namespace WPM {
 		float startAltitude, endAltitude;
 		LineRenderer _lr;
 		Color colorTransparent;
-		Vector3[] vertices;
+		public Vector3[] vertices;
+
+		public Action<Vector3[]> LineMarkerCallBack;
 
 		void OnEnable () {
 			_lr = transform.GetComponent<LineRenderer> ();
@@ -127,7 +130,7 @@ namespace WPM {
                     vertices[s] = sPos;
 				}
 			}
-
+			LineMarkerCallBack?.Invoke(vertices);
 			startAutoFadeTime = float.MaxValue;
 			colorTransparent = new Color (color.r, color.g, color.b, 0);
 

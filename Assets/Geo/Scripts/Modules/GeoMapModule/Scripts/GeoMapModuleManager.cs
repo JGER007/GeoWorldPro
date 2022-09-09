@@ -25,7 +25,6 @@ public class GeoMapModuleManager : BaseModuleManager
                 geoMapModuleFacade.InitModuleFacade();
                 initModuleUI();
             }
-
         }
     }
 

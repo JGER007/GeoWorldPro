@@ -11,6 +11,7 @@ public class GeoMapModuleFacade : BaseModuleFacade
     private bool countryFlag = false;
     private bool provinceFlag = false;
     private bool cityFlag = false;
+    private bool rlueFlag = false;
     [SerializeField]
     private WorldMapGlobe worldMapGlobe;
 
@@ -22,6 +23,9 @@ public class GeoMapModuleFacade : BaseModuleFacade
 
     private Transform provinceNamesContainer = null;
 
+    private RuleManager ruleManager;
+
+    private GameObject ruleContainer;
     //private Country zhCountry ;
 
     public override void InitModuleFacade()
@@ -35,15 +39,7 @@ public class GeoMapModuleFacade : BaseModuleFacade
         mapStyleManager.InitManager();
         worldMapGlobe.earthStyle = EARTH_STYLE.Natural;
 
-        //worldMapGlobe.OnCountryEnter += onEnterCountry;
-        /**
-        worldMapGlobe.OnCountryEnter += (int countryIndex, int regionIndex) => Debug.Log("Entered country (" + countryIndex + ") " + worldMapGlobe.countries[countryIndex].name + ",regionIndex:" + regionIndex);
-        worldMapGlobe.OnCountryExit += (int countryIndex, int r1024egionIndex) => Debug.Log("Exited country " + worldMapGlobe.countries[countryIndex].name);
-        worldMapGlobe.OnCountryPointerDown += (int countryIndex, int regionIndex) => Debug.Log("Pointer down on country " + worldMapGlobe.countries[countryIndex].name);
-        worldMapGlobe.OnCountryClick += (int countryIndex, int regionIndex) => Debug.Log("Clicked country " + worldMapGlobe.countries[countryIndex].name);
-        worldMapGlobe.OnCountryPointerUp += (int countryIndex, int regionIndex) => Debug.Log("Pointer up on country " + worldMapGlobe.countries[countryIndex].name);
-        */
-        //worldMapGlobe.OnCountryClick += OnCountryClick ;
+        initRlueManager();
 
         worldMapGlobe.OnProvinceClick += OnProvinceClick;
         worldMapGlobe.OnCityClick += OnCityClick;
@@ -54,6 +50,21 @@ public class GeoMapModuleFacade : BaseModuleFacade
         //zhCountry.labelVisible = true;
         worldMapGlobe.ZoomTo(1.333f);
         FlyToCountry("中国");
+    }
+
+    /// <summary>
+    /// 初始化测距管理类
+    /// </summary>
+    private void initRlueManager()
+    {
+        ruleManager = new RuleManager();
+        ruleManager.WorldMapGlobe = worldMapGlobe;
+        if (ruleContainer == null)
+        {
+            ruleContainer = new GameObject("RuleTransform");
+            ruleContainer.transform.SetParent(worldMapGlobe.transform);
+        }
+        ruleManager.InitManager(ruleContainer.transform);
     }
 
     private void OnCountryPointerUp(int countryIndex, int regionIndex)
@@ -193,7 +204,6 @@ public class GeoMapModuleFacade : BaseModuleFacade
     protected override void onUIToModuleAtion(CustomEventArgs eventArgs)
     {
         string action = eventArgs.args[0].ToString();
-
         if (action == "Continent")
         {
             continentFlag = (bool)eventArgs.args[1];
@@ -263,9 +273,6 @@ public class GeoMapModuleFacade : BaseModuleFacade
             }
 
             mapStyleManager.ChangeMapByStyle(style);
-
-           
-
         }
         else if(action == "Compass")
         {
@@ -284,13 +291,27 @@ public class GeoMapModuleFacade : BaseModuleFacade
         }
         else if (action == "Rule")
         {
-            bool isOn = (bool)eventArgs.args[1];
-            if(isOn)
+            rlueFlag = (bool)eventArgs.args[1];
+            if (!rlueFlag)
             {
-                MsgManager.ShowMsgContent("功能开发中...");
+                ruleManager.RemoveRule();
             }
         }
+    }
 
+    void Update()
+    {
+        if (rlueFlag)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (worldMapGlobe.mouseIsOver)
+                {
+                    ruleManager.AddRulePoint(worldMapGlobe.cursorLocation);
+                }
+            }
+        }
+        
     }
 
     public void togglePolitical()  

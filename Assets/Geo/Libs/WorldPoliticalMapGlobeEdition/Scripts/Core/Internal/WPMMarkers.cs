@@ -125,7 +125,7 @@ namespace WPM {
                         float w = kmRadius / rw;
                         w *= 2.0f * overlayWidth;
                         float h = w;
-                        marker = Drawing.DrawCircle("MarkerCircle", position, w, h, 0, Mathf.PI * 2.0f, ringWidthStart, ringWidthEnd, 64, GetColoredMarkerOtherMaterial(color), correctDistortion: false);
+                        marker = Drawing.DrawCircle("MarkerCircle", position, w, h, 0, Mathf.PI * 2.0f, ringWidthStart, ringWidthEnd, 256, GetColoredMarkerOtherMaterial(color), correctDistortion: false);
                         if (marker != null) {
                             marker.transform.SetParent(overlayMarkersLayer.transform, false);
                             marker.transform.localPosition = new Vector3(position.x, position.y, -0.01f);
