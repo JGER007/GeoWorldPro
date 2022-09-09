@@ -61,13 +61,30 @@ public class GeoMapMainUI : ModuleUI
     private Vector3 closePose;
 
     private StyleEnum currStyleEnum = StyleEnum.д╛ходёй╫;
-
+    private Camera mainCamera;
 
     private WorldMapGlobeControl worldMapGlobeControl;
 
     void Start()
     {
+        mainCamera = Camera.main;
         //InitUI();
+    }
+
+    float deltTime = 0;
+    void Update()
+    {
+        deltTime += Time.deltaTime;
+        if(deltTime >0.05f)
+        {
+            deltTime = 0;
+            Vector3 dir = mainCamera.transform.position;
+            Vector2 v2 = new Vector2(dir.x, dir.y);
+            float angle = Vector2.Angle(Vector2.up, v2);
+            Vector3 eulerAngles = new Vector3(0, 0, angle);
+            compassBtn.transform.eulerAngles = eulerAngles;
+        }
+        
     }
 
     public override void InitUI()
