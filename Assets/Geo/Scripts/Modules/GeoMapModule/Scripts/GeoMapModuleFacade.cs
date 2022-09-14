@@ -305,9 +305,11 @@ public class GeoMapModuleFacade : BaseModuleFacade
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if (worldMapGlobe.mouseIsOver)
+                Vector3 hitpose;
+                if(worldMapGlobe.GetGlobeIntersection(out hitpose))
                 {
-                    ruleManager.AddRulePoint(worldMapGlobe.cursorLocation);
+                    Vector3 pos = worldMapGlobe.transform.InverseTransformPoint(hitpose);
+                    ruleManager.AddRulePoint(pos);
                 }
             }
         }

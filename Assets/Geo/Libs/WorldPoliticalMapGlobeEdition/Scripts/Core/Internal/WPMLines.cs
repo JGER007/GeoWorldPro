@@ -21,11 +21,16 @@ namespace WPM {
         Material cursorMat, gridMatOverlay, gridMatMasked;
 
 
-        void CheckCursorVisibility() {
-            if (cursorLayer != null && _showCursor) {
-                if ((mouseIsOverUIElement || !mouseIsOver) && cursorLayer.activeSelf && !cursorAlwaysVisible) {   // not over globe?
+        void CheckCursorVisibility() 
+        {
+            if (cursorLayer != null && _showCursor) 
+            {
+                if ((mouseIsOverUIElement || !mouseIsOver) && cursorLayer.activeSelf && !cursorAlwaysVisible) 
+                {   // not over globe?
                     cursorLayer.SetActive(false);
-                } else if (mouseIsOver && !mouseIsOverUIElement && !cursorLayer.activeSelf) {   // finally, should be visible?
+                } 
+                else if (mouseIsOver && !mouseIsOverUIElement && !cursorLayer.activeSelf) 
+                {   // finally, should be visible?
                     cursorLayer.SetActive(true);
                 }
             }

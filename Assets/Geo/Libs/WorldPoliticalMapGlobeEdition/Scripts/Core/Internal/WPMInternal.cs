@@ -184,7 +184,9 @@ namespace WPM {
 
         #region System initialization
 
-        public void Init() {
+        public void Init() 
+        {
+            
             // Load materials
 #if TRACE_CTL
 			Debug.Log ("CTL " + DateTime.Now + ": init");
@@ -194,7 +196,8 @@ namespace WPM {
             mapUnityLayer = gameObject.layer;
 
             // Updates layer in children
-            foreach (Transform t in transform) {
+            foreach (Transform t in transform) 
+            {
                 t.gameObject.layer = mapUnityLayer;
             }
 
@@ -354,12 +357,10 @@ namespace WPM {
             }
         }
 
-        void Dispose() {
+        void Dispose() 
+        {
             OnDestroy();
         }
-
-
-
 
         void OnEnable() {
 
@@ -489,11 +490,13 @@ namespace WPM {
             }
         }
 
-        void Start() {
+        void Start() 
+        {
             RegisterVRPointers();
         }
 
-        void RegisterVRPointers() {
+        void RegisterVRPointers() 
+        {
             if (Time.time - lastTimeCheckVRPointers < 1f)
                 return;
             lastTimeCheckVRPointers = Time.time;
@@ -528,7 +531,8 @@ namespace WPM {
 #endif
         }
 
-        void OnDestroy() {
+        void OnDestroy() 
+        {
 #if TRACE_CTL
 			Debug.Log ("CTL " + DateTime.Now + ": destroy wpm");
 #endif
@@ -544,19 +548,27 @@ namespace WPM {
             _countries = null;
         }
 
-        void Reset() {
+        void Reset() 
+        {
 #if TRACE_CTL
 			Debug.Log ("CTL " + DateTime.Now + ": reset");
 #endif
             Redraw();
         }
 
-        void Update() {
-
-            radius = transform.lossyScale.y * 0.5f;
-
+        private float deltTime = 0;
+        void Update() 
+        {
+            //间隔0.05s刷新一次
+            deltTime += Time.time;
+            if(deltTime < 0.05f)
+            {
+                return;
+            }
+            deltTime = deltTime - 0.05f;
+            //radius = transform.lossyScale.y * 0.5f;
+            float frameStartTime = Time.time;
             CheckOverlay();
-
             Camera cam = mainCamera;
             if (cam == null || input == null)
                 return;
@@ -574,8 +586,10 @@ namespace WPM {
             CheckPointerOverUI();
 
             // Handle interaction mode
-            if ((mouseStartedDragging || !mouseIsOverUIElement) && Application.isPlaying) {
-                if (_earthInvertedMode) {
+            if ((mouseStartedDragging || !mouseIsOverUIElement) && Application.isPlaying) 
+            {
+                if (_earthInvertedMode) 
+                {
                     CheckUserInteractionInvertedMode();
                 } 
                 else 
@@ -598,7 +612,8 @@ namespace WPM {
                 shouldCheckTiles = true;
                 resortLoadQueue = true;
 
-                if (_showCountryNames && (_countryLabelsEnableAutomaticFade || _labelsFaceToCamera)) {
+                if (_showCountryNames && (_countryLabelsEnableAutomaticFade || _labelsFaceToCamera)) 
+                {
                     FadeCountryLabels();
                 }
 
@@ -624,19 +639,24 @@ namespace WPM {
         }
 
 
-        void CheckMouseOver() {
+        void CheckMouseOver() 
+        {
             // Check if it's really outside of sphere
-          
-
             _mouseEnterGlobeThisFrame = false;
-            if (GetGlobeIntersection(out sphereCurrentHitPos)) {
-                if (!_mouseIsOver) {
+            if (GetGlobeIntersection(out sphereCurrentHitPos)) 
+            {
+                if (!_mouseIsOver) 
+                {
                     _mouseEnterGlobeThisFrame = true;
                 }
                 _mouseIsOver = true;
-            } else {
-                if (_mouseIsOver) {
-                    if (!leftMouseButtonPressed && !rightMouseButtonPressed) {
+            } 
+            else 
+            {
+                if (_mouseIsOver) 
+                {
+                    if (!leftMouseButtonPressed && !rightMouseButtonPressed) 
+                    {
                         mouseStartedDragging = false;
                         HideCountryRegionHighlight();
                         HideHighlightedCell();
@@ -665,10 +685,12 @@ namespace WPM {
                 bool isClick = dragDampingStart == 0 && (leftMouseButtonClick || rightMouseButtonClick);
                 bool isRelease = leftMouseButtonRelease || rightMouseButtonRelease;
                 bool fullClick = dragDampingStart == 0 && isRelease && (Time.time - mouseDownTime < 0.5f || simulatedMouseButtonClick == 0);
-                if (isClick || isRelease) {
+                if (isClick || isRelease) 
+                {
                     _countryLastClicked = _countryHighlightedIndex;
                     _countryRegionLastClicked = _countryRegionHighlightedIndex;
-                    if (_countryLastClicked >= 0) {
+                    if (_countryLastClicked >= 0) 
+                    {
                         if (isClick && !fullClick && OnCountryPointerDown != null) {
                             OnCountryPointerDown(_countryHighlightedIndex, _countryRegionHighlightedIndex);
                         } else if (isRelease) {
@@ -763,7 +785,8 @@ namespace WPM {
                         OnClick(_cursorLocation, leftMouseButtonRelease ? 0 : 1);
                     }
                 }
-                if (leftMouseButtonPressed && _cursorLastLocation != _cursorLocation && OnDrag != null) {
+                if (leftMouseButtonPressed && _cursorLastLocation != _cursorLocation && OnDrag != null) 
+                {
                     OnDrag(_cursorLocation);
                 }
                 _cursorLastLocation = _cursorLocation;
@@ -798,10 +821,11 @@ namespace WPM {
         }
 
         private readonly HashSet<int> currentIgnoredFingerIDs = new HashSet<int>();
-        void CheckPointerOverUI() {
-
+        void CheckPointerOverUI() 
+        {
             // Check whether the points is on an UI element, then cancels
-            if (_respectOtherUI) {
+            if (_respectOtherUI) 
+            {
 #if VR_EYE_RAY_CAST_SUPPORT
 				if (VRCameraEyeRayCaster!=null && VRCameraEyeRayCaster.CurrentInteractible != null) {
 					if (!mouseIsOverUIElement) {
@@ -836,9 +860,11 @@ namespace WPM {
             mouseIsOverUIElement = false;
         }
 
-        void SyncTimeOfDay() {
+        void SyncTimeOfDay() 
+        {
             if (_sun == null) return;
-            if (_syncTimeOfDay) {
+            if (_syncTimeOfDay) 
+            {
                 SetTimeOfDay(DateTime.Now);
             }
             _earthScenicLightDirection = -_sun.forward;
@@ -934,24 +960,32 @@ namespace WPM {
         }
 
 
-        void PerformAutoRotation() {
+        void PerformAutoRotation() 
+        {
             if (!Application.isPlaying) return;
-
             // Check if navigateTo... has been called and in this case rotate the globe until the country is centered
-            if (flyToActive) {
+            if (flyToActive) 
+            {
                 NavigateToDestination();
-            } else {
+            } 
+            else 
+            {
                 // subtle/slow continuous rotation
-                if (!constraintPositionEnabled) {
-                    if (_autoRotationSpeed != 0) {
+                if (!constraintPositionEnabled) 
+                {
+                    if (_autoRotationSpeed != 0)
+                    {
                         transform.Rotate(Misc.Vector3up, -_autoRotationSpeed * Time.deltaTime * 20f);
                     }
-                    if (_cameraAutoRotationSpeed != 0) {
+                    if (_cameraAutoRotationSpeed != 0) 
+                    {
                         mainCamera.transform.RotateAround(transform.position, transform.up, -_cameraAutoRotationSpeed * Time.deltaTime * 20f);
                     }
                 }
             }
-            if (zoomToActive) {
+
+            if (zoomToActive) 
+            {
                 ZoomToDestination();
             }
         }
@@ -1182,13 +1216,18 @@ namespace WPM {
 
         #region Internal functions
 
-        float ApplyDragThreshold(float value, float threshold) {
-            if (threshold > 0) {
-                if (value < 0) {
+        float ApplyDragThreshold(float value, float threshold) 
+        {
+            if (threshold > 0) 
+            {
+                if (value < 0) 
+                {
                     value += threshold;
                     if (value > 0)
                         value = 0;
-                } else {
+                } 
+                else 
+                {
                     value -= threshold;
                     if (value < 0)
                         value = 0;
@@ -1292,41 +1331,50 @@ namespace WPM {
             return (mousePos.x < edgeLeft || mousePos.x > edgeRight || mousePos.y < edgeBottom || mousePos.y > edgeTop);
         }
 
-        protected virtual void CheckUserInteractionNormalMode() {
-
+        protected virtual void CheckUserInteractionNormalMode() 
+        {
             Camera cam = mainCamera;
-
             // cancel current gesture if time exceeded max gesture time
-            if (mouseStartedDragging && _dragMaxDuration > 0 && (leftMouseButtonPressed || rightMouseButtonPressed) && Time.time > mouseStartedDraggingTime + dragMaxDuration) {
+            if (mouseStartedDragging && _dragMaxDuration > 0 && (leftMouseButtonPressed || rightMouseButtonPressed) 
+                && Time.time > mouseStartedDraggingTime + dragMaxDuration) 
+            {
                 gestureAborted = true;
             }
             // if mouse/finger is over map, implement drag and rotation of the world
             bool canOrbit = (rightMouseButtonPressed && _rightButtonDragBehaviour == DRAG_BEHAVIOUR.CameraOrbit && !leftMouseButtonClick);
             
             // If touch released while was zooming, reset state
-            if (pinchZooming && input.touchCount == 0) {
+            if (pinchZooming && input.touchCount == 0) 
+            {
                 mouseStartedDragging = false;
                 dragDampingStart = 0;
                 pinchZooming = false;
             }
 
-            if (!pinchZooming && (_mouseIsOver || hasDragged || rightMouseButtonPressed)) {
+            if (!pinchZooming && (_mouseIsOver || hasDragged || rightMouseButtonPressed)) 
+            {
                 // Use left mouse button and drag to rotate the world
-                if (_allowUserRotation) {
+                if (_allowUserRotation) 
+                {
                     bool capturePosition = leftMouseButtonClick || touchPadTouchStart || rightMouseButtonClick;
-                    if (capturePosition) {
+                    if (capturePosition) 
+                    {
 #if VR_GOOGLE
 						mouseDragStart = GvrController.TouchPos;
 #elif VR_OCULUS
-                        if (_dragConstantSpeed) {
+                        if (_dragConstantSpeed) 
+                        {
                             mouseDragStart = input.mousePosition;
-                        } else {
+                        } 
+                        else 
+                        {
                             mouseDragStart = OVRinput.Get(OVRinput.Axis2D.PrimaryTouchpad);
                         }
 
 #else
                         mouseDragStart = input.mousePosition;
-                        UpdateCursorLocation(); // _cursorLocation has not been set yet so we call CheckMousePos before any interaction
+                        // _cursorLocation has not been set yet so we call CheckMousePos before any interaction
+                        UpdateCursorLocation(); 
 #endif
 
                         mouseDragStartCursorLocation = _cursorLocation;
@@ -1341,24 +1389,33 @@ namespace WPM {
                         if (_dragConstantSpeed) 
                         {
                             if (_mouseIsOver) {
-                                if (_rotationAxisAllowed == ROTATION_AXIS_ALLOWED.X_AXIS_ONLY) {
+                                if (_rotationAxisAllowed == ROTATION_AXIS_ALLOWED.X_AXIS_ONLY) 
+                                {
                                     mouseDragStartCursorLocation.y = 0;
                                     _cursorLocation.y = 0;
-                                } else if (_rotationAxisAllowed == ROTATION_AXIS_ALLOWED.Y_AXIS_ONLY) {
+                                } 
+                                else if (_rotationAxisAllowed == ROTATION_AXIS_ALLOWED.Y_AXIS_ONLY) 
+                                {
                                     mouseDragStartCursorLocation.x = 0;
                                     _cursorLocation.x = 0;
                                 }
-                                if (CheckDragThreshold(mouseDragStart, input.mousePosition, _mouseDragThreshold)) {
-                                    if (_mouseEnterGlobeThisFrame) {
+                                if (CheckDragThreshold(mouseDragStart, input.mousePosition, _mouseDragThreshold)) 
+                                {
+                                    if (_mouseEnterGlobeThisFrame) 
+                                    {
                                         mouseDragStartCursorLocation = _cursorLocation;
                                     }
                                     dragAngle = FastVector.AngleBetweenNormalizedVectors(mouseDragStartCursorLocation, _cursorLocation);
-                                    if (dragAngle != 0 && _mouseIsOver && input.mousePosition != mouseDragStart) {
+                                    if (dragAngle != 0 && _mouseIsOver && input.mousePosition != mouseDragStart) 
+                                    {
                                         hasDragged = true;
-                                        if (_navigationMode == NAVIGATION_MODE.EARTH_ROTATES) {
+                                        if (_navigationMode == NAVIGATION_MODE.EARTH_ROTATES) 
+                                        {
                                             dragAxis = Vector3.Cross(mouseDragStartCursorLocation, _cursorLocation);
                                             transform.Rotate(dragAxis, dragAngle);
-                                        } else {
+                                        } 
+                                        else 
+                                        {
                                             dragAxis = Vector3.Cross(transform.TransformVector(mouseDragStartCursorLocation), transform.TransformVector(_cursorLocation));
                                             RotateAround(pivotTransform, transform.position, dragAxis, -dragAngle);
                                         }
@@ -1407,25 +1464,32 @@ namespace WPM {
                             {
                                 dragDirection.x = ApplyDragThreshold(dragDirection.x, _mouseDragThreshold);
                             }
-
-                            //dragDirection *= 0.01f * distFactor * dragSensibility * Time.deltaTime * 60f;
-                            dragDirection *=  0.2F*distFactor * dragSensibility * Time.deltaTime * 60f;
+                            //dragDirection *=  0.2F*distFactor * dragSensibility * Time.deltaTime * 60f;
+                            dragDirection *= 0.5F * distFactor * dragSensibility ;
+                            //Debug.Log("CheckUserInteractionNormalMode :" + dragDirection +"," + distFactor + "," + dragSensibility + ",Time.deltaTime:" + Time.deltaTime);
 #endif
-                            if (dragDirection.x != 0 || dragDirection.y != 0) {
+                            if (dragDirection.x != 0 || dragDirection.y != 0) 
+                            {
                                 hasDragged = true;
-                                if (_navigationMode == NAVIGATION_MODE.EARTH_ROTATES) {
+                                if (_navigationMode == NAVIGATION_MODE.EARTH_ROTATES) 
+                                {
                                     transform.Rotate(cam.transform.up, dragDirection.x, Space.World);
                                     Vector3 axisY = Vector3.Cross(transform.position - cam.transform.position, cam.transform.up);
                                     transform.Rotate(axisY, dragDirection.y, Space.World);
-                                } else {
-                                    if (_rotationAxisAllowed == ROTATION_AXIS_ALLOWED.X_AXIS_ONLY) {
+                                } 
+                                else 
+                                {
+                                    if (_rotationAxisAllowed == ROTATION_AXIS_ALLOWED.X_AXIS_ONLY) 
+                                    {
                                         pivotTransform.RotateAround(transform.position, cam.transform.up, -dragDirection.x);
-                                    } else {
+                                    } 
+                                    else 
+                                    {
                                         RotateAround(pivotTransform, transform.position, cam.transform.up, -dragDirection.x);
                                         RotateAround(pivotTransform, transform.position, cam.transform.right, dragDirection.y);
                                     }
                                 }
-                                dragDampingStart = Time.time;
+                                //dragDampingStart = Time.time;
                             }
                         }
                         StopAnyNavigation();
@@ -1588,14 +1652,18 @@ namespace WPM {
             AdjustsHexagonalGridMaterial();
         }
 
-        protected virtual void CheckUserInteractionInvertedMode() {
+        protected virtual void CheckUserInteractionInvertedMode() 
+        {
             Camera cam = mainCamera;
 
             // if mouse/finger is over map, implement drag and rotation of the world
-            if (mouseIsOver) {
+            if (mouseIsOver) 
+            {
                 // Use left mouse button and drag to rotate the world
-                if (_allowUserRotation) {
-                    if (leftMouseButtonClick) {
+                if (_allowUserRotation) 
+                {
+                    if (leftMouseButtonClick) 
+                    {
 #if VR_GOOGLE
 						mouseDragStart = GvrController.TouchPos;
 #elif VR_OCULUS
@@ -1607,25 +1675,37 @@ namespace WPM {
                         mouseDragStartCursorLocation = _cursorLocation;
                         mouseStartedDragging = true;
                         hasDragged = false;
-                    } else if (mouseStartedDragging && leftMouseButtonPressed && input.touchCount < 2) {
-                        if (_dragConstantSpeed) {
-                            if (_rotationAxisAllowed == ROTATION_AXIS_ALLOWED.X_AXIS_ONLY) {
+                    } 
+                    else if (mouseStartedDragging && leftMouseButtonPressed && input.touchCount < 2) 
+                    {
+                        if (_dragConstantSpeed) 
+                        {
+                            if (_rotationAxisAllowed == ROTATION_AXIS_ALLOWED.X_AXIS_ONLY) 
+                            {
                                 mouseDragStartCursorLocation.y = 0;
                                 _cursorLocation.y = 0;
-                            } else if (_rotationAxisAllowed == ROTATION_AXIS_ALLOWED.Y_AXIS_ONLY) {
+                            } 
+                            else if (_rotationAxisAllowed == ROTATION_AXIS_ALLOWED.Y_AXIS_ONLY) 
+                            {
                                 mouseDragStartCursorLocation.x = 0;
                                 _cursorLocation.x = 0;
                             }
-                            if (CheckDragThreshold(mouseDragStart, input.mousePosition, _mouseDragThreshold)) {
+
+                            if (CheckDragThreshold(mouseDragStart, input.mousePosition, _mouseDragThreshold)) 
+                            {
                                 dragAngle = FastVector.AngleBetweenNormalizedVectors(mouseDragStartCursorLocation, _cursorLocation);
-                                if (dragAngle != 0) {
+                                if (dragAngle != 0) 
+                                {
                                     hasDragged = true;
-                                    if (_navigationMode == NAVIGATION_MODE.EARTH_ROTATES) {
+                                    if (_navigationMode == NAVIGATION_MODE.EARTH_ROTATES) 
+                                    {
                                         Vector3 v1 = transform.TransformPoint(mouseDragStartCursorLocation) - transform.position;
                                         Vector3 v2 = sphereCurrentHitPos - transform.position;
                                         dragAxis = Vector3.Cross(v1, v2);
                                         transform.Rotate(dragAxis, dragAngle, Space.World);
-                                    } else {
+                                    } 
+                                    else 
+                                    {
                                         Vector3 v1 = transform.TransformPoint(mouseDragStartCursorLocation) - transform.position;
                                         Vector3 v2 = sphereCurrentHitPos - transform.position;
                                         dragAxis = Vector3.Cross(v1, v2);
@@ -1634,7 +1714,9 @@ namespace WPM {
                                     mouseDragStart = input.mousePosition;
                                 }
                             }
-                        } else {
+                        } 
+                        else 
+                        {
                             Vector3 referencePos = transform.position + cam.transform.forward * lastRestyleEarthNormalsScaleCheck.z * 0.5f;
                             float distFactor = Vector3.Distance(cam.transform.position, referencePos);
 #if VR_GOOGLE
@@ -1659,14 +1741,18 @@ namespace WPM {
                             else if (_rotationAxisAllowed == ROTATION_AXIS_ALLOWED.Y_AXIS_ONLY)
                                 dragDirection.x = 0;
 
-                            if (dragDirection.x != 0 && dragDirection.y != 0) {
+                            if (dragDirection.x != 0 && dragDirection.y != 0) 
+                            {
                                 dragDirection *= Time.deltaTime * 60f;
                                 hasDragged = true;
-                                if (_navigationMode == NAVIGATION_MODE.EARTH_ROTATES) {
+                                if (_navigationMode == NAVIGATION_MODE.EARTH_ROTATES) 
+                                {
                                     transform.Rotate(Misc.Vector3up, dragDirection.x, Space.World);
                                     Vector3 axisY = Vector3.Cross(referencePos - cam.transform.position, Misc.Vector3up);
                                     transform.Rotate(axisY, dragDirection.y, Space.World);
-                                } else {
+                                } 
+                                else 
+                                {
                                     dragDirection.x *= -1f;
                                     cam.transform.Rotate(dragDirection.y, dragDirection.x, 0, Space.Self);
                                 }
@@ -1674,20 +1760,29 @@ namespace WPM {
                             }
                         }
                         StopAnyNavigation();
-                    } else {
-                        if (mouseStartedDragging) {
+                    } 
+                    else 
+                    {
+                        if (mouseStartedDragging) 
+                        {
                             mouseStartedDragging = false;
                             hasDragged = false;
                         }
                     }
 
                     // Use right mouse button and drag to spin the world around z-axis
-                    if (rightMouseButtonPressed && input.touchCount < 2 && !flyToActive) {
-                        if (_showProvinces && _provinceHighlightedIndex >= 0 && _centerOnRightClick && rightMouseButtonClick) {
+                    if (rightMouseButtonPressed && input.touchCount < 2 && !flyToActive) 
+                    {
+                        if (_showProvinces && _provinceHighlightedIndex >= 0 && _centerOnRightClick && rightMouseButtonClick) 
+                        {
                             FlyToProvince(_provinceHighlightedIndex, 0.8f);
-                        } else if (_countryHighlightedIndex >= 0 && rightMouseButtonClick && _centerOnRightClick) {
+                        } 
+                        else if (_countryHighlightedIndex >= 0 && rightMouseButtonClick && _centerOnRightClick) 
+                        {
                             FlyToCountry(_countryHighlightedIndex, 0.8f);
-                        } else {
+                        } 
+                        else 
+                        {
                             Vector3 axis = (transform.position - cam.transform.position).normalized;
                             float rotAngle = _rightClickRotatingClockwise || input.GetKey(KeyCode.LeftShift) || input.GetKey(KeyCode.RightShift) ? -2f : 2f;
                             transform.Rotate(axis, rotAngle * Time.deltaTime * 60f, Space.World);
@@ -1697,7 +1792,8 @@ namespace WPM {
             }
 
             // Check special keys
-            if (_allowUserKeys && _allowUserRotation) {
+            if (_allowUserKeys && _allowUserRotation) 
+            {
                 bool pressed = false;
                 dragDirection = Misc.Vector3zero;
                 if (input.GetKey(KeyCode.W)) {
@@ -1726,23 +1822,31 @@ namespace WPM {
                 }
             }
 
-            if (dragDampingStart > 0) {
+            if (dragDampingStart > 0) 
+            {
                 float t = 1f - (Time.time - dragDampingStart) / dragDampingDuration;
-                if (t >= 0 && t <= 1f) {
-                    if (_navigationMode == NAVIGATION_MODE.EARTH_ROTATES) {
+                if (t >= 0 && t <= 1f) 
+                {
+                    if (_navigationMode == NAVIGATION_MODE.EARTH_ROTATES) 
+                    {
                         transform.Rotate(Misc.Vector3up, dragDirection.x * t, Space.World);
                         Vector3 axisY = Vector3.Cross(transform.position - cam.transform.position, Misc.Vector3up);
                         transform.Rotate(axisY, dragDirection.y * t, Space.World);
-                    } else {
+                    } 
+                    else 
+                    {
                         cam.transform.Rotate(dragDirection.y * t, dragDirection.x * t, 0, Space.Self);
                     }
-                } else {
+                } 
+                else 
+                {
                     dragDampingStart = 0;
                 }
             }
 
             // Check contraint
-            if (constraintPositionEnabled && mouseStartedDragging) {
+            if (constraintPositionEnabled && mouseStartedDragging) 
+            {
                 // Check constraint around position
                 if (mouseIsOver) {
                     Vector3 camPos = cam.transform.position;
@@ -1776,20 +1880,22 @@ namespace WPM {
             }
 
             // Use mouse wheel to zoom in and out
-            if (_allowUserZoom) {
+            if (_allowUserZoom) 
+            {
                 float impulse = 0;
 
-                if (mouseIsOver || wheelAccel != 0) {
+                if (mouseIsOver || wheelAccel != 0) 
+                {
                     float wheel = input.GetAxis("Mouse ScrollWheel");
                     impulse = wheel * (_invertZoomDirection ? -1 : 1);
                 }
 
                 // Support for pinch on mobile
-                if (input.touchSupported && input.touchCount == 2) {
+                if (input.touchSupported && input.touchCount == 2) 
+                {
                     // Store both touches.
                     Touch touchZero = input.GetTouch(0);
                     Touch touchOne = input.GetTouch(1);
-
                     // Find the position in the previous frame of each touch.
                     Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
                     Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
@@ -1799,32 +1905,41 @@ namespace WPM {
                     float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
 
                     // Find the difference in the distances between each frame.
-                    float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+                    float deltaMagnitudeDiff = (prevTouchDeltaMag - touchDeltaMag);
 
                     // Pass the delta to the wheel accel
                     impulse = deltaMagnitudeDiff;
                 }
 
-                if (impulse != 0) {
+                if (impulse != 0) 
+                {
                     wheelAccel += impulse;
                 }
             }
 
-            if (wheelAccel != 0) {
+            if (wheelAccel != 0) 
+            {
                 wheelAccel = Mathf.Clamp(wheelAccel, -0.1f, 0.1f);
-                if (wheelAccel >= 0.01f || wheelAccel <= -0.01f) {
+                if (wheelAccel >= 0.01f || wheelAccel <= -0.01f) 
+                {
                     cam.fieldOfView = Mathf.Clamp(cam.fieldOfView + (90.0f * cam.fieldOfView / MAX_FIELD_OF_VIEW) * wheelAccel * zoomSpeed * Time.deltaTime * 60f, MIN_FIELD_OF_VIEW, MAX_FIELD_OF_VIEW);
-                    if (_zoomConstantSpeed) {
+                    if (_zoomConstantSpeed) 
+                    {
                         wheelAccel = 0;
-                    } else {
+                    } 
+                    else 
+                    {
                         wheelAccel *= _zoomDamping;
                     }
-                } else {
+                } 
+                else 
+                {
                     wheelAccel = 0;
                 }
             }
 
-            if (_keepStraight && !flyToActive) {
+            if (_keepStraight && !flyToActive) 
+            {
                 StraightenGlobe(SMOOTH_STRAIGHTEN_ON_POLES, true);
             }
         }
@@ -1843,9 +1958,10 @@ namespace WPM {
 
         public int layerMask { get { return 1 << mapUnityLayer; } }
 
-        bool GetRay(out Ray ray) {
-
-            if (OnRaycast != null) {
+        bool GetRay(out Ray ray) 
+        {
+            if (OnRaycast != null) 
+            {
                 ray = OnRaycast();
                 return true;
             }
@@ -1876,17 +1992,25 @@ namespace WPM {
                 ray = new Ray(cam.transform.position, cam.transform.forward);
             }
 #else
-            if (_VREnabled) {
+            if (_VREnabled) 
+            {
                 ray = new Ray(cam.transform.position, cam.transform.forward);
-            } else {
+            } 
+            else 
+            {
                 Vector3 mousePos;
-                if (input.touchCount == 2) {
+                if (input.touchCount == 2) 
+                {
                     mousePos = (input.touches[0].position + input.touches[1].position) * 0.5f;
-                } else {
+                } 
+                else 
+                {
                     mousePos = input.mousePosition;
-                    if (mainCamera != null) {
+                    if (mainCamera != null) 
+                    {
                         Rect rect = _mainCamera.pixelRect;
-                        if (Display.RelativeMouseAt(mousePos).z != mainCamera.targetDisplay || mousePos.x < rect.xMin || mousePos.x > rect.xMax || mousePos.y < rect.yMin || mousePos.y > rect.yMax) {
+                        if (Display.RelativeMouseAt(mousePos).z != mainCamera.targetDisplay || mousePos.x < rect.xMin || mousePos.x > rect.xMax || mousePos.y < rect.yMin || mousePos.y > rect.yMax) 
+                        {
                             ray = new Ray();
                             return false;
                         }
@@ -1923,11 +2047,13 @@ namespace WPM {
         public bool GetGlobeIntersection(out Vector3 hitPos) {
 
             Ray ray;
-            if (!GetRay(out ray)) {
+            if (!GetRay(out ray)) 
+            {
                 hitPos = Misc.Vector3zero;
                 return false;
             }
-            if (_earthInvertedMode) {
+            if (_earthInvertedMode) 
+            {
                 ray.origin += ray.direction * transform.lossyScale.z * 1.5f;
                 ray.direction = -ray.direction;
             }

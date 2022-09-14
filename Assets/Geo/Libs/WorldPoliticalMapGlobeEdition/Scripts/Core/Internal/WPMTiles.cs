@@ -288,8 +288,8 @@ namespace WPM {
         }
 
         private float lastUpdateTilesTime;
-        void LateUpdateTiles() {
-
+        void LateUpdateTiles() 
+        {
             if(Time.time - lastUpdateTilesTime < 0.1f)
             {
                 return;
@@ -307,7 +307,6 @@ namespace WPM {
 
             if (shouldCheckTiles || flyToActive) 
             {
-
                 shouldCheckTiles = false;
                 currentCamera = mainCamera; // for optimization purposes
                 currentCameraPosition = currentCamera.transform.position;
@@ -384,18 +383,22 @@ namespace WPM {
 
             requestPaintMainTiles = false;
             CheckTilesContent();
-
             spreadLoadAmongFrames = _tileMaxTileLoadsPerFrame;
 
-            if (requestPaintMainTiles && firstLoad) {
+            if (requestPaintMainTiles && firstLoad) 
+            {
                 firstLoad = false;
                 LateUpdateTiles();
             }
 
-            if (_tilePreciseRotation) {
-                if (_currentZoomLevel > _tilePreciseRotationZoomLevel && _navigationMode == NAVIGATION_MODE.EARTH_ROTATES) {
+            if (_tilePreciseRotation) 
+            {
+                if (_currentZoomLevel > _tilePreciseRotationZoomLevel && _navigationMode == NAVIGATION_MODE.EARTH_ROTATES) 
+                {
                     _navigationMode = NAVIGATION_MODE.CAMERA_ROTATES;
-                } else if (_currentZoomLevel <= _tilePreciseRotationZoomLevel && _navigationMode == NAVIGATION_MODE.CAMERA_ROTATES) {
+                } 
+                else if (_currentZoomLevel <= _tilePreciseRotationZoomLevel && _navigationMode == NAVIGATION_MODE.CAMERA_ROTATES) 
+                {
                     _navigationMode = NAVIGATION_MODE.EARTH_ROTATES;
                 }
             }
@@ -510,32 +513,43 @@ namespace WPM {
         void CheckTilesContent() {
             int qCount = loadQueue.Count;
             bool cleanQueue = false;
-            for (int k = 0; k < qCount; k++) {
+
+            for (int k = 0; k < qCount; k++) 
+            {
                 TileInfo ti = loadQueue[k];
                 if (ti == null) {
                     cleanQueue = true;
                     continue;
                 }
-                if (ti.loadStatus == TILE_LOAD_STATUS.InQueue) {
-                    if (ti.loadDelay > 0) {
+
+                if (ti.loadStatus == TILE_LOAD_STATUS.InQueue) 
+                {
+                    if (ti.loadDelay > 0) 
+                    {
                         ti.stage = 10;
                         ti.loadDelay--;
                         continue;
                     }
-                    if (ti.visible) {
+
+                    if (ti.visible) 
+                    {
                         if (_tilePreloadTiles && ti.zoomLevel == TILE_MIN_ZOOM_LEVEL && ReloadTextureFromCacheOrMarkForDownload(ti)) {
                             loadQueue[k] = null;
                             cleanQueue = true;
                             requestPaintMainTiles = true;
                             continue;
                         }
-                        if (_concurrentLoads <= _tileMaxConcurrentDownloads) {
+                        Debug.Log("_tileMaxConcurrentDownloads:" + _tileMaxConcurrentDownloads);
+                        if (_concurrentLoads <= _tileMaxConcurrentDownloads) 
+                        {
                             ti.loadStatus = TILE_LOAD_STATUS.Loading;
                             ti.stage = 20;
                             _concurrentLoads++;
                             StartCoroutine(LoadTileContentBackground(ti));
                         }
-                    } else if (Time.time - ti.queueTime > TILE_MAX_QUEUE_TIME) {
+                    } 
+                    else if (Time.time - ti.queueTime > TILE_MAX_QUEUE_TIME) 
+                    {
                         ti.loadStatus = TILE_LOAD_STATUS.Inactive;
                         loadQueue[k] = null;
                         cleanQueue = true;
@@ -1014,11 +1028,11 @@ namespace WPM {
 
         }
 
-        internal IEnumerator LoadTileContentBackground(TileInfo ti) {
+        internal IEnumerator LoadTileContentBackground(TileInfo ti) 
+        {
             yield return new WaitForEndOfFrame();
 
             string url = GetTileURL(_tileServer, ti);
-
             if (string.IsNullOrEmpty(url)) {
                 _concurrentLoads--;
                 //Debug.LogError("Tile server url not set. Aborting");
@@ -1038,7 +1052,6 @@ namespace WPM {
                     ti.source = TILE_SOURCE.Resources;
                 }
             }
-
             // Check if tile is in Resources
             if (ti.source == TILE_SOURCE.Unknown && _tileEnableOfflineTiles) {
                 string path = GetTileResourcePath(ti.x, ti.y, ti.zoomLevel, false);
@@ -1054,17 +1067,21 @@ namespace WPM {
             }
 
             CustomWWW www = null;
-            if (ti.source == TILE_SOURCE.Unknown) {
+            if (ti.source == TILE_SOURCE.Unknown) 
+            {
                 ti.stage = 40;
                 www = getCachedWWW(url, ti);
+                
                 yield return www;
-                if (www.isDone) {
+                if (www.isDone) 
+                {
                     error = www.error;
                 }
             }
 
             ti.stage = 50;
-            for (int tries = 0; tries < 100; tries++) {
+            for (int tries = 0; tries < 100; tries++) 
+            {
                 if (spreadLoadAmongFrames > 0)
                     break;
                 yield return new WaitForEndOfFrame();
@@ -1086,27 +1103,26 @@ namespace WPM {
 
             // Load texture
             ti.stage = 80;
-            if (ti.source != TILE_SOURCE.Resources) {
+            if (ti.source != TILE_SOURCE.Resources) 
+            {
                 downloadedBytes = www.bytesDownloaded;
                 textureBytes = www.bytes;
                 if(www.textureNonReadable.width >10)
                 {
                     ti.texture = www.textureNonReadable;
                 }
-                
-
                 www.Dispose();
                 www = null;
 
                 // Check texture consistency
                 if (ti.loadedFromCache || _tileEnableLocalCache) {
-                    //Debug.Log("url:" +url + ",_tileEnableLocalCache:" + _tileEnableLocalCache);
                     filePath = GetLocalFilePathForURL(url, ti);
-                    //Debug.Log("filePath:" + filePath );
                 }
 
-                if (ti.loadedFromCache && ti.texture.width <= 16) { // Invalid texture in local cache, retry
-                    if (File.Exists(filePath)) {
+                if (ti.loadedFromCache && ti.texture.width <= 16) 
+                { // Invalid texture in local cache, retry
+                    if (File.Exists(filePath)) 
+                    {
                         File.Delete(filePath);
                     }
                     ti.loadStatus = TILE_LOAD_STATUS.Inactive;
@@ -1120,10 +1136,17 @@ namespace WPM {
 
             // Save texture
             ti.stage = 90;
-            if (_tileEnableLocalCache && ti.source != TILE_SOURCE.Resources && !File.Exists(filePath)) {
+            
+            if (_tileEnableLocalCache && ti.source != TILE_SOURCE.Resources && !File.Exists(filePath)) 
+            {
+                yield return new WaitForEndOfFrame();
                 _tileCurrentCacheUsage += textureBytes.Length;
+                //File.WriteAllBytes(filePath, textureBytes);
+                //yield return new WaitForEndOfFrame();
+                
                 BackgroundSaver saver = new BackgroundSaver(textureBytes, filePath);
                 saver.Start();
+                
             }
 
             // Update stats
@@ -1149,8 +1172,8 @@ namespace WPM {
             FinishLoadingTile(ti);
         }
 
-        void CreatePole(TileInfo ti) {
-            
+        void CreatePole(TileInfo ti) 
+        {
             Vector3 polePos;
             Vector3 latLon0;
             string name;
@@ -1204,7 +1227,8 @@ namespace WPM {
             }
         }
 
-        Renderer CreateGameObject(Transform parent, string name, Vector3[] vertices, int[] indices, Vector2[] uv, Material mat, int subquadIndex) {
+        Renderer CreateGameObject(Transform parent, string name, Vector3[] vertices, int[] indices, Vector2[] uv, Material mat, int subquadIndex) 
+        {
             GameObject obj = new GameObject(name, typeof(MeshFilter), typeof(MeshRenderer));
             obj.layer = parent.gameObject.layer;
             obj.transform.SetParent(parent, false);
@@ -1233,7 +1257,8 @@ namespace WPM {
             return mr;
         }
 
-        class BackgroundSaver {
+        class BackgroundSaver 
+        {
             readonly byte[] tex;
             readonly string filePath;
 
@@ -1256,11 +1281,8 @@ namespace WPM {
             void SaveTextureToCache() {
                 File.WriteAllBytes(filePath, tex);
             }
-
         }
-
         StringBuilder filePathStr = new StringBuilder(250);
-
         string GetLocalFilePathForURL(string url, TileInfo ti) {
             filePathStr.Length = 0;
             filePathStr.Append(cachePath);
@@ -1275,9 +1297,8 @@ namespace WPM {
             filePathStr.Append(".png");
             return filePathStr.ToString();
         }
-
-
-        public string GetTileResourcePath(int x, int y, int zoomLevel, bool fullPath = true) {
+        public string GetTileResourcePath(int x, int y, int zoomLevel, bool fullPath = true) 
+        {
             filePathStr.Length = 0;
             if (fullPath) {
                 filePathStr.Append(_tileResourcePathBase);
@@ -1297,22 +1318,22 @@ namespace WPM {
             }
             return filePathStr.ToString();
         }
-
-
-        CustomWWW getCachedWWW(string url, TileInfo ti) {
+        CustomWWW getCachedWWW(string url, TileInfo ti) 
+        {
             string filePath = GetLocalFilePathForURL(url, ti);
-            //Debug.Log("getCachedWWW url:" + url);
-            //Debug.Log("getCachedWWW filePath:" + filePath);
             CustomWWW www;
             bool useCached = false;
             useCached = _tileEnableLocalCache && System.IO.File.Exists(filePath);
-            if (useCached) {
-                if (!_tilePreloadTiles || !filePath.Contains(PREFIX_MIN_ZOOM_LEVEL)) {
+            if (useCached) 
+            {
+                if (!_tilePreloadTiles || !filePath.Contains(PREFIX_MIN_ZOOM_LEVEL)) 
+                {
                     //check how old
                     System.DateTime written = File.GetLastWriteTimeUtc(filePath);
                     System.DateTime now = System.DateTime.UtcNow;
                     double totalHours = now.Subtract(written).TotalHours;
-                    if (totalHours > 300) {
+                    if (totalHours > 300) 
+                    {
                         File.Delete(filePath);
                         useCached = false;
                     }
@@ -1331,14 +1352,11 @@ namespace WPM {
             }
             return www;
         }
-
-
         bool ReloadTextureFromCacheOrMarkForDownload(TileInfo ti) {
             if (!_tileEnableLocalCache)
                 return false;
 
             string url = GetTileURL(_tileServer, ti);
-            //Debug.Log("ReloadTextureFromCacheOrMarkForDownload:" + url);
             if (string.IsNullOrEmpty(url)) {
                 return false;
             }
@@ -1375,12 +1393,10 @@ namespace WPM {
             FinishLoadingTile(ti);
             return true;
         }
-
-        void FinishLoadingTile(TileInfo ti) {
-
+        void FinishLoadingTile(TileInfo ti) 
+        {
             // Good to go, update tile info
             ti.SetTexture(ti.texture);
-
             ti.loadStatus = TILE_LOAD_STATUS.Loaded;
             if (ti.zoomLevel >= TILE_MIN_ZOOM_LEVEL) {
                 if (ti.y == 0 || ti.y == zoomLevelsInfo[ti.zoomLevel].yMax - 1) {
@@ -1398,14 +1414,9 @@ namespace WPM {
                     }
                 }
             }
-
             shouldCheckTiles = true;
             ti.stage = 99;
-
         }
-
-
-
     }
 
 }

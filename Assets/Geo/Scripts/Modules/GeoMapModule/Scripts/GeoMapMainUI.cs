@@ -80,7 +80,7 @@ public class GeoMapMainUI : ModuleUI
             deltTime = 0;
             Vector3 dir = mainCamera.transform.position;
             Vector2 v2 = new Vector2(dir.x, dir.y);
-            float angle = Vector2.Angle(Vector2.up, v2);
+            float angle = Vector2.Angle(Vector2.up, v2) + 180;
             Vector3 eulerAngles = new Vector3(0, 0, angle);
             compassBtn.transform.eulerAngles = eulerAngles;
         }

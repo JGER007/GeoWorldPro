@@ -227,8 +227,8 @@ public class WorldMapGlobeControl : MonoBehaviour
                 if(updateFlag)
                 {
                     updateFlag = false;
-                    worldMapGlobe.countryLabelsSize = 0.25f - (15.25f - cameraDis) * 0.05f;
-                    worldMapGlobe.cityIconSize = 1 - (15.25f - cameraDis) * 0.3f;
+                    worldMapGlobe.countryLabelsSize = 0.25f - (15.25f - cameraDis) * 0.1f;
+                    worldMapGlobe.cityIconSize = 1 - (15.25f - cameraDis) * 0.6f;
                 }
             }
 
@@ -256,16 +256,6 @@ public class WorldMapGlobeControl : MonoBehaviour
             }
             else
             {
-                /**
-                if (earthStyle == StyleEnum.卫星地图)
-                {
-                    EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.自然模式);
-                }
-                
-                if (earthStyle == StyleEnum.地形地势)
-                {
-                    EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.自然风光);
-                }*/
                 //------
                 if(showCursorFlag)
                 {
@@ -278,62 +268,6 @@ public class WorldMapGlobeControl : MonoBehaviour
                     worldMapGlobe.showLongitudeLines = true;
                 }
             }
-
-            /**
-            if (earthStyle == StyleEnum.自然模式)
-            {
-                if (cameraDis <= tileDis)
-                {
-                    EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.卫星地图);
-                }
-
-            }
-            else if (earthStyle == StyleEnum.卫星地图)
-            {
-                if (cameraDis > tileDis)
-                {
-                    EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.自然模式);
-                }
-            }
-
-            ///地形地势瓦片与自然风光模式切换
-            if (earthStyle == StyleEnum.自然风光 || earthStyle == StyleEnum.云层模式)
-            {
-                if (cameraDis <= tileDis)
-                {
-                    showClouldByValue(0);
-                    EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.地形地势);
-                }
-
-            }
-            else if (earthStyle == StyleEnum.地形地势)
-            {
-                if (cameraDis > tileDis)
-                {
-                    //clould(0);
-                    EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.自然风光);
-                }
-            }
-
-            if (cameraDis > tileDis)
-            {
-                WorldMapGlobe.showCursor = true;
-
-                if(latLonFlag)
-                {
-                    worldMapGlobe.showLatitudeLines = true;
-                    worldMapGlobe.showLongitudeLines = true;
-                }
-            }
-            else
-            {
-                WorldMapGlobe.showCursor = false;
-                if (latLonFlag)
-                {
-                    worldMapGlobe.showLatitudeLines = false;
-                    worldMapGlobe.showLongitudeLines = false;
-                }
-            }*/
         }    
     }
 

@@ -23,10 +23,13 @@ namespace WPM {
         Camera mapperCam;
 
 
-        void CheckOverlay() {
-            if (!Application.isPlaying) {
+        void CheckOverlay() 
+        {
+            if (!Application.isPlaying) 
+            {
                 // when saving the scene from Editor, the material of the sphere label layer is cleared - here's a fix to recreate it
-                if (_showCountryNames && sphereOverlayLayer != null && sphereOverlayLayer.GetComponent<Renderer>() == null) {
+                if (_showCountryNames && sphereOverlayLayer != null && sphereOverlayLayer.GetComponent<Renderer>() == null) 
+                {
                     CreateOverlay();
                 }
             }
@@ -49,14 +52,18 @@ namespace WPM {
             // Prepare layer
             WPMOverlay wpmOverlayGO = FindOverlay();
             Transform t;
-            if (wpmOverlayGO != null) {
+            if (wpmOverlayGO != null) 
+            {
                 t = wpmOverlayGO.transform;
-            } else { 
+            } 
+            else 
+            { 
                 t = transform.Find(WPM_OVERLAY_NAME_OLD);
                 if (t != null) {
                     t.SetParent(null, true);
                     t.gameObject.name = WPM_OVERLAY_NAME;
-                    if (wpmOverlayGO == null) {
+                    if (wpmOverlayGO == null) 
+                    {
                         WPMOverlay wpmOverlay = t.gameObject.AddComponent<WPMOverlay>();
                         wpmOverlay.map = this;
                     }

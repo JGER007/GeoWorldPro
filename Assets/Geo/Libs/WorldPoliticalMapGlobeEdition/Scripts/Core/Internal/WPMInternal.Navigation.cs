@@ -134,7 +134,8 @@ namespace WPM {
             float maxDist = _zoomMaxDistance + radius + cam.nearClipPlane;
 
             if (_zoomMode == ZOOM_MODE.CAMERA_MOVES) {
-                if (camDist < minDist) {
+                if (camDist < minDist) 
+                {
                     _pivotTransform.position += dir * (minDist - camDist);
                     return false;
                 } else if (camDist > maxDist) {
@@ -359,10 +360,13 @@ namespace WPM {
             }
         }
 
-        void PerformDragOnScreenEdges() {
+        void PerformDragOnScreenEdges() 
+        {
             bool onEdges = IsPointerOnScreenEdges();
-            if (onEdges) {
-                if (!mouseStartedDragging) {
+            if (onEdges) 
+            {
+                if (!mouseStartedDragging) 
+                {
                     mouseDragStart = input.mousePosition;
                     mouseStartedDragging = true;
                 }
@@ -418,13 +422,15 @@ namespace WPM {
             }
         }
 
-        void PerformOrbit(Camera cam) {
+        void PerformOrbit(Camera cam) 
+        {
             if (yawTransform == null) return;
             Vector3 targetPosition = GetOrbitTargetPositionWS();
             float camDistanceToTargetPosition = Vector3.Distance(pivotTransform.position, targetPosition);
 
             bool triggerRotateEnds = false;
-            if (_enableOrbit) {
+            if (_enableOrbit) 
+            {
                 if (orbitRotateToActive) {
                     float t = (Time.time - orbitRotateToStartTime) / orbitRotateToDuration;
                     if (t >= 1f) {

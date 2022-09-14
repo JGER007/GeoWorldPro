@@ -41,7 +41,7 @@ namespace WPM {
 
 
         [SerializeField]
-        int _tileMaxConcurrentDownloads = 10;
+        int _tileMaxConcurrentDownloads = 5;
 
         /// <summary>
         /// Gets or sets the maximum number of concurrent web downloads at a given time.
@@ -55,7 +55,6 @@ namespace WPM {
                 }
             }
         }
-
 
         [SerializeField]
         int _tileMaxTileLoadsPerFrame = 2;

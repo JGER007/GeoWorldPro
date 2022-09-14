@@ -158,7 +158,8 @@ namespace WPM {
 		/// Sets solar rotation and adjust Earth rotation as well to match a given date
 		/// </summary>
 		/// <param name="date"></param>
-		public void SetTimeOfDay(DateTime date) {
+		public void SetTimeOfDay(DateTime date) 
+		{
 			DateTime Now = date.ToUniversalTime();                // Get unlocalised time
 			float SolarDeclination = -23.45f * Mathf.Cos((360f / 365f) * (Now.DayOfYear + 10) * Mathf.Deg2Rad);
 			float sunRot = ((Now.Hour * 60f) + Now.Minute + (Now.Second / 60f)) / 4f;     // Convert time into minutes, then scale to a 0-360 range value

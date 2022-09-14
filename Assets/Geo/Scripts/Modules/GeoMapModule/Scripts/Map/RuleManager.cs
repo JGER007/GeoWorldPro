@@ -30,11 +30,10 @@ public class RuleManager : IManager
     public void AddRulePoint(Vector3 clickLocation) 
     {
         float km = 50;
-        worldMapGlobe.AddMarker(MARKER_TYPE.CIRCLE_PROJECTED, clickLocation, km, 0.2f, 0.975f, Color.white);
-        
+        worldMapGlobe.AddMarker(MARKER_TYPE.CIRCLE_PROJECTED, clickLocation, km, 0f, 1.5f, Color.white);
         if (currRulePoint != Vector3.zero)
         {
-            LineMarkerAnimator lineMarkerAnimator = worldMapGlobe.AddLine(currRulePoint, clickLocation, Color.white, 0, 0, 0.05F, 0);
+            LineMarkerAnimator lineMarkerAnimator = worldMapGlobe.AddLine(currRulePoint, clickLocation, Color.white, 0, 0, 0.035F, 0);
             lineMarkerAnimator.LineMarkerCallBack = LineMarkerCallBack;
         }
         currRulePoint = clickLocation;
