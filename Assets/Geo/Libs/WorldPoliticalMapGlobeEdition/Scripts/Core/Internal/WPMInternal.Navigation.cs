@@ -591,22 +591,28 @@ namespace WPM {
         /// <summary>
         /// Used internally to rotate the globe or the camera during FlyTo operations. Use FlyTo method.
         /// </summary>
-        void ZoomToDestination() {
+        void ZoomToDestination() 
+        {
             float delta, t;
             Camera cam = mainCamera;
 
-            if (zoomToDuration == 0) {
+            if (zoomToDuration == 0) 
+            {
                 delta = zoomToDuration;
                 t = 1;
-            } else {
+            } 
+            else 
+            {
                 delta = (Time.time - zoomToStartTime);
                 t = Mathf.SmoothStep(0, 1, delta / zoomToDuration);
             }
 
             float distance = Mathf.Lerp(zoomToStartDistance, zoomToEndDistance, t);
+            
             SetCameraDistance(distance);
 
-            if (delta >= zoomToDuration) {
+            if (delta >= zoomToDuration) 
+            {
                 StopZooming(true);
             }
         }

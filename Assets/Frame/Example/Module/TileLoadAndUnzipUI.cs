@@ -46,8 +46,9 @@ public class TileLoadAndUnzipUI : PopUpUI
         string zipOutputPath = Application.persistentDataPath;
         //ZipWrapper.UnzipFile(zipFilePath, zipOutputPath, "LS123456", new UnzipCallback());
 
-        string url = "http://192.168.10.31:81/TilesCache.zip";
-        //url = "http://vpn.prismostudio.cn:8001/TilesCache.zip";
+        //string url = "http://192.168.10.31:81/TilesCache.zip";
+        //string url = "http://vpn.prismostudio.cn:8001/TilesCache.zip";
+        string url = "http://pc.pro.youzewang.com/TilesCache.zip";
         StartCoroutine(LoadAndUnzip(url, zipFilePath, zipOutputPath));
     }
 

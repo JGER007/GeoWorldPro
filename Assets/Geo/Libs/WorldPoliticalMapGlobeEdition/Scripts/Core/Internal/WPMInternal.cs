@@ -567,7 +567,7 @@ namespace WPM {
             }
             deltTime = deltTime - 0.05f;
             //radius = transform.lossyScale.y * 0.5f;
-            float frameStartTime = Time.time;
+
             CheckOverlay();
             Camera cam = mainCamera;
             if (cam == null || input == null)
@@ -860,14 +860,20 @@ namespace WPM {
             mouseIsOverUIElement = false;
         }
 
+        private float lastSyncTimeOfDay = 60;
         void SyncTimeOfDay() 
         {
-            if (_sun == null) return;
-            if (_syncTimeOfDay) 
+            lastSyncTimeOfDay += Time.deltaTime;
+            if(lastSyncTimeOfDay >= 60)
             {
-                SetTimeOfDay(DateTime.Now);
+                lastSyncTimeOfDay = 0;
+                if (_sun == null) return;
+                if (_syncTimeOfDay)
+                {
+                    SetTimeOfDay(DateTime.Now);
+                }
+                _earthScenicLightDirection = -_sun.forward;
             }
-            _earthScenicLightDirection = -_sun.forward;
         }
 
         void GetButtonState() {
@@ -967,10 +973,11 @@ namespace WPM {
             if (flyToActive) 
             {
                 NavigateToDestination();
-            } 
+            }
+            /** 自动旋转（目前速度为0）
             else 
             {
-                // subtle/slow continuous rotation
+                // subtle/slow continuous rotation-
                 if (!constraintPositionEnabled) 
                 {
                     if (_autoRotationSpeed != 0)
@@ -982,7 +989,8 @@ namespace WPM {
                         mainCamera.transform.RotateAround(transform.position, transform.up, -_cameraAutoRotationSpeed * Time.deltaTime * 20f);
                     }
                 }
-            }
+            }*/
+            //Debug.Log("zoomToActive:" + zoomToActive);
 
             if (zoomToActive) 
             {
