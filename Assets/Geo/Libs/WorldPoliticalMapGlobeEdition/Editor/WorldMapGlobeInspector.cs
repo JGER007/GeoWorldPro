@@ -434,7 +434,8 @@ namespace WPM {
                     _map.tilePreloadTiles = EditorGUILayout.Toggle(new GUIContent("Preload Main Tiles", "Enable this option to quickly load from local cache all tiles belonging to first zoom level (Local cache must be enabled)."), _map.tilePreloadTiles);
                     _map.tilesUnloadInactiveTiles = EditorGUILayout.Toggle(new GUIContent("Unload Inactive Tiles", "Save memory by unloading textures from inactive tiles."), _map.tilesUnloadInactiveTiles);
 
-                    if (_map.tilesUnloadInactiveTiles) {
+                    if (_map.tilesUnloadInactiveTiles) 
+                    {
                         EditorGUI.indentLevel++;
                         _map.tileKeepAlive = EditorGUILayout.FloatField(new GUIContent("Tiles Keep Alive", "Time in seconds to keep an inactive/hidden tile in memory before releasing it."), _map.tileKeepAlive);
                         EditorGUI.indentLevel--;

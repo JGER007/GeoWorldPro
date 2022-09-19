@@ -206,10 +206,16 @@ namespace WPM {
                 DestroyImmediate(southPoleObj);
                 southPoleObj = null;
             }
-            if (cachedTiles != null) {
-                foreach (KeyValuePair<int, TileInfo> kvp in cachedTiles) {
+            
+            if (cachedTiles != null) 
+            {
+                foreach (KeyValuePair<int, TileInfo> kvp in cachedTiles) 
+                {
                     TileInfo ti = kvp.Value;
-                    if (ti != null && ti.texture != null && ti.source != TILE_SOURCE.Resources && ti.source != TILE_SOURCE.Unknown && ti.texture != currentEarthTexture) {
+
+                    //if (ti != null && ti.texture != null && ti.source != TILE_SOURCE.Resources && ti.source != TILE_SOURCE.Unknown && ti.texture != currentEarthTexture) 
+                    if (ti != null && ti.texture != null && ti.texture != currentEarthTexture)
+                    {
                         DestroyImmediate(ti.texture);
                         ti.texture = null;
                     }
@@ -221,7 +227,8 @@ namespace WPM {
         /// <summary>
         /// Reloads tiles
         /// </summary>
-        public void ResetTiles() {
+        public void ResetTiles() 
+        {
             DestroyTiles();
             InitTileSystem();
         }
@@ -299,11 +306,11 @@ namespace WPM {
             if (!Application.isPlaying || cachedTiles == null)
                 return;
 
+            //每3秒处理处于未激活状态的Tiles
             if (_tilesUnloadInactiveTiles && Time.time - lastDisposalTime > 3) {
                 lastDisposalTime = Time.time;
                 MonitorInactiveTiles();
             }
-            
 
             if (shouldCheckTiles || flyToActive) 
             {
@@ -321,7 +328,8 @@ namespace WPM {
                 ZoomLevelInfo zi = zoomLevelsInfo[startingZoomLevel];
                 int currentLoadQueueSize = loadQueue.Count;
 
-                for (int k = 0; k < currentLoadQueueSize; k++) {
+                for (int k = 0; k < currentLoadQueueSize; k++) 
+                {
                     loadQueue[k].visible = false;
                 }
 
@@ -341,9 +349,11 @@ namespace WPM {
                 }
 
                 int newQueueCount = loadQueue.Count;
-                if (currentLoadQueueSize != newQueueCount) {
+                if (currentLoadQueueSize != newQueueCount) 
+                {
                     resortLoadQueue = true;
-                    for (int k = 0; k < newQueueCount; k++) {
+                    for (int k = 0; k < newQueueCount; k++) 
+                    {
                         TileInfo ti = loadQueue[k];
                         Vector3 midPos;
                         midPos.x = (ti.cornerWorldPos[0].x + ti.cornerWorldPos[3].x) * 0.5f;
@@ -353,9 +363,11 @@ namespace WPM {
                         if (!ti.visible) ti.distToCamera += 1e20f;
                     }
                 }
-                if (resortLoadQueue) {
+                if (resortLoadQueue) 
+                {
                     resortLoadQueue = false;
-                    loadQueue.Sort((TileInfo x, TileInfo y) => {
+                    loadQueue.Sort((TileInfo x, TileInfo y) => 
+                    {
                         if (x.distToCamera < y.distToCamera)
                             return -1;
                         else if (x.distToCamera > y.distToCamera)
@@ -366,10 +378,13 @@ namespace WPM {
                 }
                 // Ensure local cache max size is not exceeded
                 long maxLocalCacheSize = _tileMaxLocalCacheSize * 1024 * 1024;
-                if (cachedFiles != null && _tileCurrentCacheUsage > maxLocalCacheSize) {
-                    for (int f = 0; f < cachedFiles.Length; f++) {
+                if (cachedFiles != null && _tileCurrentCacheUsage > maxLocalCacheSize) 
+                {
+                    for (int f = 0; f < cachedFiles.Length; f++) 
+                    {
                         if (cachedFiles[f] != null && cachedFiles[f].Exists) {
-                            if (_tilePreloadTiles && cachedFiles[f].Name.StartsWith(PREFIX_MIN_ZOOM_LEVEL)) {
+                            if (_tilePreloadTiles && cachedFiles[f].Name.StartsWith(PREFIX_MIN_ZOOM_LEVEL)) 
+                            {
                                 continue;
                             }
                             _tileCurrentCacheUsage -= cachedFiles[f].Length;
@@ -379,6 +394,11 @@ namespace WPM {
                             break;
                     }
                 }
+            }
+
+            if (Input.touchCount > 0 || Input.GetMouseButton(0))
+            {
+                return;
             }
 
             requestPaintMainTiles = false;
@@ -431,31 +451,39 @@ namespace WPM {
         }
 
 
-        void MonitorInactiveTiles() {
-
+        void MonitorInactiveTiles() 
+        {
             int inactiveCount = inactiveTiles.Count;
             bool changes = false;
             bool releasedMemory = false;
-            for (int k = 0; k < inactiveCount; k++) {
+            for (int k = 0; k < inactiveCount; k++) 
+            {
                 TileInfo ti = inactiveTiles[k];
-                if (ti == null) {
+                if (ti == null) 
+                {
                     changes = true;
                     continue;
                 }
-                if (ti.gameObject == null || ti.visible || ti.texture == currentEarthTexture || ti.loadStatus != TILE_LOAD_STATUS.Loaded) {
+                if (ti.gameObject == null || ti.visible || ti.texture == currentEarthTexture || ti.loadStatus != TILE_LOAD_STATUS.Loaded) 
+                {
                     inactiveTiles[k] = null;
                     ti.isAddedToInactive = false;
                     changes = true;
                     continue;
                 }
-                if (Time.time - ti.inactiveTime > _tileKeepAlive) {
+
+                if (Time.time - ti.inactiveTime > _tileKeepAlive) 
+                {
                     bool relatedTileIsVisible = false;
                     // if a children is visible, do not unload this tile
-                    if (ti.children != null) {
+                    if (ti.children != null) 
+                    {
                         int cCount = ti.children.Count;
-                        for (int c = 0; c < cCount; c++) {
+                        for (int c = 0; c < cCount; c++) 
+                        {
                             TileInfo tiChild = ti.children[c];
-                            if (tiChild.visible) {
+                            if (tiChild.visible) 
+                            {
                                 relatedTileIsVisible = true;
                                 break;
                             }
@@ -464,8 +492,10 @@ namespace WPM {
                     }
                     // if a parent is visible, do not unload this tile
                     TileInfo tiParent = ti.parent;
-                    while (tiParent != null) {
-                        if (tiParent.visible) {
+                    while (tiParent != null) 
+                    {
+                        if (tiParent.visible) 
+                        {
                             relatedTileIsVisible = true;
                             break;
                         }
@@ -477,7 +507,8 @@ namespace WPM {
                     inactiveTiles[k] = null;
                     ti.isAddedToInactive = false;
                     ti.loadStatus = TILE_LOAD_STATUS.Inactive;
-                    if (ti.source != TILE_SOURCE.Resources && ti.source != TILE_SOURCE.Unknown && ti.texture != currentEarthTexture) {
+                    if (ti.source != TILE_SOURCE.Resources && ti.source != TILE_SOURCE.Unknown && ti.texture != currentEarthTexture) 
+                    {
                         DestroyImmediate(ti.texture);
                         releasedMemory = true;
                     }
@@ -486,23 +517,28 @@ namespace WPM {
                     ResolvePlaceholderImage(ti.parent);
 
                     // Reset parentcoords on children
-                    if (ti.children != null) {
+                    if (ti.children != null) 
+                    {
                         ResolvePlaceholderImage(ti);
                     }
 
                     changes = true;
                 }
             }
-            if (changes) {
+
+            if (changes) 
+            {
                 shouldCheckTiles = true;
                 List<TileInfo> newInactiveList = new List<TileInfo>();
-                for (int k = 0; k < inactiveCount; k++) {
+                for (int k = 0; k < inactiveCount; k++) 
+                {
                     if (inactiveTiles[k] != null)
                         newInactiveList.Add(inactiveTiles[k]);
                 }
                 inactiveTiles.Clear();
                 inactiveTiles = newInactiveList;
-                if (releasedMemory) {
+                if (releasedMemory) 
+                {
                     Resources.UnloadUnusedAssets();
                     GC.Collect();
                 }
@@ -539,7 +575,6 @@ namespace WPM {
                             requestPaintMainTiles = true;
                             continue;
                         }
-                        Debug.Log("_tileMaxConcurrentDownloads:" + _tileMaxConcurrentDownloads);
                         if (_concurrentLoads <= _tileMaxConcurrentDownloads) 
                         {
                             ti.loadStatus = TILE_LOAD_STATUS.Loading;
@@ -557,13 +592,18 @@ namespace WPM {
                 }
             }
 
-            if (cleanQueue) {
-                if (newQueue == null) {
+            if (cleanQueue) 
+            {
+                if (newQueue == null) 
+                {
                     newQueue = new List<TileInfo>(qCount);
-                } else {
+                } 
+                else 
+                {
                     newQueue.Clear();
                 }
-                for (int k = 0; k < qCount; k++) {
+                for (int k = 0; k < qCount; k++) 
+                {
                     TileInfo ti = loadQueue[k];
                     if (ti != null) {
                         newQueue.Add(ti);
@@ -575,21 +615,25 @@ namespace WPM {
             }
         }
 
-        void CheckTiles(TileInfo parent, int currentZoomLevel, int xTile, int yTile, int zoomLevel, int subquadIndex) {
+        void CheckTiles(TileInfo parent, int currentZoomLevel, int xTile, int yTile, int zoomLevel, int subquadIndex) 
+        {
             // Is this tile visible?
             TileInfo ti;
-
             int tileCode = GetTileHashCode(xTile, yTile, zoomLevel);
-            if (!cachedTiles.TryGetValue(tileCode, out ti)) {
+            if (!cachedTiles.TryGetValue(tileCode, out ti)) 
+            {
                 ti = new TileInfo(xTile, yTile, zoomLevel, subquadIndex, currentEarthTexture);
                 ti.parent = parent;
-                if (parent != null) {
-                    if (parent.children == null) {
+                if (parent != null) 
+                {
+                    if (parent.children == null) 
+                    {
                         parent.children = new List<TileInfo>();
                     }
                     parent.children.Add(ti);
                 }
-                for (int k = 0; k < 4; k++) {
+                for (int k = 0; k < 4; k++) 
+                {
                     float xt = xTile + offsets[k].x;
                     float yt = yTile + offsets[k].y;
                     ti.latlons[k] = Conversion.GetLatLonFromTile(xt, yt, zoomLevel);
@@ -599,11 +643,13 @@ namespace WPM {
                 Vector2 latLonBR = ti.latlons[3];
                 Vector2 uv_tl = new Vector2((latLonTL.y + 180) / 360f, (latLonTL.x + 90) / 180f);
                 Vector2 uv_br = new Vector2((latLonBR.y + 180) / 360f, (latLonBR.x + 90) / 180f);
-                if (uv_tl.x > 0.5f && uv_br.x < 0.5f) {
+                if (uv_tl.x > 0.5f && uv_br.x < 0.5f) 
+                {
                     uv_br.x = 1f;
                 }
                 ti.worldTextureCoords = new Vector4(uv_tl.x, uv_br.y, uv_br.x, uv_tl.y);
-                for (int k = 0; k < 4; k++) {
+                for (int k = 0; k < 4; k++) 
+                {
                     Vector3 spherePos = Conversion.GetSpherePointFromLatLon(ti.latlons[k]);
                     ti.spherePos[k] = spherePos;
                 }
@@ -611,7 +657,8 @@ namespace WPM {
             }
 
 #if DEBUG_TILES
-            if (ti.gameObject != null) {
+            if (ti.gameObject != null) 
+            {
                 if (ti.gameObject.GetComponent<TileInfoEx>().debug) {
                     int jj = 9; // can put a break point here to debug this tile
                     jj++;
@@ -627,7 +674,8 @@ namespace WPM {
             Vector3 maxWorldPos = Misc.Vector3Min;
             float globeRadiusSqr = radius * radius;
 
-            for (int c = 0; c < 4; c++) {
+            for (int c = 0; c < 4; c++) 
+            {
                 Vector3 wpos = transform.TransformPoint(ti.spherePos[c]);
                 ti.cornerWorldPos[c] = wpos;
                 if (wpos.x < minWorldPos.x)
@@ -642,7 +690,8 @@ namespace WPM {
                     maxWorldPos.y = wpos.y;
                 if (wpos.z > maxWorldPos.z)
                     maxWorldPos.z = wpos.z;
-                if (cornersOccluded) {
+                if (cornersOccluded) 
+                {
                     FastVector.NormalizedDirection(ref wpos, ref currentCameraPosition, ref tmp);
                     Vector3 st = wpos;
                     FastVector.Add(ref st, ref tmp, localScaleFactor);
@@ -656,7 +705,8 @@ namespace WPM {
             FastVector.Average(ref minWorldPos, ref maxWorldPos, ref tmp);
             Vector3 tileMidPoint = tmp;
             // Check center of quad
-            if (cornersOccluded) {
+            if (cornersOccluded) 
+            {
                 Vector2 latLonTL = ti.latlons[0];
                 Vector2 latLonBR = ti.latlons[3];
                 if (currentLatLon.x >= latLonBR.x && currentLatLon.x <= latLonTL.x && currentLatLon.y >= latLonTL.y && currentLatLon.y <= latLonBR.y) {
@@ -886,16 +936,21 @@ namespace WPM {
         }
 #endif
 
-        void HideTile(TileInfo ti) {
-            if (ti.gameObject != null && ti.gameObject.activeSelf) {
+        void HideTile(TileInfo ti) 
+        {
+            if (ti.gameObject != null && ti.gameObject.activeSelf) 
+            {
                 ti.gameObject.SetActive(false);
                 ti.visible = false;
                 ti.renderer.enabled = false;
-                if (OnTileBecameInvisible != null) {
+                if (OnTileBecameInvisible != null) 
+                {
                     OnTileBecameInvisible(ti);
                 }
-                if (ti.loadStatus == TILE_LOAD_STATUS.Loaded && ti.zoomLevel > TILE_MIN_ZOOM_LEVEL) {
-                    if (!ti.isAddedToInactive) {
+                if (ti.loadStatus == TILE_LOAD_STATUS.Loaded && ti.zoomLevel > TILE_MIN_ZOOM_LEVEL) 
+                {
+                    if (!ti.isAddedToInactive) 
+                    {
                         ti.isAddedToInactive = true;
                         inactiveTiles.Add(ti);
                     }

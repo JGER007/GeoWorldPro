@@ -36,6 +36,7 @@ public class MapStyleManager : IManager
         else
         {
             WorldMapGlobe.instance.showTiles = false;
+            WorldMapGlobe.instance.ResetTiles();
             if (styleEnum == StyleEnum.¹ú¼ÒÄ£¿é)
             {
                 Country[] countries = WorldMapGlobe.instance.countries;

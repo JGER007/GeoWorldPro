@@ -165,9 +165,6 @@ public class GeoMapModuleFacade : BaseModuleFacade
                 EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "info", null);
             }
         }
-        
-
-        
     }
 
     private void OnCityClick(int cityIndex)

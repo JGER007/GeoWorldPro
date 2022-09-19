@@ -35,7 +35,6 @@ public class ConfigManager : Singleton<ConfigManager>, IManager
         else
         {
             //初始化UI配置文件
-            ////https://boboother.oss-cn-beijing.aliyuncs.com/AR/Config/ARConfig.json
             AssetManager.Instance.LoadText (BaseNetPath + "Config/ARConfig.json", loadTextCallBack);
         }*/
         string config = Resources.Load<TextAsset> ("Config/Config").text;
