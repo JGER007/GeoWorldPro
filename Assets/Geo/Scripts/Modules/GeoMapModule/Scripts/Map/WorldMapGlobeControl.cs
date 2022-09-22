@@ -63,10 +63,15 @@ public class WorldMapGlobeControl : MonoBehaviour
         SetLatLonLineFlag(false);
     }
 
+    public Vector3 GetPolePosition()
+    {
+        return worldMapGlobe.transform.TransformPoint(Vector3.up*-0.5f);
+    }
+
     public void ShowContinent(bool flag)
     {
         worldMapGlobeEarthContinent.SetActive(flag);
-        worldMapGlobe.allowUserZoom = !flag;
+        //worldMapGlobe.allowUserZoom = !flag;
     }
 
     public Color GetColorIndex()

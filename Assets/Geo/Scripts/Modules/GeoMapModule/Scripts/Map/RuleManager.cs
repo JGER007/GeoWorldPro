@@ -38,7 +38,7 @@ public class RuleManager : IManager
         worldMapGlobe.AddMarker(MARKER_TYPE.CIRCLE_PROJECTED, clickLocation, km, 0f, 1f, Color.white);
         if (currRulePoint != Vector3.zero)
         {
-            float lineWidth =  0.035f * worldMapGlobe.GetZoomLevel()/ 1.3f;
+            float lineWidth = 0.05f;  //0.035f * worldMapGlobe.GetZoomLevel()/ 1.3f;
             LineMarkerAnimator lineMarkerAnimator = worldMapGlobe.AddLine(currRulePoint, clickLocation, Color.white, 0, 0, lineWidth, 0);
             lineMarkerAnimator.LineMarkerCallBack = LineMarkerCallBack;
             lines.Add(lineMarkerAnimator);
@@ -50,10 +50,9 @@ public class RuleManager : IManager
 
     private void updateLines()
     {
-        Debug.Log("worldMapGlobe.GetZoomLevel:" + worldMapGlobe.GetZoomLevel());
         float zoom = worldMapGlobe.GetZoomLevel();
         float lineWidth = (2.3f-zoom)*0.035f * zoom / 1.3f;
-
+        lineWidth = 0.05f;
         Debug.Log("Camera.main.transform.position.sqrMagnitude:" + Camera.main.transform.position.sqrMagnitude);
 
         foreach(LineMarkerAnimator lineMarkerAnimator in lines)
