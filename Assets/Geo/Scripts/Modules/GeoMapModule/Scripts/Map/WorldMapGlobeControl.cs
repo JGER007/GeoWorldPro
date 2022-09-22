@@ -235,6 +235,7 @@ public class WorldMapGlobeControl : MonoBehaviour
 
             if(cameraDis <= tileDis)
             {
+                /**
                 if (earthStyle == StyleEnum.自然模式)
                 {
                     EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.卫星地图);
@@ -244,7 +245,7 @@ public class WorldMapGlobeControl : MonoBehaviour
                 {
                     showClouldByValue(0);
                     EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.地形地势);
-                }
+                }*/
 
                 //------
                 WorldMapGlobe.showCursor = false;

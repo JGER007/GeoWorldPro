@@ -1018,19 +1018,22 @@ namespace WPM {
             return zoomLevel;
         }
 
-        void CreateTileQuad(TileInfo ti) {
+        void CreateTileQuad(TileInfo ti) 
+        {
             ZoomLevelInfo zi = zoomLevelsInfo[ti.zoomLevel];
-
             // Create container
             GameObject parentObj;
-            if (ti.parent == null) {
+            if (ti.parent == null) 
+            {
                 parentObj = zi.tilesContainer;
                 if (parentObj == null) {
                     parentObj = new GameObject("Tiles" + ti.zoomLevel);
                     parentObj.transform.SetParent(tilesRoot, false);
                     zi.tilesContainer = parentObj;
                 }
-            } else {
+            } 
+            else 
+            {
                 parentObj = ti.parent.gameObject;
             }
 
@@ -1058,10 +1061,13 @@ namespace WPM {
 
             Material tileMat = ti.zoomLevel < TILE_MIN_ZOOM_LEVEL ? parent.opaqueMat : parent.transMat;
 
-            if (ti.zoomLevel < TILE_MIN_ZOOM_LEVEL) {
+            if (ti.zoomLevel < TILE_MIN_ZOOM_LEVEL) 
+            {
                 ti.loadStatus = TILE_LOAD_STATUS.Loaded;
             }
-            if (ti.zoomLevel <= TILE_MIN_ZOOM_LEVEL) {
+
+            if (ti.zoomLevel <= TILE_MIN_ZOOM_LEVEL) 
+            {
                 ti.ClearPlaceholderImage();
             } else {
                 ResolvePlaceholderImage(ti.parent);
@@ -1077,7 +1083,8 @@ namespace WPM {
             ti.gameObject.AddComponent<TileInfoEx>();
 #endif
 
-            if (OnTileCreated != null) {
+            if (OnTileCreated != null) 
+            {
                 OnTileCreated(ti);
             }
 
@@ -1090,7 +1097,6 @@ namespace WPM {
             string url = GetTileURL(_tileServer, ti);
             if (string.IsNullOrEmpty(url)) {
                 _concurrentLoads--;
-                //Debug.LogError("Tile server url not set. Aborting");
                 yield break;
             }
 
@@ -1102,20 +1108,26 @@ namespace WPM {
             ti.source = TILE_SOURCE.Unknown;
      
             // Check if tile is given by external event
-            if (OnTileRequest != null) {
-                if (OnTileRequest(ti.zoomLevel, ti.x, ti.y, out ti.texture, out error) && ti.texture != null) {
+            if (OnTileRequest != null) 
+            {
+                if (OnTileRequest(ti.zoomLevel, ti.x, ti.y, out ti.texture, out error) && ti.texture != null) 
+                {
                     ti.source = TILE_SOURCE.Resources;
                 }
             }
             // Check if tile is in Resources
-            if (ti.source == TILE_SOURCE.Unknown && _tileEnableOfflineTiles) {
+            if (ti.source == TILE_SOURCE.Unknown && _tileEnableOfflineTiles) 
+            {
                 string path = GetTileResourcePath(ti.x, ti.y, ti.zoomLevel, false);
                 ResourceRequest request = Resources.LoadAsync<Texture2D>(path);
                 yield return request;
-                if (request.asset != null) {
+                if (request.asset != null) 
+                {
                     ti.texture = (Texture2D)request.asset;
                     ti.source = TILE_SOURCE.Resources;
-                } else if (tileOfflineTilesOnly) {
+                } 
+                else if (tileOfflineTilesOnly) 
+                {
                     ti.texture = tileResourceFallbackTexture;
                     ti.source = TILE_SOURCE.Resources;
                 }
@@ -1135,6 +1147,7 @@ namespace WPM {
             }
 
             ti.stage = 50;
+           
             for (int tries = 0; tries < 100; tries++) 
             {
                 if (spreadLoadAmongFrames > 0)
@@ -1145,10 +1158,12 @@ namespace WPM {
             _concurrentLoads--;
 
             ti.stage = 70;
-            if (!string.IsNullOrEmpty(error)) {
+            if (!string.IsNullOrEmpty(error)) 
+            {
                 _tileLastError = "Error getting tile z:" + ti.zoomLevel + " x:" + ti.x + " " + ti.y + ": " + error + " url=" + url + " max timeout:" + _tileDownloadTimeout;
                 _tileLastErrorDate = DateTime.Now;
-                if (_tileDebugErrors) {
+                if (_tileDebugErrors) 
+                {
                    // Debug.Log(_tileLastErrorDate + " " + _tileLastError);
                 }
                 ti.loadStatus = TILE_LOAD_STATUS.InQueue;
@@ -1201,7 +1216,6 @@ namespace WPM {
                 
                 BackgroundSaver saver = new BackgroundSaver(textureBytes, filePath);
                 saver.Start();
-                
             }
 
             // Update stats
@@ -1378,7 +1392,7 @@ namespace WPM {
             string filePath = GetLocalFilePathForURL(url, ti);
             CustomWWW www;
             bool useCached = false;
-            useCached = _tileEnableLocalCache && System.IO.File.Exists(filePath);
+            useCached = _tileEnableLocalCache && File.Exists(filePath);
             if (useCached) 
             {
                 if (!_tilePreloadTiles || !filePath.Contains(PREFIX_MIN_ZOOM_LEVEL)) 
@@ -1407,21 +1421,23 @@ namespace WPM {
             }
             return www;
         }
-        bool ReloadTextureFromCacheOrMarkForDownload(TileInfo ti) {
+        bool ReloadTextureFromCacheOrMarkForDownload(TileInfo ti) 
+        {
             if (!_tileEnableLocalCache)
                 return false;
 
             string url = GetTileURL(_tileServer, ti);
-            if (string.IsNullOrEmpty(url)) {
+            if (string.IsNullOrEmpty(url)) 
+            {
                 return false;
             }
 
             string filePath = GetLocalFilePathForURL(url, ti);
-            if (System.IO.File.Exists(filePath)) {
+            if (File.Exists(filePath)) {
                 //check how old
                 if (!_tilePreloadTiles || ti.zoomLevel != TILE_MIN_ZOOM_LEVEL) {
-                    System.DateTime written = File.GetLastWriteTimeUtc(filePath);
-                    System.DateTime now = System.DateTime.UtcNow;
+                    DateTime written = File.GetLastWriteTimeUtc(filePath);
+                    DateTime now = DateTime.UtcNow;
                     double totalHours = now.Subtract(written).TotalHours;
                     if (totalHours > 300) {
                         File.Delete(filePath);
@@ -1431,7 +1447,7 @@ namespace WPM {
             } else {
                 return false;
             }
-            byte[] bb = System.IO.File.ReadAllBytes(filePath);
+            byte[] bb = File.ReadAllBytes(filePath);
             ti.texture = new Texture2D(0, 0);
             ti.texture.LoadImage(bb);
             if (ti.texture.width <= 16) { // Invalid texture in local cache, retry
