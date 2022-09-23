@@ -54,13 +54,17 @@ public class WorldMapGlobeControl : MonoBehaviour
     private Camera mainCamera;
 
     private bool initFlag = false;
+
+    private float mainCameraDis;
     public void Init() 
     {
-        mainCamera = Camera.main;
         worldMapGlobe.cursorColor = Color.white;
         initFlag = true;
         
         SetLatLonLineFlag(false);
+
+        mainCamera = Camera.main;
+        mainCameraDis = 132273000f;
     }
 
     public Vector3 GetPolePosition()
@@ -222,9 +226,9 @@ public class WorldMapGlobeControl : MonoBehaviour
         {
             dt = 0;
             float cameraDis = mainCamera.transform.position.magnitude;
-            /**
             
-            if (Mathf.Abs(lastCameraDis - cameraDis) > 0.05f)
+            
+            if (Mathf.Abs(lastCameraDis - cameraDis) > 5)
             {
                 lastCameraDis = cameraDis;
                 updateFlag = true;
@@ -233,11 +237,18 @@ public class WorldMapGlobeControl : MonoBehaviour
             {
                 if(updateFlag)
                 {
+                    //Debug.Log("mainCamera.transform.position.sqrMagnitude:" + mainCamera.transform.position.sqrMagnitude);
+                    float tempDis = mainCamera.transform.position.sqrMagnitude;
+                    float changeScale = 0;
+                    if (tempDis > 28000000)
+                    {
+                        changeScale = mainCamera.transform.position.sqrMagnitude / mainCameraDis;
+                    }
                     updateFlag = false;
-                    worldMapGlobe.countryLabelsSize = 0.25f - (15.25f - cameraDis) * 0.1f;
-                    worldMapGlobe.cityIconSize = 1 - (15.25f - cameraDis) * 0.6f;
+                    worldMapGlobe.countryLabelsSize = 0.25f* changeScale;
+                    worldMapGlobe.cityIconSize = changeScale;
                 }
-            }*/
+            }
 
 
             if (cameraDis <= tileDis)

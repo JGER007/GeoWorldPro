@@ -46,6 +46,7 @@ namespace WPM {
             cursorLayer.transform.SetParent(transform, false);
             cursorLayer.layer = gameObject.layer;
             cursorLayer.transform.localPosition = Misc.Vector3zero;
+            cursorLayer.transform.localScale = Misc.Vector3one * 1.005f;
             cursorLayer.transform.localRotation = Misc.QuaternionZero;
             cursorLayer.SetActive(_showCursor);
             switch (_cursorStyle) {

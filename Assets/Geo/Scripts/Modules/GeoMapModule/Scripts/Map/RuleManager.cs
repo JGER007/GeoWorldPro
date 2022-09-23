@@ -54,12 +54,9 @@ public class RuleManager : IManager
 
     public void AddRulePoint(Vector3 clickLocation) 
     {
-        Debug.Log(mainCamera.transform.position.sqrMagnitude);
-
         markerScale = mainCamera.transform.position.sqrMagnitude / mainCameraDis;
         markerScale = markerScale * 0.8f;
         markerScale = markerScale > 0.01f ? markerScale : 0.01f;
-        Debug.Log("markerScale:" + markerScale);
         addMarker(clickLocation);
         if (currRulePoint != Vector3.zero)
         {
