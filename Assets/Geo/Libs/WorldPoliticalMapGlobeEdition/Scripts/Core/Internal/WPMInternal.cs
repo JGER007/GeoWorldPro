@@ -1473,7 +1473,7 @@ namespace WPM {
                                 dragDirection.x = ApplyDragThreshold(dragDirection.x, _mouseDragThreshold);
                             }
                             //dragDirection *=  0.2F*distFactor * dragSensibility * Time.deltaTime * 60f;
-                            dragDirection *= 0.5F * distFactor * dragSensibility ;
+                            dragDirection *= 0.2F * distFactor * dragSensibility ;
                             //Debug.Log("CheckUserInteractionNormalMode :" + dragDirection +"," + distFactor + "," + dragSensibility + ",Time.deltaTime:" + Time.deltaTime);
 #endif
                             if (dragDirection.x != 0 || dragDirection.y != 0) 
@@ -1523,9 +1523,11 @@ namespace WPM {
 
                     // Use right mouse button and drag to spin the world around z-axis
                     if (!flyToActive) {
-                        if (input.touchCount < 2) {
+                        if (input.touchCount < 2) 
+                        {
                             oldPinchRotationAngle = 999;
-                            if (rightMouseButtonPressed) {
+                            if (rightMouseButtonPressed) 
+                            {
                                 if (_allowUserRotation && _rightButtonDragBehaviour == DRAG_BEHAVIOUR.Rotate && Time.time - mouseStartedDraggingTime > 0.5f) {
                                     float rotAngle = _rightClickRotatingClockwise || input.GetKey(KeyCode.LeftShift) || input.GetKey(KeyCode.RightShift) ? -2f : 2f;
                                     RotateCameraAroundAxis(rotAngle);
