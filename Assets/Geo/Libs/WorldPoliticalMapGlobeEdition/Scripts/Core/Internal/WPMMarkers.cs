@@ -28,6 +28,7 @@ namespace WPM {
                 markersLayer.layer = gameObject.layer;
                 markersLayer.transform.SetParent(transform, false);
                 markersLayer.transform.localPosition = Misc.Vector3zero;
+                markersLayer.transform.localScale = Vector3.one * 1.002f;
             }
         }
 

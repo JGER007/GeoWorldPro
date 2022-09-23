@@ -330,7 +330,8 @@ namespace WPM {
         /// <param name="sphereLocation">Sphere location.</param>
         /// <param name="name">Text label.</param>
         public TextMesh AddText(string name, Vector3 sphereLocation, Color color, float scale = 0.002f, Font font = null, FontStyle fontStyle = FontStyle.Normal) {
-            if (fontMaterial == null) {
+            if (fontMaterial == null) 
+            {
                 fontMaterial = Instantiate<Material>(Resources.Load<Material>("Materials/Font"));
                 fontMaterial.shader = Shader.Find("TextMeshPro/Mobile/Distance Field");
             }
@@ -342,10 +343,12 @@ namespace WPM {
             go.transform.localScale = Vector3.one * scale;
             go.transform.LookAt(transform.position, transform.up);
             TextMesh tm = go.AddComponent<TextMesh>();
-            if (font != null) {
+            if (font != null) 
+            {
                 tm.font = font;
             }
-            if (fontStyle != FontStyle.Normal) {
+            if (fontStyle != FontStyle.Normal) 
+            {
                 tm.fontStyle = fontStyle;
             }
             fontMaterial.mainTexture = tm.font.material.mainTexture;

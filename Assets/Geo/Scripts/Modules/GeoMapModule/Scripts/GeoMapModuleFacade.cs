@@ -24,10 +24,9 @@ public class GeoMapModuleFacade : BaseModuleFacade
     private Transform provinceNamesContainer = null;
 
     private RuleManager ruleManager;
-
+    [SerializeField]
     private GameObject ruleContainer;
     //private Country zhCountry ;
-
     public override void InitModuleFacade()
     {
         base.InitModuleFacade();
@@ -48,6 +47,7 @@ public class GeoMapModuleFacade : BaseModuleFacade
         worldMapGlobe.OnCountryPointerUp += OnCountryPointerUp;
         //zhCountry = worldMapGlobe.GetCountry("中国");
         //zhCountry.labelVisible = true;
+
         worldMapGlobe.ZoomTo(1.333f);
         FlyToCountry("中国");
     }
@@ -58,14 +58,10 @@ public class GeoMapModuleFacade : BaseModuleFacade
     private void initRlueManager()
     {
         ruleManager = new RuleManager();
-        ruleManager.WorldMapGlobe = worldMapGlobe;
-        if (ruleContainer == null)
-        {
-            ruleContainer = new GameObject("RuleTransform");
-            ruleContainer.transform.SetParent(worldMapGlobe.transform);
-        }
+        ruleManager.WorldMapGlobe = worldMapGlobe; 
         ruleManager.InitManager(ruleContainer.transform);
     }
+
 
     private void OnCountryPointerUp(int countryIndex, int regionIndex)
     {
@@ -300,7 +296,7 @@ public class GeoMapModuleFacade : BaseModuleFacade
     {
         if (rlueFlag)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !checkPointerOverUI())
             {
                 Vector3 hitpose;
                 if(worldMapGlobe.GetGlobeIntersection(out hitpose))
@@ -312,6 +308,37 @@ public class GeoMapModuleFacade : BaseModuleFacade
         }
         
     }
+
+
+    /// <summary>
+    /// 检查是否点击再UI上
+    /// </summary>
+    /// <returns></returns>
+    private bool checkPointerOverUI() 
+    {
+        // Check whether the points is on an UI element, then cancels
+        if (UnityEngine.EventSystems.EventSystem.current != null)
+        {
+                if (Input.touchSupported && Input.touchCount > 0)
+                {
+                    for (int i = 0; i < Input.touchCount; i++)
+                    {
+                        Touch currTouch = Input.GetTouch(i);
+                        if (currTouch.phase == TouchPhase.Began && UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(currTouch.fingerId))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                else if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(-1))
+                {
+                    return true;
+                }
+        }
+        return false;
+    }
+
+
 
     public void togglePolitical()  
     {

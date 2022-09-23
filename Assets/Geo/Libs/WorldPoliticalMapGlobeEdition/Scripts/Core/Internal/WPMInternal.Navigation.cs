@@ -119,13 +119,14 @@ namespace WPM {
             }
         }
 
-        float GetCameraMinDistance(Camera cam) {
-            return _zoomMinDistance + radius + (cam.nearClipPlane + 0.001f);
+        float GetCameraMinDistance(Camera cam) 
+        {
+            return _zoomMinDistance + radius + (cam.nearClipPlane + 1f);
         }
 
         // this version fixes camera plane crossing globe surface when zooming in too much
-        bool CheckCamMinMaxDistance(Camera cam) {
-
+        bool CheckCamMinMaxDistance(Camera cam) 
+        {
             Vector3 v = pivotTransform.position - transform.position;
             float camDist = v.magnitude;
             Vector3 dir = new Vector3(v.x / camDist, v.y / camDist, v.z / camDist);

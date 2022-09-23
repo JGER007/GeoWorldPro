@@ -72,7 +72,7 @@ public class GeoMapMainUI : ModuleUI
         mainCamera = Camera.main;
         //InitUI();
         screenCenter = new Vector3(Screen.width / 2, Screen.height / 2,0);
-        Debug.Log("GeoMapMainUI:" + Screen.width + "," + Screen.height);
+        //Debug.Log("GeoMapMainUI:" + Screen.width + "," + Screen.height);
     }
 
     float deltTime = 0;
@@ -82,22 +82,22 @@ public class GeoMapMainUI : ModuleUI
         if(deltTime >0.05f)
         {
             deltTime = 0;
-            /*
-            Vector3 dir = mainCamera.transform.position;
-            Vector2 v2 = new Vector2(dir.x, dir.y);
-            float angle = Vector2.Angle(Vector2.up, v2) + 180;
-            Vector3 eulerAngles = new Vector3(0, 0, angle);
-            compassBtn.transform.eulerAngles = eulerAngles;*/
-
             Vector3 polePosition = worldMapGlobeControl.GetPolePosition();
-            Vector3 screenPos = Camera.main.WorldToScreenPoint(polePosition) - screenCenter;
-            float angle = Vector2.Angle(Vector2.right, screenPos)-90;
+            Vector3 screenPos = mainCamera.WorldToScreenPoint(polePosition) - screenCenter;
+            float angle = angle_360(screenPos);
             Vector3 eulerAngles = new Vector3(0, 0, angle);
             compassBtn.transform.eulerAngles = eulerAngles;
-
-            //Debug.Log("GeoMapMainUI angle:" + angle);
         }
         
+    }
+
+    public float angle_360(Vector2 v2)
+    {
+        float angle = Mathf.Atan2(v2.y, v2.x) * Mathf.Rad2Deg;
+        if (angle < 0)
+            angle = 360 + angle;
+
+        return angle;
     }
 
     public override void InitUI()

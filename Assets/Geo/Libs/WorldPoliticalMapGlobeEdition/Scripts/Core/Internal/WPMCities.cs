@@ -191,6 +191,10 @@ namespace WPM {
             if (_earthInvertedMode) {
                 citiesLayer.transform.localScale *= 0.99f;
             }
+            else
+            {
+                citiesLayer.transform.localScale *= 1.01f;
+            }
 
             // Create cityclass parents
             GameObject countryCapitals = new GameObject("Country Capitals");

@@ -129,7 +129,7 @@ namespace WPM {
 
             //cachePath = Application.persistentDataPath + "/TilesCache";
             cachePath = Application.persistentDataPath + "/TilesCache";
-            Debug.Log("TilesCache cachePath:" + cachePath);
+            //Debug.Log("TilesCache cachePath:" + cachePath);
             if (!Directory.Exists(cachePath)) {
                 Directory.CreateDirectory(cachePath);
             }

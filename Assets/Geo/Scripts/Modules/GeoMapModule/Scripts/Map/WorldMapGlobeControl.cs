@@ -222,6 +222,8 @@ public class WorldMapGlobeControl : MonoBehaviour
         {
             dt = 0;
             float cameraDis = mainCamera.transform.position.magnitude;
+            /**
+            
             if (Mathf.Abs(lastCameraDis - cameraDis) > 0.05f)
             {
                 lastCameraDis = cameraDis;
@@ -235,10 +237,10 @@ public class WorldMapGlobeControl : MonoBehaviour
                     worldMapGlobe.countryLabelsSize = 0.25f - (15.25f - cameraDis) * 0.1f;
                     worldMapGlobe.cityIconSize = 1 - (15.25f - cameraDis) * 0.6f;
                 }
-            }
+            }*/
 
 
-            if(cameraDis <= tileDis)
+            if (cameraDis <= tileDis)
             {
                 /**
                 if (earthStyle == StyleEnum.自然模式)

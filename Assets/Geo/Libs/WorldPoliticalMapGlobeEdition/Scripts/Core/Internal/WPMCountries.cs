@@ -707,8 +707,8 @@ namespace WPM {
             }
         }
 
-        void DrawFrontiers() {
-
+        void DrawFrontiers() 
+        {
             if (!gameObject.activeInHierarchy || frontiers == null)
                 return;
 
@@ -716,30 +716,43 @@ namespace WPM {
             Transform t = transform.Find(FRONTIERS_LAYER);
             if (t != null)
                 DestroyImmediate(t.gameObject);
+
             frontiersLayer = new GameObject(FRONTIERS_LAYER);
             frontiersLayer.layer = gameObject.layer;
             frontiersLayer.transform.SetParent(transform, false);
             frontiersLayer.transform.localPosition = Misc.Vector3zero;
             frontiersLayer.transform.localRotation = Misc.QuaternionZero; //Quaternion.Euler (Misc.Vector3zero);
-            frontiersLayer.transform.localScale = _earthInvertedMode ? Misc.Vector3one * 0.995f : Misc.Vector3one ;
+            frontiersLayer.transform.localScale = _earthInvertedMode ? Misc.Vector3one * 0.995f : Misc.Vector3one * 1.0002f;
 
             // Choose a frontiers mat
-            if (_frontiersColor.a < 1f) {
-                if (_frontiersThicknessMode == FRONTIERS_THICKNESS.Custom) {
+            if (_frontiersColor.a < 1f)
+            {
+                if (_frontiersThicknessMode == FRONTIERS_THICKNESS.Custom)
+                {
                     frontiersMatCurrent = frontiersMatThickAlpha;
-                } else {
+                }
+                else
+                {
                     frontiersMatCurrent = frontiersMatThinAlpha;
                 }
-            } else {
-                if (_frontiersThicknessMode == FRONTIERS_THICKNESS.Custom) {
-                    frontiersMatCurrent = frontiersMatThickOpaque;
-                } else {
-                    frontiersMatCurrent = frontiersMatThinOpaque;
+            }
+            else
+            {
+                if (_frontiersThicknessMode == FRONTIERS_THICKNESS.Custom)
+                {
+                    //frontiersMatCurrent = frontiersMatThickOpaque;
+                    frontiersMatCurrent = inlandFrontiersMatOpaque;
+                }
+                else
+                {
+                    //frontiersMatCurrent = frontiersMatThinOpaque;
+                    frontiersMatCurrent = inlandFrontiersMatOpaque;
                 }
             }
             UpdateFrontiersMatProperties();
-
-            for (int k = 0; k < frontiers.Length; k++) {
+            
+            for (int k = 0; k < frontiers.Length; k++) 
+            {
                 GameObject flayer = new GameObject("flayer");
                 flayer.hideFlags = HideFlags.DontSave | HideFlags.HideInHierarchy;
                 flayer.layer = gameObject.layer;
@@ -787,13 +800,14 @@ namespace WPM {
             inlandFrontiersLayer.transform.localScale = _earthInvertedMode ? Misc.Vector3one * 0.995f : Misc.Vector3one;
 
             // Choose an inland frontiers mat
-            if (_inlandFrontiersColor.a < 1f) {
+            if (_inlandFrontiersColor.a < 1f) 
+            {
                 inlandFrontiersMatCurrent = inlandFrontiersMatAlpha;
-            } else {
+            } 
+            else 
+            {
                 inlandFrontiersMatCurrent = inlandFrontiersMatOpaque;
             }
-            //Debug.Log("_inlandFrontiersColor.a:" + _inlandFrontiersColor.a);
-
             inlandFrontiersMatCurrent.color = _inlandFrontiersColor;
 
             for (int k = 0; k < inlandFrontiers.Length; k++) {
@@ -802,7 +816,7 @@ namespace WPM {
                 flayer.layer = gameObject.layer;
                 flayer.transform.SetParent(inlandFrontiersLayer.transform, false);
                 flayer.transform.localPosition = Misc.Vector3zero;
-                flayer.transform.localRotation = Misc.QuaternionZero; //Quaternion.Euler (Misc.Vector3zero);
+                flayer.transform.localRotation = Misc.QuaternionZero; 
 
                 Mesh mesh = new Mesh();
                 mesh.vertices = inlandFrontiers[k];

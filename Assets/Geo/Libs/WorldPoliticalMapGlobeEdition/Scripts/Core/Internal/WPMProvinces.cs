@@ -563,6 +563,7 @@ namespace WPM {
             provincesObj.transform.SetParent(transform, false);
             provincesObj.transform.localPosition = Misc.Vector3zero;
             provincesObj.transform.localRotation = Misc.QuaternionZero;
+            provincesObj.transform.localScale = Misc.Vector3one;
             provincesObj.layer = gameObject.layer;
 
             // Choose a borders mat
@@ -887,8 +888,13 @@ namespace WPM {
             surf.transform.localPosition = Misc.Vector3zero;
             region.surfaceGameObject = surf;
 
-            if (_earthInvertedMode) {
+            if (_earthInvertedMode) 
+            {
                 surf.transform.localScale = Misc.Vector3one * 0.998f;
+            }
+            else
+            {
+                surf.transform.localScale = Misc.Vector3one;
             }
             surfaces[cacheIndex] = surf;
             return surf;
