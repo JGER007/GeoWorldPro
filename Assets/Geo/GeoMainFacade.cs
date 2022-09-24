@@ -21,4 +21,18 @@ public class GeoMainFacade : Facade
         EventUtil.DispatchEvent(GlobalEvent.Open_Module, "geomap");
         EventUtil.RemoveListener(GlobalEvent.Tiles_Unzip_Finish, onUnzipTilesFinish);
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape) /*|| Input.GetKeyDown(KeyCode.Home)*/)
+        {
+            Quit();
+        }
+    }
+
+    public void Quit()
+    {
+        //测试时不能执行，打包后可以执行
+        Application.Quit();
+    }
 }

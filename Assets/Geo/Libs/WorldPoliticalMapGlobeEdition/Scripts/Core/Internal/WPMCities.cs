@@ -193,7 +193,7 @@ namespace WPM {
             }
             else
             {
-                citiesLayer.transform.localScale *= 1.01f;
+                citiesLayer.transform.localScale *= 1.001f;
             }
 
             // Create cityclass parents

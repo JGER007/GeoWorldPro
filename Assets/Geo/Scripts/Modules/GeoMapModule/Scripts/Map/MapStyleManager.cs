@@ -31,7 +31,20 @@ public class MapStyleManager : IManager
             EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "Toggle", "Country", false);
             EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "Toggle", "Province", false);
             EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "Toggle", "City", false);
-
+            Color color = Color.white;
+            if (styleEnum == StyleEnum.地形地势)
+            {
+                color = new Color(0.843f, 0.925f, 0.694f);
+            }
+            else if (styleEnum == StyleEnum.卫星地图)
+            {
+                color = new Color(0.184f, 0.29f, 0.122f);
+            }
+            else if (styleEnum == StyleEnum.城市模式)
+            {
+                color = new Color(1, 0.976f, 0.949f);
+            }
+            _worldMapGlobeControl.SetWorldMapGlobeBackFacesColor(color);
         }
         else
         {

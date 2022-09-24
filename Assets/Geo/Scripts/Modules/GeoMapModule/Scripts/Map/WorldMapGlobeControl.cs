@@ -165,11 +165,8 @@ public class WorldMapGlobeControl : MonoBehaviour
         else if (earthStyle == StyleEnum.¹ú¼ÒÄ£¿é)
         {
             ShowSurface(true);
-            if (worldMapGlobeBackFacesMeshMat == null)
-            {
-                worldMapGlobeBackFacesMeshMat = transform.Find("WorldMapGlobeBackFaces").GetComponent<MeshRenderer>().material;
-                worldMapGlobeBackFacesMeshMat.SetColor("_Color", new Color(0, 0.21f, 0.42f));
-            }
+            SetWorldMapGlobeBackFacesColor(new Color(0, 0.21f, 0.42f));
+            
             earthHD.SetActive(false);
             normalEarth.SetActive(false);
         }
@@ -179,6 +176,15 @@ public class WorldMapGlobeControl : MonoBehaviour
             normalEarth.SetActive(false);
         }
     }
+
+    public void SetWorldMapGlobeBackFacesColor(Color color)
+    {
+        if (worldMapGlobeBackFacesMeshMat == null)
+        {
+            worldMapGlobeBackFacesMeshMat = transform.Find("WorldMapGlobeBackFaces").GetComponent<MeshRenderer>().material;
+        }
+        worldMapGlobeBackFacesMeshMat.SetColor("_Color", color);
+    }    
 
 
 
