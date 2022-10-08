@@ -44,8 +44,7 @@ public class RuleManager : IManager
         currRulePoint = Vector3.zero;
         lines.Clear();
         worldMapGlobe.ClearLineMarkers();
-        
-        foreach(GameObject marker in ruleMarkers)
+        foreach (GameObject marker in ruleMarkers)
         {
             GlobalMonoTool.Destroy(marker);
         }

@@ -28,8 +28,7 @@ public class WorldMapGlobeControl : MonoBehaviour
 
     private bool showCursorFlag = false;
 
-    [SerializeField]
-    private float tileDis = 9.0f; 
+    private float tileDis = 5400; 
 
     private GameObject surfaces;
 
@@ -214,6 +213,7 @@ public class WorldMapGlobeControl : MonoBehaviour
 
     public WorldMapGlobe WorldMapGlobe { get => worldMapGlobe; set => worldMapGlobe = value; }
 
+    private bool smallFlag = false;
     void Update()
     {
         // Check whether a country or city is selected, then show a label
@@ -256,23 +256,34 @@ public class WorldMapGlobeControl : MonoBehaviour
                 }
             }
 
-
             if (cameraDis <= tileDis)
             {
-                /**
-                if (earthStyle == StyleEnum.自然模式)
+                /*
+                if(!smallFlag)
                 {
-                    EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.卫星地图);
-                }
-
-                if (earthStyle == StyleEnum.自然风光 || earthStyle == StyleEnum.云层模式)
-                {
-                    showClouldByValue(0);
-                    EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.地形地势);
+                    smallFlag = true;
+                    if (earthStyle == StyleEnum.自然模式 || earthStyle == StyleEnum.云层模式 ||
+                    earthStyle == StyleEnum.国家模块 || earthStyle == StyleEnum.城市灯光 ||
+                    earthStyle == StyleEnum.默认模式)
+                    {
+                        worldMapGlobe.ZoomTo(0.7f);
+                    }
                 }*/
 
-                //------
-                WorldMapGlobe.showCursor = false;
+                    /**
+                    if (earthStyle == StyleEnum.自然模式)
+                    {
+                        EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.卫星地图);
+                    }
+
+                    if (earthStyle == StyleEnum.自然风光 || earthStyle == StyleEnum.云层模式)
+                    {
+                        showClouldByValue(0);
+                        EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "style", StyleEnum.地形地势);
+                    }*/
+
+                    //------
+                    WorldMapGlobe.showCursor = false;
                 if (latLonFlag)
                 {
                     worldMapGlobe.showLatitudeLines = false;
@@ -292,6 +303,8 @@ public class WorldMapGlobeControl : MonoBehaviour
                     worldMapGlobe.showLatitudeLines = true;
                     worldMapGlobe.showLongitudeLines = true;
                 }
+
+               // smallFlag = false;
             }
         }    
     }

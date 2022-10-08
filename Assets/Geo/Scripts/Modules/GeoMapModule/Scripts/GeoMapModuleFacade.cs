@@ -45,8 +45,9 @@ public class GeoMapModuleFacade : BaseModuleFacade
 
         worldMapGlobe.OnCountryClick += OnCountryClick;
         worldMapGlobe.OnCountryPointerUp += OnCountryPointerUp;
-        //zhCountry = worldMapGlobe.GetCountry("中国");
+        Country zhCountry = worldMapGlobe.GetCountry("中国");
         //zhCountry.labelVisible = true;
+        //Debug.Log(zhCountry.latlonCenter);
 
         worldMapGlobe.ZoomTo(1.333f);
         FlyToCountry("中国");
