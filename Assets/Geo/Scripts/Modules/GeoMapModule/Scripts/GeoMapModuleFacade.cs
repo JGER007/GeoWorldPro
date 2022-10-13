@@ -16,6 +16,7 @@ public class GeoMapModuleFacade : BaseModuleFacade
     private WorldMapGlobe worldMapGlobe;
 
     private MapStyleManager mapStyleManager;
+    private MapMarkerManager mapMarkerManager;
 
     private WorldMapGlobeControl worldMapGlobeControl;
 
@@ -32,6 +33,11 @@ public class GeoMapModuleFacade : BaseModuleFacade
         base.InitModuleFacade();
         
         mapStyleManager = new MapStyleManager();
+
+        mapMarkerManager = FindObjectOfType<MapMarkerManager>();
+        mapMarkerManager.WorldMapGlobe = worldMapGlobe;
+        mapMarkerManager.InitManager();
+
         worldMapGlobeControl = FindObjectOfType<WorldMapGlobeControl>();
         worldMapGlobeControl.WorldMapGlobe = worldMapGlobe;
         mapStyleManager.WorldMapGlobeControl = worldMapGlobeControl;
@@ -96,7 +102,7 @@ public class GeoMapModuleFacade : BaseModuleFacade
             worldMapGlobe.HideProvinceRegionHighlights(true);
         }
 
-        /*
+        /**
         if (worldMapGlobe.showCountryNames)
         {
             Country country = worldMapGlobe.countries[countryIndex];
@@ -334,9 +340,9 @@ public class GeoMapModuleFacade : BaseModuleFacade
             {
                 GameObject hitGameObject = hit.collider.gameObject;
                 Debug.Log(hitGameObject.name + ":" + hitGameObject.transform.InverseTransformPoint(hit.point));
+
             }
         }*/
-
         /*
         if (Input.GetMouseButtonDown(1))
         {

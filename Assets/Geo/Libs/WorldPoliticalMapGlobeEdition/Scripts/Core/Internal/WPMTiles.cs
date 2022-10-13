@@ -212,7 +212,7 @@ namespace WPM {
             
             if (cachedTiles != null) 
             {
-                foreach (KeyValuePair<int, TileInfo> kvp in cachedTiles) 
+                /*foreach (KeyValuePair<int, TileInfo> kvp in cachedTiles) 
                 {
                     TileInfo ti = kvp.Value;
                     //if (ti != null && ti.texture != null && ti.source != TILE_SOURCE.Resources && ti.source != TILE_SOURCE.Unknown && ti.texture != currentEarthTexture) 
@@ -228,7 +228,7 @@ namespace WPM {
                             Debug.Log(kvp.Key);
                         }
                     }
-                }
+                }*/
                 cachedTiles.Clear();
             }
         }
