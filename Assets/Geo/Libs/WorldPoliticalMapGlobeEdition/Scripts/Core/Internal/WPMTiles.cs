@@ -148,8 +148,8 @@ namespace WPM {
                 tileMatTransRef = Resources.Load<Material>("Materials/TileOverlayTrans") as Material;
             }
             cameraPlanes = new Plane[6];
-            currentEarthTexture = (Texture2D)Resources.Load<Texture>("Textures/Earth/Tile");
-            /*
+            ///currentEarthTexture = (Texture2D)Resources.Load<Texture>("Textures/Earth/Tile");
+            /**
             if (_earthRenderer != null && _earthRenderer.sharedMaterial != null) {
                 currentEarthTexture = (Texture2D)_earthRenderer.sharedMaterial.mainTexture;
             } else {
@@ -195,14 +195,17 @@ namespace WPM {
 
         }
 
-        void DestroyTiles() {
+        void DestroyTiles() 
+        {
             if (tilesRoot != null)
                 DestroyImmediate(tilesRoot.gameObject);
             if (northPoleObj != null) {
                 DestroyImmediate(northPoleObj);
                 northPoleObj = null;
             }
-            if (southPoleObj != null) {
+
+            if (southPoleObj != null) 
+            {
                 DestroyImmediate(southPoleObj);
                 southPoleObj = null;
             }
@@ -212,12 +215,18 @@ namespace WPM {
                 foreach (KeyValuePair<int, TileInfo> kvp in cachedTiles) 
                 {
                     TileInfo ti = kvp.Value;
-
                     //if (ti != null && ti.texture != null && ti.source != TILE_SOURCE.Resources && ti.source != TILE_SOURCE.Unknown && ti.texture != currentEarthTexture) 
                     if (ti != null && ti.texture != null && ti.texture != currentEarthTexture)
                     {
-                        DestroyImmediate(ti.texture);
-                        ti.texture = null;
+                        if(ti.zoomLevel >5)
+                        {
+                            DestroyImmediate(ti.texture);
+                            ti.texture = null;
+                        }
+                        else
+                        {
+                            Debug.Log(kvp.Key);
+                        }
                     }
                 }
                 cachedTiles.Clear();
@@ -297,6 +306,7 @@ namespace WPM {
         private float lastUpdateTilesTime;
         void LateUpdateTiles() 
         {
+            //0.1秒刷新一次
             if(Time.time - lastUpdateTilesTime < 0.1f)
             {
                 return;
@@ -395,7 +405,7 @@ namespace WPM {
                     }
                 }
             }
-
+            ///交互操作过程中停止加载
             if (Input.touchCount > 0 || Input.GetMouseButton(0))
             {
                 return;
@@ -1093,7 +1103,6 @@ namespace WPM {
         internal IEnumerator LoadTileContentBackground(TileInfo ti) 
         {
             yield return new WaitForEndOfFrame();
-
             string url = GetTileURL(_tileServer, ti);
             if (string.IsNullOrEmpty(url)) {
                 _concurrentLoads--;
@@ -1431,27 +1440,37 @@ namespace WPM {
             {
                 return false;
             }
-
+            
             string filePath = GetLocalFilePathForURL(url, ti);
-            if (File.Exists(filePath)) {
+            Debug.Log(ti.zoomLevel + " filePath:" + filePath);
+            if (File.Exists(filePath)) 
+            {
                 //check how old
-                if (!_tilePreloadTiles || ti.zoomLevel != TILE_MIN_ZOOM_LEVEL) {
+                if (!_tilePreloadTiles || ti.zoomLevel != TILE_MIN_ZOOM_LEVEL) 
+                {
                     DateTime written = File.GetLastWriteTimeUtc(filePath);
                     DateTime now = DateTime.UtcNow;
                     double totalHours = now.Subtract(written).TotalHours;
-                    if (totalHours > 300) {
+                    if (totalHours > 300) 
+                    {
                         File.Delete(filePath);
                         return false;
                     }
                 }
-            } else {
+            } 
+            else 
+            {
                 return false;
             }
+
             byte[] bb = File.ReadAllBytes(filePath);
             ti.texture = new Texture2D(0, 0);
             ti.texture.LoadImage(bb);
-            if (ti.texture.width <= 16) { // Invalid texture in local cache, retry
-                if (File.Exists(filePath)) {
+            if (ti.texture.width <= 16) 
+            { 
+                //Invalid texture in local cache, retry
+                if (File.Exists(filePath)) 
+                {
                     File.Delete(filePath);
                 }
                 return false;
@@ -1469,8 +1488,10 @@ namespace WPM {
             // Good to go, update tile info
             ti.SetTexture(ti.texture);
             ti.loadStatus = TILE_LOAD_STATUS.Loaded;
-            if (ti.zoomLevel >= TILE_MIN_ZOOM_LEVEL) {
-                if (ti.y == 0 || ti.y == zoomLevelsInfo[ti.zoomLevel].yMax - 1) {
+            if (ti.zoomLevel >= TILE_MIN_ZOOM_LEVEL) 
+            {
+                if (ti.y == 0 || ti.y == zoomLevelsInfo[ti.zoomLevel].yMax - 1) 
+                {
                     CreatePole(ti);
                 }
             }
@@ -1478,9 +1499,11 @@ namespace WPM {
             // Notify children of new placeholder 
             if (ti.children != null) {
                 int childCount = ti.children.Count;
-                for (int k = 0; k < childCount; k++) {
+                for (int k = 0; k < childCount; k++) 
+                {
                     TileInfo tiChild = ti.children[k];
-                    if (tiChild != null) {
+                    if (tiChild != null) 
+                    {
                         tiChild.placeholderImageSet = false;
                     }
                 }

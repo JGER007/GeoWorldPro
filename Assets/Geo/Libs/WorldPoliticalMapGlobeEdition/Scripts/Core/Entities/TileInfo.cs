@@ -56,6 +56,7 @@ namespace WPM {
             this.zoomLevel = zoomLevel;
             this.subquadIndex = subquadIndex;
             this.currentEarthTexture = currentEarthTexture;
+            //Debug.Log("this.subquadIndex:" + this.subquadIndex);
         }
 
         public void SetAlpha(float t) {
@@ -132,8 +133,10 @@ namespace WPM {
             hasAnimated = animationFinished = isAnimating = false;
         }
 
-        public void SetPlaceholderImage(Texture2D texture) {
-            if (parent == null || parent.transMat == null) {
+        public void SetPlaceholderImage(Texture2D texture) 
+        {
+            if (parent == null || parent.transMat == null) 
+            {
                 return;
             }
 

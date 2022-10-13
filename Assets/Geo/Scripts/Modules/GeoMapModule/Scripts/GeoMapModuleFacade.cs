@@ -54,6 +54,22 @@ public class GeoMapModuleFacade : BaseModuleFacade
     }
 
     /// <summary>
+    /// 初始化洲标签信息
+    /// 亚洲：(-0.3, 0.4, 0.0)
+    /// 欧洲：(-0.2, 0.4, 0.3)
+    /// 非洲：(-0.1, 0.1, 0.5)
+    /// 北美洲：(0.3, 0.4, -0.1)
+    /// 南美洲：(0.4, -0.1, 0.3)
+    /// 大洋洲：(-0.3, -0.2, -0.3)
+    /// 南极洲：(0.0, -0.5, 0.0)
+    /// </summary>
+    private void initContinentLabels()
+    {
+
+    }
+
+
+    /// <summary>
     /// 初始化测距管理类
     /// </summary>
     private void initRlueManager()
@@ -307,7 +323,39 @@ public class GeoMapModuleFacade : BaseModuleFacade
                 }
             }
         }
-        
+
+        /*
+        if(Input.GetMouseButtonDown(1))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Debug.DrawRay(ray.origin, ray.direction, Color.red);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, int.MaxValue))
+            {
+                GameObject hitGameObject = hit.collider.gameObject;
+                Debug.Log(hitGameObject.name + ":" + hitGameObject.transform.InverseTransformPoint(hit.point));
+            }
+        }*/
+
+        /*
+        if (Input.GetMouseButtonDown(1))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Debug.DrawRay(ray.origin, ray.direction, Color.red);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, int.MaxValue))
+            {
+                Vector3 hitPosition = hit.point;
+                Vector3 localHitPosition = _earth.transform.InverseTransformPoint(hitPosition);
+                GameObject marker = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                marker.transform.SetParent(_earth.transform);
+                marker.transform.localPosition = localHitPosition;
+                marker.transform.localScale = Vector3.one * 3;
+                marker.transform.LookAt(_earth.transform.position);
+
+                Debug.Log("检测到物体! localHitPosition:" + localHitPosition);
+            }
+        }*/
     }
 
 
