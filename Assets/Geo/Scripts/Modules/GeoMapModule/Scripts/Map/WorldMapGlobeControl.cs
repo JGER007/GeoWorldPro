@@ -39,7 +39,8 @@ public class WorldMapGlobeControl : MonoBehaviour
     private Color[] continentColors;
 
     [SerializeField]
-    private string[] continentNames; 
+    private string[] continentNames;
+
 
     private Material worldMapGlobeBackFacesMeshMat = null ; 
 
@@ -53,8 +54,17 @@ public class WorldMapGlobeControl : MonoBehaviour
     private Camera mainCamera;
 
     private bool initFlag = false;
-
     private float mainCameraDis;
+
+
+
+    //洲单独贴图
+    private Texture2D continentTexture;
+    //洲叠加国家贴图
+    private Texture2D continentCountryTexture; 
+    //洲材质球
+    private Material continentMaterial ;
+
     public void Init() 
     {
         worldMapGlobe.cursorColor = Color.white;
@@ -64,6 +74,19 @@ public class WorldMapGlobeControl : MonoBehaviour
 
         mainCamera = Camera.main;
         mainCameraDis = 132273000f;
+
+        initContinent();
+    }
+
+    /// <summary>
+    /// 初始化洲对应的资源
+    /// </summary>
+    private void initContinent()
+    {
+        continentMaterial = worldMapGlobeEarthContinent.GetComponent<MeshRenderer>().material;
+        continentTexture = Resources.Load<Texture2D>("Textures/Continent");
+        continentCountryTexture = Resources.Load<Texture2D>("Textures/Continent_Country");
+        continentMaterial.mainTexture = continentTexture;
     }
 
     public Vector3 GetPolePosition()
@@ -75,6 +98,23 @@ public class WorldMapGlobeControl : MonoBehaviour
     {
         worldMapGlobeEarthContinent.SetActive(flag);
         //worldMapGlobe.allowUserZoom = !flag;
+    }
+
+    public void DealContinentAndCountry(bool countryFlag)
+    {
+        if(worldMapGlobeEarthContinent.activeSelf)
+        {
+            if(countryFlag)
+            {
+                continentMaterial.mainTexture = continentCountryTexture;
+            }
+            else
+            {
+                continentMaterial.mainTexture = continentTexture;
+            }
+            
+
+        }
     }
 
     public Color GetColorIndex()
@@ -196,11 +236,8 @@ public class WorldMapGlobeControl : MonoBehaviour
         {
             string continentName = continentNames[i];
             Color color = continentColors[i];
-
             worldMapGlobe.ToggleContinentSurface(continentName, true, color);
         }
-
-        
     }
 
 

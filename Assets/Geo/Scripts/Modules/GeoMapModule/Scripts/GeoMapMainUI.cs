@@ -308,7 +308,6 @@ public class GeoMapMainUI : ModuleUI
                     toggle.isOn = isOn;
                 }
             }
-            
         }
         else if(action == "style")
         {
@@ -331,6 +330,7 @@ public class GeoMapMainUI : ModuleUI
 
     IEnumerator  OnToggleValueChanged(string action,bool isOn)  
     {
+        Debug.Log("OnToggleValueChanged action:" + action + ",isOn:" + isOn);
         if(!isOn && (action == "Province" || action == "City"))
         {
             infoUI.gameObject.SetActive(false);
