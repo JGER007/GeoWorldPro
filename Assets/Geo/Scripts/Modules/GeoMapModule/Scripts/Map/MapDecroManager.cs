@@ -91,6 +91,7 @@ public class MapDecroManager :MonoBehaviour, IManager
     void Update()
     {
 #if UNITY_EDITOR
+        
         if (Input.GetMouseButtonDown(1))
         {
             Vector3 hitPosition = getHitPoint();
@@ -106,18 +107,27 @@ public class MapDecroManager :MonoBehaviour, IManager
         {
             getScreen();
         }
-
+        else if(Input.GetKeyDown(KeyCode.A))
+        {
+            Vector3 hitPosition = getHitPoint();
+            if (hitPosition != Vector3.zero)
+            {
+                Vector3 localHitPosition = transform.InverseTransformPoint(hitPosition);
+                addMarker(localHitPosition);
+            }
+        }
 #endif
     }
 
     private Vector3 getHitPoint() 
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width/2,Screen.height/2,0));
         Debug.DrawRay(ray.origin, ray.direction, Color.red);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, int.MaxValue))
         {
-            //_worldMapGlobe.ZoomTo(0.1f);
+            //_worldMapGlobe.ZoomTo(0.2f);
             return hit.point;
         }
         return Vector3.zero;
@@ -132,8 +142,11 @@ public class MapDecroManager :MonoBehaviour, IManager
         GameObject marker = GameObject.CreatePrimitive(PrimitiveType.Cube);
         marker.transform.SetParent(mapMarkerContainer.transform);
         marker.transform.localPosition = localHitPosition;
-        marker.transform.localScale = Vector3.one * 0.003F;
+        marker.transform.localScale = Vector3.one * 0.0015F;
         marker.transform.LookAt(mapMarkerContainer.transform.position);
+
+        //Vector3 latlonPoint = Conversion.GetLatLonFromSpherePoint(localHitPosition);
+        //Debug.Log("addMarker latlonPoint:" + latlonPoint.ToString());
     }
 
     private void getScreen()

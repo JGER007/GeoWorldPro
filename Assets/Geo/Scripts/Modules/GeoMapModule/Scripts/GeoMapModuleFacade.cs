@@ -18,6 +18,8 @@ public class GeoMapModuleFacade : BaseModuleFacade
     private MapStyleManager mapStyleManager;
     private MapDecroManager mapDecroManager;
 
+    private MapCloudManager mapCloudManager;
+
     private WorldMapGlobeControl worldMapGlobeControl;
 
     private int selectProvinceindex = -1;
@@ -37,6 +39,11 @@ public class GeoMapModuleFacade : BaseModuleFacade
         mapDecroManager = FindObjectOfType<MapDecroManager>();
         mapDecroManager.WorldMapGlobe = worldMapGlobe;
         mapDecroManager.InitManager();
+
+
+        mapCloudManager = FindObjectOfType<MapCloudManager>();
+        mapCloudManager.WorldMapGlobe = worldMapGlobe;
+        mapCloudManager.InitManager();
 
         worldMapGlobeControl = FindObjectOfType<WorldMapGlobeControl>();
         worldMapGlobeControl.WorldMapGlobe = worldMapGlobe;
@@ -274,7 +281,6 @@ public class GeoMapModuleFacade : BaseModuleFacade
         else if (action == "Style")
         {
             string style = eventArgs.args[1].ToString();
-
             if(mapStyleManager.IshowPoliticalBorder(style))
             {
                 togglePolitical();
@@ -282,6 +288,16 @@ public class GeoMapModuleFacade : BaseModuleFacade
             }
 
             mapStyleManager.ChangeMapByStyle(style);
+
+            if (style == StyleEnum.云层模式.ToString())
+            {
+                mapCloudManager.ShowEarthCloud();
+            }
+            else
+            {
+                mapCloudManager.HideEarthCloud();
+            }
+
         }
         else if(action == "Compass")
         {
@@ -306,6 +322,11 @@ public class GeoMapModuleFacade : BaseModuleFacade
                 ruleManager.RemoveRule();
             }
         }
+        else if(action == "EarthCloud")
+        {
+            string op = (string)eventArgs.args[1];
+            mapCloudManager.ShowCloudByOp(op);
+        }
     }
 
     void Update()
@@ -322,39 +343,6 @@ public class GeoMapModuleFacade : BaseModuleFacade
                 }
             }
         }
-
-        /**
-        if(Input.GetMouseButtonDown(1))
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            Debug.DrawRay(ray.origin, ray.direction, Color.red);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, int.MaxValue))
-            {
-                GameObject hitGameObject = hit.collider.gameObject;
-                Debug.Log(hitGameObject.name + ":" + hitGameObject.transform.InverseTransformPoint(hit.point));
-
-            }
-        }*/
-        /**
-        if (Input.GetMouseButtonDown(1))
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            Debug.DrawRay(ray.origin, ray.direction, Color.red);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, int.MaxValue))
-            {
-                Vector3 hitPosition = hit.point;
-                Vector3 localHitPosition = _earth.transform.InverseTransformPoint(hitPosition);
-                GameObject marker = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                marker.transform.SetParent(_earth.transform);
-                marker.transform.localPosition = localHitPosition;
-                marker.transform.localScale = Vector3.one * 3;
-                marker.transform.LookAt(_earth.transform.position);
-
-                Debug.Log("检测到物体! localHitPosition:" + localHitPosition);
-            }
-        }*/
     }
 
 

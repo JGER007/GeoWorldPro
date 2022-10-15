@@ -162,6 +162,12 @@ namespace com.frame
             getAssetLoadManager ().LoadTextAsset (path, localTextCallBack);
         }
 
+        /// <summary> 加载Texture </summary>
+        public void LoadTexture(string path, Action<Texture2D> localTextureCallBack)
+        {
+            getAssetLoadManager().LoadTextureAsset(path, localTextureCallBack);
+        }
+
         /// <summary>加载音频</summary>
         public void LoadAudio (string path, Action<AudioClip> localAudioCallBack)
         {

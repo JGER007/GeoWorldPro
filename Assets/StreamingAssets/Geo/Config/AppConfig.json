@@ -1,0 +1,74 @@
+{
+	"Clouds": [{
+			"name": "苏力",
+			"desc": "苏力",
+			"fileName": "苏力.png",
+			"earthLocation": {
+				"x": "-0.3184",
+				"y": "0.24",
+				"z": "-0.3016"
+			},
+			"earthZoom": "0.2"
+		},
+		{
+			"name": "大气重力波",
+			"desc": "大气重力波",
+			"fileName": "大气重力波.png",
+			"earthLocation": {
+				"x": "-0.4314",
+				"y": "-0.1527",
+				"z": "-0.2014"
+			},
+			"earthZoom": "0.2"
+		},
+		{
+			"name": "冯卡门漩涡",
+			"desc": "冯卡门漩涡",
+			"fileName": "冯卡门漩涡.png",
+			"earthLocation": {
+				"x": "-0.3383",
+				"y": "0.2622",
+				"z": "-0.2584"
+			},
+			"earthZoom": "0.26"
+		},
+		{
+			"name": "气旋",
+			"desc": "气旋",
+			"fileName": "气旋.png",
+			"earthLocation": {
+				"x": "0.1015",
+				"y": "0.4488",
+				"z": "0.1957"
+			},
+			"earthZoom": "0.24"
+		},
+		{
+			"name": "汤加火山",
+			"desc": "汤加火山",
+			"fileName": "汤加火山.png",
+			"earthLocation": {
+				"x": "0.0337",
+				"y": "-0.1962",
+				"z": "-0.4586"
+			},
+			"earthZoom": "0.08"
+		}
+	],
+	"Continents"[
+	{
+		"Name":"亚洲",
+		"MinE":"60",
+		"MaxE":"170",
+		"MinS":"10",
+		"MaxS":"80"
+	},
+	{
+		"Name":"欧洲",
+		"MinE":"60",
+		"MaxE":"170",
+		"MinS":"10",
+		"MaxS":"80"
+	}
+	]
+}

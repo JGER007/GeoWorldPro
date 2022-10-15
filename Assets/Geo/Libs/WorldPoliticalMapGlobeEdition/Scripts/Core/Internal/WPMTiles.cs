@@ -1442,7 +1442,7 @@ namespace WPM {
             }
             
             string filePath = GetLocalFilePathForURL(url, ti);
-            Debug.Log(ti.zoomLevel + " filePath:" + filePath);
+            //Debug.Log(ti.zoomLevel + " filePath:" + filePath);
             if (File.Exists(filePath)) 
             {
                 //check how old

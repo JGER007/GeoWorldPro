@@ -24,6 +24,7 @@ public class Facade : MonoBehaviour
             AssetManager.Instance.InitManager ();
             EventUtil.AddListener (GlobalEvent.Init_Config_Complete, onConfigInitComplete);
             ConfigManager.Instance.InitManager ();
+            
         }
         else
         {
@@ -35,7 +36,9 @@ public class Facade : MonoBehaviour
     private void onConfigInitComplete (CustomEventArgs eventArgs)
     {
         EventUtil.RemoveListener (GlobalEvent.Init_Config_Complete, onConfigInitComplete);
-        initApp ();
+
+        AppConfigManager.Instance.InitManager();
+        initApp();
     }
 
     /// <summary> App初始化 </summary>

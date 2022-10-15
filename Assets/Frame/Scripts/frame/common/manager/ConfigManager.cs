@@ -21,7 +21,7 @@ public class ConfigManager : Singleton<ConfigManager>, IManager
     public Dictionary<string, ModuleConfigVO> ModuleConfig { get { return moduleConfig; } }
 
     //加载网络资源根路径
-    public static string BaseNetPath = "http://boboother.oss-cn-beijing.aliyuncs.com/AR/";
+    public static string BaseNetPath = "";
 
     /// <summary>初始化配置文件</summary>
     /// <param name="container"></param>

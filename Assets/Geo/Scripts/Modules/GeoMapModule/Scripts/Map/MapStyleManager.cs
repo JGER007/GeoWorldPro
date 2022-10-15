@@ -94,6 +94,7 @@ public class MapStyleManager : IManager
                 break;
 
             case StyleEnum.ÎÀÐÇµØÍ¼:
+            case StyleEnum.ÔÆ²ãÄ£Ê½:
                 tILE_SERVER = TILE_SERVER.Satellite;
                 break;
 

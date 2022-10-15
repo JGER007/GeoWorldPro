@@ -21,6 +21,34 @@ namespace com.frame
             StartCoroutine (LoadAudio (path, loadAudioCallBack));
         }
 
+        //加载图片资源
+        public void LoadTextureAsset(string path, Action<Texture2D> loadTextureCallBack)
+        {
+            StartCoroutine(LoadTexture(path, loadTextureCallBack));
+        }
+
+
+        /// <summary>
+        /// 加载图片资源
+        /// </summary>
+        /// <param name="path">路径</param>
+        /// <param name="loadTextCallBack">加载回调</param>
+        /// <returns></returns>
+        IEnumerator LoadTexture(string path, Action<Texture2D> loadTextureCallBack) 
+        {
+            UnityWebRequest wr = new UnityWebRequest(path);
+            DownloadHandlerTexture texDl = new DownloadHandlerTexture(true);
+            wr.downloadHandler = texDl;
+            yield return wr.Send();
+            if (!wr.isError)
+            {
+                Texture2D t = texDl.texture;
+                loadTextureCallBack?.Invoke(t) ;
+            }
+
+        }
+
+
 
         /// <summary>
         /// 加载音频资源
@@ -66,6 +94,7 @@ namespace com.frame
             else
             {
                 Debug.Log ("配置文件:" + webRequest.downloadHandler.text);
+                Debug.Log(path);
                 loadTextCallBack (webRequest.downloadHandler.text);
             }
         }
@@ -127,7 +156,6 @@ namespace com.frame
                 {
                     assetVO.Asset = null;
                     loadCallBack (assetVO);
-                    //Debug.Log ("加载失败:" + webRequest.error);
                 }
                 //不添加这一句 第二次加载的时候会阻塞 停止加载
                 webRequest.Dispose ();

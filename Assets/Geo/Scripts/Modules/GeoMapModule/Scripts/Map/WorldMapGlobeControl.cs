@@ -225,8 +225,6 @@ public class WorldMapGlobeControl : MonoBehaviour
         worldMapGlobeBackFacesMeshMat.SetColor("_Color", color);
     }    
 
-
-
     /// <summary>
     /// 展示洲区块信息
     /// </summary>
@@ -288,14 +286,14 @@ public class WorldMapGlobeControl : MonoBehaviour
                         changeScale = mainCamera.transform.position.sqrMagnitude / mainCameraDis;
                     }
                     updateFlag = false;
-                    worldMapGlobe.countryLabelsSize = 0.25f* changeScale;
+                    worldMapGlobe.countryLabelsSize = 0.35f* changeScale;
                     worldMapGlobe.cityIconSize = changeScale;
                 }
             }
 
             if (cameraDis <= tileDis)
             {
-                /*
+                /**
                 if(!smallFlag)
                 {
                     smallFlag = true;
@@ -343,7 +341,38 @@ public class WorldMapGlobeControl : MonoBehaviour
 
                // smallFlag = false;
             }
-        }    
+        }   
+        
+        if(worldMapGlobeEarthContinent.activeSelf)
+        {
+            checkSelectContinent();
+        }
+    }
+
+    private void  checkSelectContinent() 
+    {
+        if(Input.GetMouseButtonDown(0))
+        {
+            Vector3 vector3 = getHitPoint();
+            if(vector3 != Vector3.zero)
+            {
+                Vector2 latlon = Conversion.GetLatLonFromSpherePoint(vector3);
+                Debug.Log("latlon:" + latlon);
+            }
+        }
+        //
+    }
+
+    private Vector3 getHitPoint()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Debug.DrawRay(ray.origin, ray.direction, Color.red);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, int.MaxValue))
+        {
+            return hit.point;
+        }
+        return Vector3.zero;
     }
 
     private void showClouldByValue(float value)

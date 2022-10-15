@@ -55,6 +55,9 @@ public class GeoMapMainUI : ModuleUI
     private List<string> styles;
 
     [SerializeField]
+    private ClouldUI clouldUI;
+
+    [SerializeField]
     private InfoUI infoUI;
 
     private Vector3 openPose;
@@ -70,9 +73,7 @@ public class GeoMapMainUI : ModuleUI
     void Start()
     {
         mainCamera = Camera.main;
-        //InitUI();
         screenCenter = new Vector3(Screen.width / 2, Screen.height / 2,0);
-        //Debug.Log("GeoMapMainUI:" + Screen.width + "," + Screen.height);
     }
 
     float deltTime = 0;
@@ -115,6 +116,19 @@ public class GeoMapMainUI : ModuleUI
         initModeUI();
 
         toolUI.InitUI();
+
+        clouldUI.InitUI();
+    }
+
+    
+    public void ShowClouldUI(ClouldVO clouldVO)
+    {
+        clouldUI.ShowClould(clouldVO);
+    }
+
+    public void HideClouldUI()
+    {
+        clouldUI.HideClould();
     }
 
     private void initModeUI()
@@ -156,7 +170,6 @@ public class GeoMapMainUI : ModuleUI
             }
             seletModeTxt.text = label.text;
             label.color = modeLightColor;
-            //Invoke("delayChangeToStyle", 0.1f);
             StartCoroutine(ChangeToStyle());
         }
         else
@@ -167,11 +180,8 @@ public class GeoMapMainUI : ModuleUI
 
     IEnumerator ChangeToStyle()
     {
-        //Loading.SetActive(true);
         yield return new WaitForEndOfFrame();
         EventUtil.DispatchEvent(GlobalEvent.UI_TO_Module_Action, "Style", currToggle.name);
-        //yield return new WaitForSeconds(1);
-        //Loading.SetActive(false);
         yield return null;
     }
 
@@ -314,6 +324,23 @@ public class GeoMapMainUI : ModuleUI
             currStyleEnum = (StyleEnum)eventArgs.args[1];
             showCurrStyle();
         }
+        else if (action == "earthcloud")
+        {
+            bool flag = (bool)eventArgs.args[1];
+            string cloudName = (string)eventArgs.args[2];
+            
+
+            if (flag)
+            {
+                ClouldVO clouldVO = AppConfigManager.Instance.GetClouldVO(cloudName);
+                clouldUI.ShowClould(clouldVO);
+            }
+            else
+            {
+                clouldUI.HideClould();
+            }
+        }
+        
     }
 
     private void showCurrStyle()
@@ -330,7 +357,6 @@ public class GeoMapMainUI : ModuleUI
 
     IEnumerator  OnToggleValueChanged(string action,bool isOn)  
     {
-        Debug.Log("OnToggleValueChanged action:" + action + ",isOn:" + isOn);
         if(!isOn && (action == "Province" || action == "City"))
         {
             infoUI.gameObject.SetActive(false);

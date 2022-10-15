@@ -6,6 +6,7 @@ public class Test_ZipWrapper : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log(Application.dataPath);
         //Test_Zip();
         //Test_UnZip();
     }
@@ -15,7 +16,8 @@ public class Test_ZipWrapper : MonoBehaviour
 
     void Test_Zip()
     {
-        string[] zipFilePaths = new string[] {
+        string[] zipFilePaths = new string[] 
+        {
             Application.dataPath+"/TilesCache"
         };
 

@@ -1,0 +1,58 @@
+{
+	"Clouds": [{
+			"name": "苏力",
+			"desc": "苏力",
+			"fileName": "苏力.png",
+			"earthLocation": {
+				"x": -0.3184,
+				"y": 0.24,
+				"z": -0.3016
+			},
+			"earthZoom": 0.2
+		},
+		{
+			"name": "大气重力波",
+			"desc": "大气重力波",
+			"fileName": "大气重力波.png",
+			"earthLocation": {
+				"x": -0.3184,
+				"y": 0.24,
+				"z": -0.3016
+			},
+			"earthZoom": 0.2
+		},
+		{
+			"name": "冯卡门漩涡",
+			"desc": "冯卡门漩涡",
+			"fileName": "冯卡门漩涡.png",
+			"earthLocation": {
+				"x": -0.3184,
+				"y": 0.24,
+				"z": -0.3016
+			},
+			"earthZoom": 0.2
+		},
+		{
+			"name": "气旋",
+			"desc": "气旋",
+			"fileName": "气旋.png",
+			"earthLocation": {
+				"x": -0.3184,
+				"y": 0.24,
+				"z": -0.3016
+			},
+			"earthZoom": 0.2
+		},
+		{
+			"name": "汤加火山",
+			"desc": "汤加火山",
+			"fileName": "汤加火山.png",
+			"earthLocation": {
+				"x": -0.3184,
+				"y": 0.24,
+				"z": -0.3016
+			},
+			"earthZoom": 0.2
+		}
+	]
+}
