@@ -26,6 +26,22 @@ public class InfoUI : MonoBehaviour
     private string tipCity = "数据来源：中国城市统计年鉴2020";
     private string tipProvince = "数据来源：2020年第七次全国人口普查主要数据";
 
+
+    public void SetContinentInfo(ContinentVO continentVO)
+    {
+        titleTxt.text = continentVO.name;
+        
+        if(!tipTxt.gameObject.activeSelf)
+        {
+            tipTxt.gameObject.SetActive(true);
+        }
+
+        BG01.SetActive(true);
+        BG02.SetActive(false);
+
+        infoTxt.text = continentVO.GetInfo();
+        tipTxt.text = "数据来源：人教版《地理》七年级上册";
+    }
     public void SetInfo(InfoVO infoVO)
     {
         titleTxt.text = infoVO.Tilte;

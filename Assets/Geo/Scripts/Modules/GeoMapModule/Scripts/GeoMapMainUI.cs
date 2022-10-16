@@ -288,6 +288,20 @@ public class GeoMapMainUI : ModuleUI
                 infoUI.gameObject.SetActive(false);
             }
         }
+        else if(action == "continentinfo")
+        {
+            ContinentVO continentVO = (ContinentVO)eventArgs.args[1];
+            if (continentVO != null)
+            {
+                infoUI.gameObject.SetActive(true);
+                infoUI.SetContinentInfo(continentVO);
+            }
+            else
+            {
+                infoUI.gameObject.SetActive(false);
+            }
+
+        }
         else if(action == "toggle")
         {
             ///洲、国家、省份、城市

@@ -63,8 +63,7 @@ public class ClouldUI : BaseUI
     public void ShowClould(ClouldVO clouldVO)
     {
         currClouldVO = clouldVO;
-        content.SetActive(true);
-        clouldImg.gameObject.SetActive(false);
+        
         Sprite sprite = null; 
         cloudSp.TryGetValue(clouldVO.path,out sprite);
         if(sprite == null)
@@ -81,8 +80,8 @@ public class ClouldUI : BaseUI
 
     private void showClouldImg(Sprite sp)
     {
-        clouldImg.gameObject.SetActive(true);
         clouldImg.sprite = sp;
+        content.SetActive(true);
     }
 
     private void onLoadTextureComplete(Texture2D t)

@@ -60,6 +60,7 @@ public class WorldMapGlobeControl : MonoBehaviour
 
     //ÖÞµ¥¶ÀÌùÍ¼
     private Texture2D continentTexture;
+
     //ÖÞµþ¼Ó¹ú¼ÒÌùÍ¼
     private Texture2D continentCountryTexture; 
     //ÖÞ²ÄÖÊÇò
@@ -343,25 +344,47 @@ public class WorldMapGlobeControl : MonoBehaviour
             }
         }   
         
-        if(worldMapGlobeEarthContinent.activeSelf)
+        if(worldMapGlobeEarthContinent.activeSelf&& !worldMapGlobe.showCountryNames && !worldMapGlobe.showProvinces && !worldMapGlobe.showCities)
         {
             checkSelectContinent();
         }
     }
 
+    #region Continent
+
+
+    
+
     private void  checkSelectContinent() 
     {
         if(Input.GetMouseButtonDown(0))
         {
-            Vector3 vector3 = getHitPoint();
-            if(vector3 != Vector3.zero)
+            Vector3 hitPoint = getHitPoint();
+            if(hitPoint != Vector3.zero)
             {
-                Vector2 latlon = Conversion.GetLatLonFromSpherePoint(vector3);
-                Debug.Log("latlon:" + latlon);
+                Vector3 localEarthPoint = transform.InverseTransformPoint(hitPoint);
+                Vector2 uv = Conversion.GetUVFromSpherePoint(localEarthPoint);
+                //Debug.Log("uv:" + uv);
+                int hitW = (int)(continentTexture.width * uv.x);
+                int hitH = (int)(continentTexture.height * uv.y);
+                Color hitColor = continentTexture.GetPixel(hitW, hitH) * 255;
+                Vector3 hitColorValue = new Vector3(hitColor.r, hitColor.g, hitColor.b);
+                ContinentVO continentVO = AppConfigManager.Instance.GetMatchContinentVO(hitColorValue);
+                if(continentVO != null)
+                {
+                    Debug.Log(continentVO.name);
+                    EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "continentinfo", continentVO);
+                }
+                else
+                {
+                    Debug.Log("´óÑó");
+                }
+                
             }
         }
-        //
     }
+
+
 
     private Vector3 getHitPoint()
     {
@@ -374,6 +397,8 @@ public class WorldMapGlobeControl : MonoBehaviour
         }
         return Vector3.zero;
     }
+
+    #endregion
 
     private void showClouldByValue(float value)
     {

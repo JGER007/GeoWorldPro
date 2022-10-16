@@ -9,21 +9,86 @@ using System.IO;
 
 public class AppConfigManager : Singleton<AppConfigManager>, IManager
 {
-    private Dictionary<string , ClouldVO> clouldDic = null;
-    private List<string> cloudNameList = null;
-
     public void InitManager(Transform container = null)
     {
         string basePath = AppResPath4Web + "Geo/Config/AppConfig.json";
         AssetManager.Instance.LoadText(basePath, onLoadAppConfigCallBack);
-        clouldDic = new Dictionary<string, ClouldVO>();
-        cloudNameList = new List<string>();
+        
     }
 
     private void onLoadAppConfigCallBack(string appConfigData)
     {
         JsonData appConfigJD = JsonMapper.ToObject(appConfigData);
         JsonData cloudJD = appConfigJD["Clouds"];
+        parseCloudData(cloudJD);
+
+        JsonData continentJD = appConfigJD["Continents"];
+        parseContinentData(continentJD);
+    }
+
+    #region 洲数据
+    private Dictionary<string, ContinentVO> continentDic = null;
+    private void parseContinentData(JsonData continentJD)
+    {
+        continentDic = new Dictionary<string, ContinentVO>();
+        foreach (JsonData continent in continentJD)
+        {
+            ContinentVO continentVO = new ContinentVO();
+            continentVO.name = continent["name"].ToString();
+            continentVO.desc = continent["desc"].ToString();
+            continentVO.area = int.Parse(continent["area"].ToString());
+
+            JsonData colorJD = continent["color"];
+            continentVO.colorValue = new Vector3();
+            continentVO.colorValue.x = float.Parse(colorJD["r"].ToString());
+            continentVO.colorValue.y = float.Parse(colorJD["g"].ToString());
+            continentVO.colorValue.z = float.Parse(colorJD["b"].ToString());
+
+            JsonData locationJD = continent["location"];
+            continentVO.location = new Vector3();
+            continentVO.location.x = float.Parse(locationJD["x"].ToString());
+            continentVO.location.y = float.Parse(locationJD["y"].ToString());
+            continentVO.location.z = float.Parse(locationJD["z"].ToString());
+
+            continentDic.Add(continentVO.name,continentVO);
+        }
+    }
+
+
+    private Vector3 defaultColorValue = new Vector3(186.0f, 227.0f, 235.0f);
+    public ContinentVO GetMatchContinentVO(Vector3 hitColorValue)
+    {
+        Debug.Log("hitColorValue:" + hitColorValue);
+        ContinentVO continentVO = null;
+        float minDis = Vector3.Distance(hitColorValue, defaultColorValue);
+        foreach (string key in continentDic.Keys)
+        {
+            ContinentVO vo = continentDic[key];
+            float dis = Vector3.Distance(hitColorValue, vo.colorValue);
+            if(dis < minDis)
+            {
+                continentVO = vo;
+                minDis = dis;
+            }
+        }
+        return continentVO;
+    }
+
+
+    #endregion
+
+    #region 云层数据
+    private Dictionary<string, ClouldVO> clouldDic = null;
+    private List<string> cloudNameList = null;
+
+    /// <summary>
+    /// 解析云层数据
+    /// </summary>
+    /// <param name="cloudJD"></param>
+    private void parseCloudData(JsonData cloudJD)
+    {
+        clouldDic = new Dictionary<string, ClouldVO>();
+        cloudNameList = new List<string>();
         foreach (JsonData cloud in cloudJD)
         {
             ClouldVO clouldVO = new ClouldVO();
@@ -37,7 +102,7 @@ public class AppConfigManager : Singleton<AppConfigManager>, IManager
             clouldVO.earthLocation.y = float.Parse(earthLocationJD["y"].ToString());
             clouldVO.earthLocation.z = float.Parse(earthLocationJD["z"].ToString());
             clouldVO.path = AppResPath4Web + "Geo/Res/Clouds/" + clouldVO.fileName;
-            clouldDic.Add(clouldVO.name ,clouldVO);
+            clouldDic.Add(clouldVO.name, clouldVO);
             cloudNameList.Add(clouldVO.name);
         }
     }
@@ -48,12 +113,6 @@ public class AppConfigManager : Singleton<AppConfigManager>, IManager
         clouldDic.TryGetValue(cloudName, out clouldVO);
         return clouldVO;
     }
-
-    public void OnQuit()
-    {
-        
-    }
-
     /// <summary>
     /// 应用程序内部资源路径存放路径(www/webrequest专用)
     /// </summary>
@@ -72,6 +131,12 @@ public class AppConfigManager : Singleton<AppConfigManager>, IManager
     }
 
     public List<string> CloudNameList { get => cloudNameList; set => cloudNameList = value; }
+
+    #endregion
+    public void OnQuit()
+    {
+
+    }
 }
 
 public class AppConfigInfo
@@ -88,4 +153,24 @@ public class ClouldVO
     public Vector3 earthLocation;
     public float earthZoom;
    
+}
+
+public class ContinentVO
+{
+    public string name;
+    public string desc;
+    public int area;
+    public Vector3 colorValue;
+    public Vector3 location;
+
+    private string info = "";
+    public string GetInfo()
+    {
+        if(string.IsNullOrEmpty(info))
+        {
+            info = "面积:" + area + "(万平方公里)\n"
+                + desc;
+        }
+        return info;
+    }
 }
