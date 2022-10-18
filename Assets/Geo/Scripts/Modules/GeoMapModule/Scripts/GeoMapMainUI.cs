@@ -66,8 +66,6 @@ public class GeoMapMainUI : ModuleUI
     private StyleEnum currStyleEnum = StyleEnum.默认模式;
     private Camera mainCamera;
 
-    private WorldMapGlobeControl worldMapGlobeControl;
-
     private Vector3 screenCenter;
 
     void Start()
@@ -83,7 +81,7 @@ public class GeoMapMainUI : ModuleUI
         if(deltTime >0.05f)
         {
             deltTime = 0;
-            Vector3 polePosition = worldMapGlobeControl.GetPolePosition();
+            Vector3 polePosition = WorldMapGlobeControl.Instance.GetPolePosition();
             Vector3 screenPos = mainCamera.WorldToScreenPoint(polePosition) - screenCenter;
             float angle = angle_360(screenPos);
             Vector3 eulerAngles = new Vector3(0, 0, angle);
@@ -109,9 +107,7 @@ public class GeoMapMainUI : ModuleUI
         initOperateUI();
 
         EventUtil.AddListener(GlobalEvent.Module_TO_UI_Action ,onModuleAction);
-
-        worldMapGlobeControl = FindObjectOfType<WorldMapGlobeControl>();
-        worldMapGlobeControl.onLatLonUpdate = onLatLonUpdate;
+        WorldMapGlobeControl.Instance.onLatLonUpdate = onLatLonUpdate;
 
         initModeUI();
 
@@ -160,10 +156,10 @@ public class GeoMapMainUI : ModuleUI
 
     private void onModelListToggleValueChanged(Toggle toggle) 
     {
-        currToggle = toggle;
         Text label = toggle.transform.Find("Label").GetComponent<Text>();
         if (toggle.isOn)
         {
+            currToggle = toggle;
             if (!seletModeTxt.gameObject.activeSelf)
             {
                 seletModeTxt.gameObject.SetActive(true);
@@ -180,14 +176,20 @@ public class GeoMapMainUI : ModuleUI
 
     IEnumerator ChangeToStyle()
     {
+        if(currToggle.name == StyleEnum.云层模式.ToString() )
+        {
+            operateUITran.gameObject.SetActive(false);
+        }
+        else
+        {
+            if(!operateUITran.gameObject.activeSelf)
+            {
+                operateUITran.gameObject.SetActive(true);
+            }
+        }
         yield return new WaitForEndOfFrame();
         EventUtil.DispatchEvent(GlobalEvent.UI_TO_Module_Action, "Style", currToggle.name);
         yield return null;
-    }
-
-    private void delayChangeToStyle()
-    {
-        EventUtil.DispatchEvent(GlobalEvent.UI_TO_Module_Action, "Style", currToggle.name);
     }
 
     /// <summary>
@@ -342,7 +344,6 @@ public class GeoMapMainUI : ModuleUI
         {
             bool flag = (bool)eventArgs.args[1];
             string cloudName = (string)eventArgs.args[2];
-            
 
             if (flag)
             {
@@ -371,7 +372,7 @@ public class GeoMapMainUI : ModuleUI
 
     IEnumerator  OnToggleValueChanged(string action,bool isOn)  
     {
-        if(!isOn && (action == "Province" || action == "City"))
+        if(!isOn && (action == "Country" || action == "Province" || action == "City"))
         {
             infoUI.gameObject.SetActive(false);
         }

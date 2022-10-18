@@ -17,11 +17,15 @@ public class MapCloudManager : MonoBehaviour, IManager
     private List<string> cloudNameList = null;
     public void InitManager(Transform container = null)
     {
-        cloudNameList = AppConfigManager.Instance.CloudNameList;
+        
     }
 
     public void ShowEarthCloud()
     {
+        if (cloudNameList == null)
+        {
+            cloudNameList = AppConfigManager.Instance.CloudNameList;
+        }
         opIndex = 0;
         string cloudName = cloudNameList[opIndex];
         show(cloudName);
@@ -40,15 +44,16 @@ public class MapCloudManager : MonoBehaviour, IManager
 
     private void onFlyToLocationOver()
     {
-        _worldMapGlobe.ZoomTo(0.2f, 1);
-        StartCoroutine(WaitAction(onZoomToOver, 1.2f));
+        WorldMapGlobeControl.Instance.MapZoomTo(0.2f, 1, onZoomToOver);
+        _worldMapGlobe.ZoomTo(currClouldVO.earthZoom, 1);
+        //StartCoroutine(WaitAction(onZoomToOver, 1.2f));
     }
 
     private void onZoomToOver() 
     {
         EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "EarthCloud", true, currClouldVO.name);
     }
-
+    
     IEnumerator WaitAction(Action action ,float duration)
     {
         yield return new WaitForSeconds(duration);

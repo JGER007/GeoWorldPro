@@ -7,6 +7,9 @@ using WPM;
 
 public class GeoMapModuleFacade : BaseModuleFacade
 {
+
+    public static float DefaultEarthZoom = 1.333f;
+
     private bool continentFlag = false; 
     private bool countryFlag = false;
     private bool provinceFlag = false;
@@ -17,19 +20,15 @@ public class GeoMapModuleFacade : BaseModuleFacade
 
     private MapStyleManager mapStyleManager;
     private MapDecroManager mapDecroManager;
-
+    private MapContinentManager mapContinentManager;
     private MapCloudManager mapCloudManager;
-
-    private WorldMapGlobeControl worldMapGlobeControl;
-
-    private int selectProvinceindex = -1;
 
     private Transform provinceNamesContainer = null;
 
     private RuleManager ruleManager;
     [SerializeField]
     private GameObject ruleContainer;
-    //private Country zhCountry ;
+    
     public override void InitModuleFacade()
     {
         base.InitModuleFacade();
@@ -45,24 +44,23 @@ public class GeoMapModuleFacade : BaseModuleFacade
         mapCloudManager.WorldMapGlobe = worldMapGlobe;
         mapCloudManager.InitManager();
 
-        worldMapGlobeControl = FindObjectOfType<WorldMapGlobeControl>();
-        worldMapGlobeControl.WorldMapGlobe = worldMapGlobe;
-        mapStyleManager.WorldMapGlobeControl = worldMapGlobeControl;
+        mapContinentManager = FindObjectOfType<MapContinentManager>();
+        mapContinentManager.WorldMapGlobe = worldMapGlobe;
+        mapContinentManager.InitManager();
+
+        WorldMapGlobeControl.Instance.WorldMapGlobe = worldMapGlobe;
         mapStyleManager.InitManager();
         worldMapGlobe.earthStyle = EARTH_STYLE.Natural;
 
         initRlueManager();
-
         worldMapGlobe.OnProvinceClick += OnProvinceClick;
         worldMapGlobe.OnCityClick += OnCityClick;
-
         worldMapGlobe.OnCountryClick += OnCountryClick;
-        worldMapGlobe.OnCountryPointerUp += OnCountryPointerUp;
-        Country zhCountry = worldMapGlobe.GetCountry("中国");
-        //zhCountry.labelVisible = true;
-        //Debug.Log(zhCountry.latlonCenter);
 
-        worldMapGlobe.ZoomTo(1.333f);
+        worldMapGlobe.OnCountryPointerUp += OnCountryPointerUp;
+
+        Country zhCountry = worldMapGlobe.GetCountry("中国");
+        worldMapGlobe.ZoomTo(DefaultEarthZoom);
         FlyToCountry("中国");
     }
 
@@ -87,28 +85,7 @@ public class GeoMapModuleFacade : BaseModuleFacade
         
     }
 
-    private void OnCountryClick(int countryIndex, int regionIndex)
-    {
-        if (worldMapGlobe.GetCountry(countryIndex).name != "中国")
-        {
-            worldMapGlobe.HideProvinceRegionHighlights(true);
-        }
-
-        /**
-        if (worldMapGlobe.showCountryNames)
-        {
-            Country country = worldMapGlobe.countries[countryIndex];
-            InfoVO infoVO = new InfoVO();
-            infoVO.SetData(country);
-            EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "info", infoVO);
-        }*/
-    }
-
-    /**
-    private void onEnterCountry(int countryIndex, int regionIndex)
-    {
-        Debug.Log("Entered country (" + countryIndex + ") " + worldMapGlobe.countries[countryIndex].name + ",regionIndex:" + regionIndex);
-    }*/
+    
 
     
     private void showProvinceNames() 
@@ -133,14 +110,12 @@ public class GeoMapModuleFacade : BaseModuleFacade
                 for (int p = 0; p < country.provinces.Length; p++)
                 {
                     Province state = country.provinces[p];
-                    Color color = Color.white; //new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+                    Color color = Color.white; 
                     TextMesh textMesh = worldMapGlobe.AddText(state.name, state.localPosition, color);
                     textMesh.transform.SetParent(provinceNamesContainer);
                 }
             }
         }
-
-        
     }
 
 
@@ -156,7 +131,34 @@ public class GeoMapModuleFacade : BaseModuleFacade
         worldMapGlobe.FlyToCity(cityIndex, 2f, 0.2f, 0.5f);
     }
 
-    
+    private void OnCountryClick(int countryIndex, int regionIndex)
+    {
+        if (worldMapGlobe.showCountryNames)
+        {
+            if (countryIndex != -1)
+            {
+                if (worldMapGlobe.GetCountry(countryIndex).name != "中国")
+                {
+                    worldMapGlobe.HideProvinceRegionHighlights(true);
+                }
+
+                if (worldMapGlobe.showCountryNames && !worldMapGlobe.showProvinces && !worldMapGlobe.showCities)
+                {
+                    Country country = worldMapGlobe.countries[countryIndex];
+                    InfoVO infoVO = new InfoVO();
+                    infoVO.SetData(country);
+
+                    EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "info", infoVO);
+                }
+            }
+            else
+            {
+                EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "info", null);
+            }
+        }
+
+            
+    }
 
     private void OnProvinceClick(int provinceIndex, int regionIndex)
     {
@@ -215,8 +217,9 @@ public class GeoMapModuleFacade : BaseModuleFacade
         if (action == "Continent")
         {
             continentFlag = (bool)eventArgs.args[1];
-            worldMapGlobeControl.ShowContinent(continentFlag);
-            if(continentFlag)
+            //worldMapGlobeControl.ShowContinent(continentFlag);
+            mapContinentManager.ShowContinent(continentFlag);
+            if (continentFlag)
             {
                 togglePolitical();
                 string style = StyleEnum.自然模式.ToString();
@@ -228,7 +231,8 @@ public class GeoMapModuleFacade : BaseModuleFacade
                 mapDecroManager.HideContinentLabel();
             }
 
-            worldMapGlobeControl.DealContinentAndCountry(countryFlag);
+            //worldMapGlobeControl.DealContinentAndCountry(countryFlag);
+            mapContinentManager.DealContinentAndCountry(countryFlag);
         }
         else if (action == "Country")
         {
@@ -243,16 +247,16 @@ public class GeoMapModuleFacade : BaseModuleFacade
             worldMapGlobe.showInlandFrontiers = countryFlag;
             worldMapGlobe.enableCountryHighlight = countryFlag;
             worldMapGlobe.highlightAllCountryRegions = countryFlag;
-
-            worldMapGlobeControl.DealContinentAndCountry(countryFlag);
+            mapContinentManager.DealContinentAndCountry(countryFlag);
+            //worldMapGlobeControl.DealContinentAndCountry(countryFlag);
         }
         else if(action == "Province")
         {
             provinceFlag = (bool)eventArgs.args[1];
-            if (provinceFlag)
+            /*if (provinceFlag)
             {
                 toggleContinent();
-            }
+            }*/
             worldMapGlobe.showProvinces = provinceFlag;
             worldMapGlobe.showProvinceCountryOutline = provinceFlag;
 
@@ -288,7 +292,7 @@ public class GeoMapModuleFacade : BaseModuleFacade
             }
 
             mapStyleManager.ChangeMapByStyle(style);
-
+          
             if (style == StyleEnum.云层模式.ToString())
             {
                 mapCloudManager.ShowEarthCloud();
@@ -301,18 +305,18 @@ public class GeoMapModuleFacade : BaseModuleFacade
         }
         else if(action == "Compass")
         {
-            worldMapGlobe.ZoomTo(1.333f);
+            worldMapGlobe.ZoomTo(DefaultEarthZoom);
             FlyToCountry("中国");
         }
         else if(action == "LatLonLine")
         {
             bool isOn = (bool)eventArgs.args[1];
-            worldMapGlobeControl.SetLatLonLineFlag(isOn);
+            WorldMapGlobeControl.Instance.SetLatLonLineFlag(isOn);
         }
         else if (action == "LatLon")
         {
             bool isOn = (bool)eventArgs.args[1];
-            worldMapGlobeControl.SetShowCursorFlag(isOn);
+            WorldMapGlobeControl.Instance.SetShowCursorFlag(isOn);
         }
         else if (action == "Rule")
         {
@@ -378,7 +382,6 @@ public class GeoMapModuleFacade : BaseModuleFacade
 
     public void togglePolitical()  
     {
-        //EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "toggle", "Country", false);
         EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "toggle", "Province", false);
         EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "toggle", "City", false);
     }
@@ -455,7 +458,6 @@ public class InfoVO
             {
                 info = info + "(" + provinceDataVO.Abbreviation + ")";
             }
-            //info = "位置:" + info;
         }
 
         if (!string.IsNullOrEmpty(City))
@@ -469,22 +471,6 @@ public class InfoVO
     public string GetInfo()
     {
         string info = "";
-        /**
-        //Continent + ">" + Country;
-        if(!string.IsNullOrEmpty(Province))
-        {
-            info = info + ">" + Province ;
-            if(provinceDataVO != null)
-            {
-                info = info + "(" + provinceDataVO.Abbreviation + ")";
-            }
-            info = "位置:" + info;
-        }
-
-        if (!string.IsNullOrEmpty(City))
-        {
-            info = info + ">" + City;
-        }*/
 
         if (cityVO != null)
         {
@@ -511,18 +497,6 @@ public class InfoVO
         else if(provinceDataVO != null)
         {
             info = info + "\n人口：" + provinceDataVO.Population + "(人)";//+ "(万)";
-            /**
-            info = info + "\n面积：" + provinceDataVO.Area + "(平方公里)";
-
-            if (!string.IsNullOrEmpty(provinceDataVO.WaterResources))
-            {
-                info = info + "\n水资源：" + provinceDataVO.WaterResources + "(万立方米)";
-            }
-
-            if (!string.IsNullOrEmpty(provinceDataVO.GreenLandArea))
-            {
-                info = info + "\n绿地面积：" + provinceDataVO.GreenLandArea + "(公顷)";
-            }*/
         }
 
         return info;

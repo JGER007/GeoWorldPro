@@ -30,8 +30,8 @@ public class InfoUI : MonoBehaviour
     public void SetContinentInfo(ContinentVO continentVO)
     {
         titleTxt.text = continentVO.name;
-        
-        if(!tipTxt.gameObject.activeSelf)
+        positionInfo.text = continentVO.en;
+        if (!tipTxt.gameObject.activeSelf)
         {
             tipTxt.gameObject.SetActive(true);
         }
@@ -61,8 +61,6 @@ public class InfoUI : MonoBehaviour
             BG02.SetActive(true); 
             tipTxt.gameObject.SetActive(false);
         }
-
-
         if (infoVO.Country == "ÖÐ¹ú")
         {
             if (infoVO.cityVO != null)
@@ -82,6 +80,5 @@ public class InfoUI : MonoBehaviour
         {
             tipTxt.gameObject.SetActive(false);
         }
-        
     }
 }

@@ -13,12 +13,12 @@ public class AppConfigManager : Singleton<AppConfigManager>, IManager
     {
         string basePath = AppResPath4Web + "Geo/Config/AppConfig.json";
         AssetManager.Instance.LoadText(basePath, onLoadAppConfigCallBack);
-        
     }
 
     private void onLoadAppConfigCallBack(string appConfigData)
     {
         JsonData appConfigJD = JsonMapper.ToObject(appConfigData);
+
         JsonData cloudJD = appConfigJD["Clouds"];
         parseCloudData(cloudJD);
 
@@ -36,6 +36,7 @@ public class AppConfigManager : Singleton<AppConfigManager>, IManager
             ContinentVO continentVO = new ContinentVO();
             continentVO.name = continent["name"].ToString();
             continentVO.desc = continent["desc"].ToString();
+            continentVO.en = continent["En"].ToString();
             continentVO.area = int.Parse(continent["area"].ToString());
 
             JsonData colorJD = continent["color"];
@@ -58,7 +59,6 @@ public class AppConfigManager : Singleton<AppConfigManager>, IManager
     private Vector3 defaultColorValue = new Vector3(186.0f, 227.0f, 235.0f);
     public ContinentVO GetMatchContinentVO(Vector3 hitColorValue)
     {
-        Debug.Log("hitColorValue:" + hitColorValue);
         ContinentVO continentVO = null;
         float minDis = Vector3.Distance(hitColorValue, defaultColorValue);
         foreach (string key in continentDic.Keys)
@@ -71,7 +71,12 @@ public class AppConfigManager : Singleton<AppConfigManager>, IManager
                 minDis = dis;
             }
         }
-        return continentVO;
+        if(minDis <10)
+        {
+            return continentVO;
+        }
+
+        return null;
     }
 
 
@@ -105,6 +110,7 @@ public class AppConfigManager : Singleton<AppConfigManager>, IManager
             clouldDic.Add(clouldVO.name, clouldVO);
             cloudNameList.Add(clouldVO.name);
         }
+        
     }
 
     public ClouldVO GetClouldVO(string cloudName)
@@ -160,6 +166,7 @@ public class ContinentVO
     public string name;
     public string desc;
     public int area;
+    public string en; 
     public Vector3 colorValue;
     public Vector3 location;
 
@@ -168,7 +175,7 @@ public class ContinentVO
     {
         if(string.IsNullOrEmpty(info))
         {
-            info = "面积:" + area + "(万平方公里)\n"
+            info = "\n面积:" + area + " (万平方公里)\n"
                 + desc;
         }
         return info;

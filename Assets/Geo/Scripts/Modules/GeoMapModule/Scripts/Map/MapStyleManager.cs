@@ -7,15 +7,12 @@ using WPM;
 
 public class MapStyleManager : IManager
 {
-    WorldMapGlobeControl _worldMapGlobeControl = null;
     private Dictionary<string, Color> countryColorDic = null;
-
-    public WorldMapGlobeControl WorldMapGlobeControl { get => _worldMapGlobeControl; set => _worldMapGlobeControl = value; }
 
     public void InitManager(Transform container = null)
     {
         countryColorDic = new Dictionary<string, Color>();
-        _worldMapGlobeControl.Init();
+        WorldMapGlobeControl.Instance.Init();
     }
 
     public void ChangeMapByStyle(string style)
@@ -44,7 +41,7 @@ public class MapStyleManager : IManager
             {
                 color = new Color(1, 0.976f, 0.949f);
             }
-            _worldMapGlobeControl.SetWorldMapGlobeBackFacesColor(color);
+            WorldMapGlobeControl.Instance.SetWorldMapGlobeBackFacesColor(color);
         }
         else
         {
@@ -64,7 +61,7 @@ public class MapStyleManager : IManager
                 EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "Toggle", "City", false);
             }
         }
-        _worldMapGlobeControl.ChangeMapByStyle(styleEnum);
+        WorldMapGlobeControl.Instance.ChangeMapByStyle(styleEnum);
 
     }
 
@@ -80,7 +77,7 @@ public class MapStyleManager : IManager
             return countryColorDic[countryName];
         }
 
-        Color color = _worldMapGlobeControl.GetColorIndex();
+        Color color = WorldMapGlobeControl.Instance.GetColorIndex();
         return color;
     }
 

@@ -5,18 +5,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using WPM;
 
-public class WorldMapGlobeControl : MonoBehaviour
+public class WorldMapGlobeControl : MonoSingleton<WorldMapGlobeControl>
 {
     [SerializeField]
     private GameObject earthHD;
 
     [SerializeField]
     private GameObject worldMapGlobeEarthContinent;  
-    
 
     [SerializeField]
     private GameObject normalEarth;
-
 
     [SerializeField]
     private GameObject globalLight;
@@ -30,8 +28,6 @@ public class WorldMapGlobeControl : MonoBehaviour
 
     private float tileDis = 5400; 
 
-    private GameObject surfaces;
-
     [SerializeField]
     private Color[] countryColors;
 
@@ -40,14 +36,8 @@ public class WorldMapGlobeControl : MonoBehaviour
 
     [SerializeField]
     private string[] continentNames;
-
-
     private Material worldMapGlobeBackFacesMeshMat = null ; 
-
-
     public Action<string> onLatLonUpdate = null;
-
-
     private WorldMapGlobe worldMapGlobe;
 
     private StyleEnum earthStyle;
@@ -56,66 +46,20 @@ public class WorldMapGlobeControl : MonoBehaviour
     private bool initFlag = false;
     private float mainCameraDis;
 
-
-
-    //洲单独贴图
-    private Texture2D continentTexture;
-
-    //洲叠加国家贴图
-    private Texture2D continentCountryTexture; 
-    //洲材质球
-    private Material continentMaterial ;
-
     public void Init() 
     {
         worldMapGlobe.cursorColor = Color.white;
-        initFlag = true;
+        //initFlag = true;
         
         SetLatLonLineFlag(false);
 
         mainCamera = Camera.main;
         mainCameraDis = 132273000f;
-
-        initContinent();
-    }
-
-    /// <summary>
-    /// 初始化洲对应的资源
-    /// </summary>
-    private void initContinent()
-    {
-        continentMaterial = worldMapGlobeEarthContinent.GetComponent<MeshRenderer>().material;
-        continentTexture = Resources.Load<Texture2D>("Textures/Continent");
-        continentCountryTexture = Resources.Load<Texture2D>("Textures/Continent_Country");
-        continentMaterial.mainTexture = continentTexture;
     }
 
     public Vector3 GetPolePosition()
     {
         return worldMapGlobe.transform.TransformPoint(Vector3.up*-0.5f);
-    }
-
-    public void ShowContinent(bool flag)
-    {
-        worldMapGlobeEarthContinent.SetActive(flag);
-        //worldMapGlobe.allowUserZoom = !flag;
-    }
-
-    public void DealContinentAndCountry(bool countryFlag)
-    {
-        if(worldMapGlobeEarthContinent.activeSelf)
-        {
-            if(countryFlag)
-            {
-                continentMaterial.mainTexture = continentCountryTexture;
-            }
-            else
-            {
-                continentMaterial.mainTexture = continentTexture;
-            }
-            
-
-        }
     }
 
     public Color GetColorIndex()
@@ -140,7 +84,6 @@ public class WorldMapGlobeControl : MonoBehaviour
 
     private void global()  
     {
-        //ShowCloulds(true);
         normalEarth.SetActive(false);
         sunLight.SetActive(false);
         globalLight.SetActive(true);
@@ -149,7 +92,6 @@ public class WorldMapGlobeControl : MonoBehaviour
 
     private void night() 
     {
-        //ShowCloulds(false);
         normalEarth.SetActive(false);
         sunLight.SetActive(false);
         globalLight.SetActive(false);
@@ -183,7 +125,6 @@ public class WorldMapGlobeControl : MonoBehaviour
 
     public void ChangeMapByStyle(StyleEnum style) 
     {
-        worldMapGlobe.ZoomTo(1.3333f,2);
         earthStyle = style;
        
         if (earthStyle == StyleEnum.城市灯光)
@@ -215,6 +156,51 @@ public class WorldMapGlobeControl : MonoBehaviour
             earthHD.SetActive(false);
             normalEarth.SetActive(false);
         }
+
+        if(!initFlag)
+        {
+            initFlag = true;
+            return;
+        }
+        
+        if(earthStyle != StyleEnum.云层模式)
+        {
+            float lastZoomLevel = worldMapGlobe.GetZoomLevel();
+            MapZoomTo(GeoMapModuleFacade.DefaultEarthZoom, 2, delegate
+            {
+                MapZoomTo(lastZoomLevel, 2);
+            });
+        }   
+    }
+
+    public bool IsStaticMap()
+    {
+        if (earthStyle == StyleEnum.城市灯光 || earthStyle == StyleEnum.默认模式 || earthStyle == StyleEnum.自然模式 || earthStyle == StyleEnum.自然风光)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public void MapZoomTo(float zoom ,float duration , Action zoomComplete = null)
+    {
+        if(IsStaticMap())
+        {
+            if(zoom < 1)
+            {
+                zoom = 1;
+            }
+        }
+        StartCoroutine(OnZoomTo(zoom, duration, zoomComplete));
+    }
+
+
+    IEnumerator OnZoomTo(float zoom ,float duration ,Action zoomComplete=null)
+    {
+        worldMapGlobe.ZoomTo(zoom, duration);
+        yield return new WaitForSeconds(duration);
+        zoomComplete?.Invoke();
+        yield return null;
     }
 
     public void SetWorldMapGlobeBackFacesColor(Color color)
@@ -226,18 +212,6 @@ public class WorldMapGlobeControl : MonoBehaviour
         worldMapGlobeBackFacesMeshMat.SetColor("_Color", color);
     }    
 
-    /// <summary>
-    /// 展示洲区块信息
-    /// </summary>
-    public void ShowColorfulContinents()  
-    {
-        for(int i=0;i< continentNames.Length;i++)
-        {
-            string continentName = continentNames[i];
-            Color color = continentColors[i];
-            worldMapGlobe.ToggleContinentSurface(continentName, true, color);
-        }
-    }
 
 
     #region 更新经纬度信息
@@ -248,8 +222,6 @@ public class WorldMapGlobeControl : MonoBehaviour
     private bool updateFlag = false;
 
     public WorldMapGlobe WorldMapGlobe { get => worldMapGlobe; set => worldMapGlobe = value; }
-
-    private bool smallFlag = false;
     void Update()
     {
         // Check whether a country or city is selected, then show a label
@@ -343,62 +315,8 @@ public class WorldMapGlobeControl : MonoBehaviour
                // smallFlag = false;
             }
         }   
-        
-        if(worldMapGlobeEarthContinent.activeSelf&& !worldMapGlobe.showCountryNames && !worldMapGlobe.showProvinces && !worldMapGlobe.showCities)
-        {
-            checkSelectContinent();
-        }
     }
 
-    #region Continent
-
-
-    
-
-    private void  checkSelectContinent() 
-    {
-        if(Input.GetMouseButtonDown(0))
-        {
-            Vector3 hitPoint = getHitPoint();
-            if(hitPoint != Vector3.zero)
-            {
-                Vector3 localEarthPoint = transform.InverseTransformPoint(hitPoint);
-                Vector2 uv = Conversion.GetUVFromSpherePoint(localEarthPoint);
-                //Debug.Log("uv:" + uv);
-                int hitW = (int)(continentTexture.width * uv.x);
-                int hitH = (int)(continentTexture.height * uv.y);
-                Color hitColor = continentTexture.GetPixel(hitW, hitH) * 255;
-                Vector3 hitColorValue = new Vector3(hitColor.r, hitColor.g, hitColor.b);
-                ContinentVO continentVO = AppConfigManager.Instance.GetMatchContinentVO(hitColorValue);
-                if(continentVO != null)
-                {
-                    Debug.Log(continentVO.name);
-                    EventUtil.DispatchEvent(GlobalEvent.Module_TO_UI_Action, "continentinfo", continentVO);
-                }
-                else
-                {
-                    Debug.Log("大洋");
-                }
-                
-            }
-        }
-    }
-
-
-
-    private Vector3 getHitPoint()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Debug.DrawRay(ray.origin, ray.direction, Color.red);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, int.MaxValue))
-        {
-            return hit.point;
-        }
-        return Vector3.zero;
-    }
-
-    #endregion
 
     private void showClouldByValue(float value)
     {

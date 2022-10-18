@@ -40,7 +40,7 @@ namespace com.frame
             DownloadHandlerTexture texDl = new DownloadHandlerTexture(true);
             wr.downloadHandler = texDl;
             yield return wr.Send();
-            if (!wr.isError)
+            if (!wr.isNetworkError)
             {
                 Texture2D t = texDl.texture;
                 loadTextureCallBack?.Invoke(t) ;

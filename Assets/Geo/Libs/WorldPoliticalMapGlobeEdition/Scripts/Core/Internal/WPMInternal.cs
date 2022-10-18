@@ -679,7 +679,7 @@ namespace WPM {
                     CheckMousePos();
                 }
 
-                if (!showProvinces) return;
+                //if (!showProvinces) return;
 
                 // Remember the last element clicked & trigger events
                 bool isClick = dragDampingStart == 0 && (leftMouseButtonClick || rightMouseButtonClick);
@@ -691,31 +691,21 @@ namespace WPM {
                     _countryRegionLastClicked = _countryRegionHighlightedIndex;
                     if (_countryLastClicked >= 0) 
                     {
-                        if (isClick && !fullClick && OnCountryPointerDown != null) {
+                        if (isClick && !fullClick && OnCountryPointerDown != null) 
+                        {
                             OnCountryPointerDown(_countryHighlightedIndex, _countryRegionHighlightedIndex);
-                        } else if (isRelease) {
-                            if (OnCountryPointerUp != null) {
+                        } 
+                        else if (isRelease) 
+                        {
+                            if (OnCountryPointerUp != null) 
+                            {
                                 OnCountryPointerUp(_countryHighlightedIndex, _countryRegionHighlightedIndex);
                             }
+                           
                             if (fullClick && OnCountryClick != null) 
                             {
                                 OnCountryClick(_countryHighlightedIndex, _countryRegionHighlightedIndex);
                             }
-
-                            /**
-                            if(GetCountry(_countryHighlightedIndex).name != "中国")
-                            {
-                                if(OnProvinceClick !=null)
-                                {
-                                    OnProvinceClick(-1,-1);
-                                }
-
-                                if (OnCityClick != null)
-                                {
-                                    OnCityClick(-1);
-                                }
-                                return;
-                            }*/
                         }
                     }
                     else
@@ -781,7 +771,8 @@ namespace WPM {
                     if (isClick && OnMouseDown != null) {
                         OnMouseDown(_cursorLocation, leftMouseButtonClick ? 0 : 1);
                     }
-                    if (fullClick && OnClick != null && !CheckDragThreshold(mouseDragStart, input.mousePosition, 10)) {
+                    if (fullClick && OnClick != null && !CheckDragThreshold(mouseDragStart, input.mousePosition, 10)) 
+                    {
                         OnClick(_cursorLocation, leftMouseButtonRelease ? 0 : 1);
                     }
                 }
@@ -796,6 +787,11 @@ namespace WPM {
                 if (leftMouseButtonClick || rightMouseButtonClick)
                 {
                     HideProvinceRegionHighlights(false);
+
+                    if (OnCountryClick != null)
+                    {
+                        OnCountryClick(-1, -1);
+                    }
 
                     if (OnProvinceClick != null)
                     {
