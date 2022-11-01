@@ -92,7 +92,8 @@ namespace WPM {
         /// <summary>
         /// Convertes sphere to latitude/longitude coordinates
         /// </summary>
-        public static void GetLatLonFromSpherePoint(Vector3 p, out float lat, out float lon) {
+        public static void GetLatLonFromSpherePoint(Vector3 p, out float lat, out float lon) 
+        {
             p.Normalize();
             float phi = Mathf.Asin(p.y);
             float theta = Mathf.Atan2(p.x, p.z);

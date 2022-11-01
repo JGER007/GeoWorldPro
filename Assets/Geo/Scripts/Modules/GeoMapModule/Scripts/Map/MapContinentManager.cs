@@ -81,7 +81,6 @@ public class MapContinentManager : MonoBehaviour,IManager
             if (worldMapGlobe.GetGlobeIntersection(out earthHitPoint))
             {
                 Vector3 localEarthPoint = worldMapGlobe.transform.InverseTransformPoint(earthHitPoint);
-                //Debug.Log("checkSelectContinent localEarthPoint:" + localEarthPoint);
                 Vector2 uv = Conversion.GetUVFromSpherePoint(localEarthPoint);
                 int hitW = (int)(continentTexture.width * uv.x);
                 int hitH = (int)(continentTexture.height * uv.y);

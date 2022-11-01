@@ -200,6 +200,7 @@ public class ZipWrapper : MonoBehaviour
         {
             if (!string.IsNullOrEmpty(_password))
                 zipInputStream.Password = _password;
+
             
             while (null != (entry = zipInputStream.GetNextEntry()))
             {

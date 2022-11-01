@@ -44,8 +44,16 @@ public class MapDecroManager :MonoBehaviour, IManager
             {
                 Vector3 continentLocalPosition = continentCenterDic[key];
                 GameObject continentlabel = GameObject.Instantiate<GameObject>(textLabelPerfab);
-                continentlabel.transform.Find("Text").GetComponent<TextMeshPro>().text = key;
+                TextMeshPro textMeshPro = continentlabel.transform.Find("Text").GetComponent<TextMeshPro>();
+                textMeshPro.text = key;
                 continentlabel.name = key;
+
+                if(!key.Contains("洲"))
+                {
+                    textMeshPro.fontSize = 10;
+                }
+
+
                 continentlabel.transform.SetParent(mapContinentLabelContainer.transform);
                 continentlabel.transform.localPosition = continentLocalPosition;
                 continentlabel.transform.localScale = Vector3.one ;
@@ -80,6 +88,18 @@ public class MapDecroManager :MonoBehaviour, IManager
         continentCenterDic.Add("南美洲", new Vector3(0.432f, -0.08f, 0.2685f));
         continentCenterDic.Add("大洋洲", new Vector3(-0.34f, -0.167f, -0.34f));
         continentCenterDic.Add("南极洲", new Vector3(0.0f, -0.5f, 0.0f));
+
+        continentCenterDic.Add("厄尔布鲁士山", new Vector3(-0.2443f, 0.3577f, 0.2541f));
+        continentCenterDic.Add("乌拉尔河", new Vector3(-0.2551f, 0.3919f, 0.1835f));
+        continentCenterDic.Add("乌拉尔山", new Vector3(-0.1949f, 0.4496f, 0.1099f));
+        continentCenterDic.Add("苏伊士运河", new Vector3(-0.2624f, 0.2562f, 0.3433f));
+        continentCenterDic.Add("土耳其海峡（黑海海峡）", new Vector3(-0.164f, 0.3453f, 0.325f));
+        continentCenterDic.Add("丹麦海峡", new Vector3(0.0569f, 0.4311f, 0.2511f));
+        continentCenterDic.Add("巴拿马运河", new Vector3(0.497f, 0.0404f, 0.0573f));
+        continentCenterDic.Add("白令海峡", new Vector3(0.0304f, 0.4679f, -0.1803f));
+        continentCenterDic.Add("帝汶海", new Vector3(-0.4156f, -0.1079f, -0.2594f));
+        continentCenterDic.Add("阿拉佛拉海", new Vector3(-0.3545f, -0.0889f, -0.3433f));
+        continentCenterDic.Add("德雷克海峡", new Vector3(0.2352f, -0.4282f, 0.1153f));
     }
 
     public void OnQuit()
@@ -94,7 +114,7 @@ public class MapDecroManager :MonoBehaviour, IManager
         
         if (Input.GetMouseButtonDown(1))
         {
-            Vector3 hitPosition = getHitPoint();
+            Vector3 hitPosition = getHitPoint(false);
             if(hitPosition != Vector3.zero)
             {
                 Vector3 localHitPosition = transform.InverseTransformPoint(hitPosition);
@@ -119,10 +139,16 @@ public class MapDecroManager :MonoBehaviour, IManager
 #endif
     }
 
-    private Vector3 getHitPoint() 
+    private Vector3 getHitPoint(bool isCenter = true) 
     {
         //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width/2,Screen.height/2,0));
+        Vector3 screenPoint = new Vector3(Screen.width / 2, Screen.height / 2, 0);
+        if(!isCenter)
+        {
+            screenPoint = Input.mousePosition;
+        }
+
+        Ray ray = Camera.main.ScreenPointToRay(screenPoint);
         Debug.DrawRay(ray.origin, ray.direction, Color.red);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, int.MaxValue))
@@ -141,6 +167,7 @@ public class MapDecroManager :MonoBehaviour, IManager
     {
         GameObject marker = GameObject.CreatePrimitive(PrimitiveType.Cube);
         marker.transform.SetParent(mapMarkerContainer.transform);
+        marker.name = "Marker_" + mapMarkerContainer.transform.childCount;
         marker.transform.localPosition = localHitPosition;
         marker.transform.localScale = Vector3.one * 0.0015F;
         marker.transform.LookAt(mapMarkerContainer.transform.position);

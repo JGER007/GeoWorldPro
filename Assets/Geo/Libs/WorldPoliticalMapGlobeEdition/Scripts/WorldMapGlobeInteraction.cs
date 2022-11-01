@@ -1050,8 +1050,8 @@ namespace WPM {
         /// <param name="destinationZoomLevel">Destination zoom level. A value of 0 will keep current zoom level.</param>
         /// <param name="bounceIntensity">Bounce intensity. 0 uses a linear transition between zoom levels. A value > 0 will produce a jump effect.</param>
         /// <param name="cameraDistance">Distance in world space units to the surface.</param> 
-        public CallbackHandler FlyToLocation(Vector3 destination, float duration, float destinationZoomLevel = 0, float bounceIntensity = 0, float cameraDistance = 0) {
-
+        public CallbackHandler FlyToLocation(Vector3 destination, float duration, float destinationZoomLevel = 0, float bounceIntensity = 0, float cameraDistance = 0) 
+        {
             flyToGlobeStartPosition = Misc.Vector3one * -1000;
             flyToEndDestination = destination;
             if (_navigationMode == NAVIGATION_MODE.EARTH_ROTATES || _earthInvertedMode) {
