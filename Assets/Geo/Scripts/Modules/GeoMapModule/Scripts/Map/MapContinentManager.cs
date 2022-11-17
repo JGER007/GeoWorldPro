@@ -85,6 +85,7 @@ public class MapContinentManager : MonoBehaviour,IManager
                 int hitW = (int)(continentTexture.width * uv.x);
                 int hitH = (int)(continentTexture.height * uv.y);
                 Color hitColor = continentTexture.GetPixel(hitW, hitH) * 255;
+
                 Vector3 hitColorValue = new Vector3(hitColor.r, hitColor.g, hitColor.b);
 
                 ContinentVO continentVO = AppConfigManager.Instance.GetMatchContinentVO(hitColorValue);

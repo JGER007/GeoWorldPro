@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using WPM;
+using LitJson;
+using System.IO;
 
 public class MapDecroManager :MonoBehaviour, IManager
 {
@@ -21,15 +23,13 @@ public class MapDecroManager :MonoBehaviour, IManager
 
     public WorldMapGlobe WorldMapGlobe { get => _worldMapGlobe; set => _worldMapGlobe = value; }
 
-    private Dictionary<string, Vector3> continentCenterDic = null;
+    //private Dictionary<string, Vector3> continentCenterDic = null;
 
     public void InitManager(Transform container = null)
     {
         mapMarkerContainer = mapDecroContainer.Find("Markers");
         mapContinentLabelContainer = mapDecroContainer.Find("ContinentLabels");
-        initContinentCenterDic();
-
-        //ShowContinentLabel();
+        //initContinentCenterDic();
     }
 
     /// <summary>
@@ -40,7 +40,26 @@ public class MapDecroManager :MonoBehaviour, IManager
         mapContinentLabelContainer.gameObject.SetActive(true);
         if(mapContinentLabelContainer.childCount == 0)
         {
-            foreach(string key in continentCenterDic.Keys)
+            Dictionary<string, EarthLabelVO> earthLabelDic = AppConfigManager.Instance.EarthLabelDic;
+            foreach(EarthLabelVO earthLabelVO in earthLabelDic.Values)
+            {
+                GameObject continentlabel = GameObject.Instantiate<GameObject>(textLabelPerfab);
+                TextMeshPro textMeshPro = continentlabel.transform.Find("Text").GetComponent<TextMeshPro>();
+                textMeshPro.text = earthLabelVO.label;
+                continentlabel.name = earthLabelVO.name;
+                /*if (!continentlabel.name.Contains("洲"))
+                {
+                    textMeshPro.fontSize = 10;
+                }*/
+                continentlabel.transform.SetParent(mapContinentLabelContainer.transform);
+                continentlabel.transform.localPosition = earthLabelVO.position;
+                continentlabel.transform.localScale = earthLabelVO.scale;
+                continentlabel.transform.LookAt(mapContinentLabelContainer.transform.position);
+                continentlabel.transform.localEulerAngles = earthLabelVO.angles;
+            }
+
+            /**
+            foreach (string key in continentCenterDic.Keys)
             {
                 Vector3 continentLocalPosition = continentCenterDic[key];
                 GameObject continentlabel = GameObject.Instantiate<GameObject>(textLabelPerfab);
@@ -53,12 +72,12 @@ public class MapDecroManager :MonoBehaviour, IManager
                     textMeshPro.fontSize = 10;
                 }
 
-
                 continentlabel.transform.SetParent(mapContinentLabelContainer.transform);
                 continentlabel.transform.localPosition = continentLocalPosition;
                 continentlabel.transform.localScale = Vector3.one ;
                 continentlabel.transform.LookAt(mapContinentLabelContainer.transform.position);
             }
+            */
         }
 
     }
@@ -68,6 +87,7 @@ public class MapDecroManager :MonoBehaviour, IManager
         mapContinentLabelContainer.gameObject.SetActive(false);
     }
 
+    /*
     /// <summary>
     /// 初始化洲标签信息
     /// 亚洲：(-0.3, 0.4, 0.0)
@@ -100,7 +120,10 @@ public class MapDecroManager :MonoBehaviour, IManager
         continentCenterDic.Add("帝汶海", new Vector3(-0.4156f, -0.1079f, -0.2594f));
         continentCenterDic.Add("阿拉佛拉海", new Vector3(-0.3545f, -0.0889f, -0.3433f));
         continentCenterDic.Add("德雷克海峡", new Vector3(0.2352f, -0.4282f, 0.1153f));
-    }
+
+        continentCenterDic.Add("华\n北\n平\n原", new Vector3(-0.3626259f, 0.2871951f, -0.195001f));
+        continentCenterDic.Add("太平洋", new Vector3(-0.2049472f, 0.1685606f, -0.4261314f));
+    }*/
 
     public void OnQuit()
     {
@@ -118,10 +141,28 @@ public class MapDecroManager :MonoBehaviour, IManager
             if(hitPosition != Vector3.zero)
             {
                 Vector3 localHitPosition = transform.InverseTransformPoint(hitPosition);
-                Debug.Log("localHitPosition:" + localHitPosition);
                 addMarker(localHitPosition);
             }
         }
+
+        if(Input.GetKeyDown(KeyCode.N))
+        {
+            //保存新创建的标签
+            if(mapMarkerContainer.childCount >0)
+            {
+                saveChildLabels(mapMarkerContainer);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            //保存场景已经存在的标签
+            if (mapContinentLabelContainer.childCount > 0)
+            {
+                saveChildLabels(mapContinentLabelContainer);
+            }
+        }
+
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -137,6 +178,51 @@ public class MapDecroManager :MonoBehaviour, IManager
             }
         }
 #endif
+    }
+
+
+    /// <summary>
+    /// 保存Marker 配置信息
+    /// </summary>
+    /// <param name="parentLabelTran"></param>
+    private void saveChildLabels(Transform parentLabelTran)
+    {
+        
+        JsonData newMarkerJD = new JsonData();
+        for (int i = 0; i < parentLabelTran.childCount; i++)
+        {
+            Transform marker = parentLabelTran.GetChild(i);
+
+            JsonData markerJD = new JsonData();
+
+            markerJD["name"] = marker.name;
+            TextMeshPro textMeshPro = marker.transform.Find("Text").GetComponent<TextMeshPro>();
+            markerJD["label"] = textMeshPro.text;
+
+            JsonData posJD = new JsonData();
+            Vector3 markerLocalPos = marker.localPosition;
+            posJD["x"] = markerLocalPos.x.ToString("f4");
+            posJD["y"] = markerLocalPos.y.ToString("f4");
+            posJD["z"] = markerLocalPos.z.ToString("f4");
+            markerJD["position"] = posJD;
+
+            JsonData scaleJD = new JsonData();
+            Vector3 markerLocalScale = marker.localScale;
+            scaleJD["x"] = markerLocalScale.x.ToString("f2");
+            scaleJD["y"] = markerLocalScale.y.ToString("f2");
+            scaleJD["z"] = markerLocalScale.z.ToString("f2");
+            markerJD["scale"] = scaleJD;
+
+            JsonData localAnglesJD = new JsonData();
+            Vector3 localEulerAngles = marker.localEulerAngles;
+            localAnglesJD["x"] = localEulerAngles.x.ToString("f1");
+            localAnglesJD["y"] = localEulerAngles.y.ToString("f1");
+            localAnglesJD["z"] = localEulerAngles.z.ToString("f1");
+            markerJD["angles"] = localAnglesJD;
+            newMarkerJD.Add(markerJD);
+        }
+        Debug.Log(Application.dataPath + "/" + parentLabelTran.name);
+        File.WriteAllText(Application.dataPath + "/" + parentLabelTran.name + "_Markers.json", newMarkerJD.ToJson().ToString());
     }
 
     private Vector3 getHitPoint(bool isCenter = true) 
@@ -165,15 +251,12 @@ public class MapDecroManager :MonoBehaviour, IManager
     /// <param name="localHitPosition">地球本地坐标</param>
     private void addMarker(Vector3 localHitPosition) 
     {
-        GameObject marker = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        GameObject marker = GameObject.Instantiate<GameObject>(textLabelPerfab);
         marker.transform.SetParent(mapMarkerContainer.transform);
         marker.name = "Marker_" + mapMarkerContainer.transform.childCount;
         marker.transform.localPosition = localHitPosition;
-        marker.transform.localScale = Vector3.one * 0.0015F;
+        marker.transform.localScale = Vector3.one;
         marker.transform.LookAt(mapMarkerContainer.transform.position);
-
-        //Vector3 latlonPoint = Conversion.GetLatLonFromSpherePoint(localHitPosition);
-        //Debug.Log("addMarker latlonPoint:" + latlonPoint.ToString());
     }
 
     private void getScreen()

@@ -9,10 +9,10 @@ using System.IO;
 
 public class AppConfigManager : Singleton<AppConfigManager>, IManager
 {
+    public static string AppConfigPath = "https://prismo-hddq-1255382607.cos.ap-beijing.myqcloud.com/App/AppConfig_V0.1.json";
     public void InitManager(Transform container = null)
     {
-        string basePath = AppResPath4Web + "Geo/Config/AppConfig.json";
-        AssetManager.Instance.LoadText(basePath, onLoadAppConfigCallBack);
+        AssetManager.Instance.LoadText(AppConfigPath, onLoadAppConfigCallBack);
     }
 
     private void onLoadAppConfigCallBack(string appConfigData)
@@ -24,6 +24,48 @@ public class AppConfigManager : Singleton<AppConfigManager>, IManager
 
         JsonData continentJD = appConfigJD["Continents"];
         parseContinentData(continentJD);
+
+        JsonData earthLabelJD = appConfigJD["EarthLabel"];
+        parseEarthLabelData(earthLabelJD);
+    }
+
+
+    
+    private Dictionary<string, EarthLabelVO> earthLabelDic = null;
+    public Dictionary<string, EarthLabelVO> EarthLabelDic { get => earthLabelDic; set => earthLabelDic = value; }
+    /// <summary>
+    /// 解析地球标签数据
+    /// </summary>
+    /// <param name="earthLabelJD"></param>
+    private void parseEarthLabelData(JsonData earthLabelJD)
+    {
+        EarthLabelDic = new Dictionary<string, EarthLabelVO>();
+        foreach (JsonData labelJD in earthLabelJD) 
+        {
+            EarthLabelVO earthLabelVO = new EarthLabelVO();
+            earthLabelVO.name = (string)labelJD["name"];
+            earthLabelVO.label = (string)labelJD["label"];
+
+            JsonData positionJD = labelJD["position"];
+            earthLabelVO.position = new Vector3();
+            earthLabelVO.position.x = float.Parse(positionJD["x"].ToString());
+            earthLabelVO.position.y = float.Parse(positionJD["y"].ToString());
+            earthLabelVO.position.z = float.Parse(positionJD["z"].ToString());
+
+            JsonData scaleJD = labelJD["scale"];
+            earthLabelVO.scale = new Vector3();
+            earthLabelVO.scale.x = float.Parse(scaleJD["x"].ToString());
+            earthLabelVO.scale.y = float.Parse(scaleJD["y"].ToString());
+            earthLabelVO.scale.z = float.Parse(scaleJD["z"].ToString());
+
+            JsonData anglesJD = labelJD["angles"];
+            earthLabelVO.angles = new Vector3();
+            earthLabelVO.angles.x = float.Parse(anglesJD["x"].ToString());
+            earthLabelVO.angles.y = float.Parse(anglesJD["y"].ToString());
+            earthLabelVO.angles.z = float.Parse(anglesJD["z"].ToString());
+
+            EarthLabelDic.Add(earthLabelVO.name,earthLabelVO);
+        }
     }
 
     #region 洲数据
@@ -99,14 +141,13 @@ public class AppConfigManager : Singleton<AppConfigManager>, IManager
             ClouldVO clouldVO = new ClouldVO();
             clouldVO.name = cloud["name"].ToString();
             clouldVO.desc = cloud["desc"].ToString();
-            clouldVO.fileName = cloud["fileName"].ToString();
             clouldVO.earthZoom = float.Parse(cloud["earthZoom"].ToString());
             clouldVO.earthLocation = new Vector3();
             JsonData earthLocationJD = cloud["earthLocation"];
             clouldVO.earthLocation.x = float.Parse(earthLocationJD["x"].ToString());
             clouldVO.earthLocation.y = float.Parse(earthLocationJD["y"].ToString());
             clouldVO.earthLocation.z = float.Parse(earthLocationJD["z"].ToString());
-            clouldVO.path = AppResPath4Web + "Geo/Res/Clouds/" + clouldVO.fileName;
+            clouldVO.path = cloud["path"].ToString();
             clouldDic.Add(clouldVO.name, clouldVO);
             cloudNameList.Add(clouldVO.name);
         }
@@ -119,6 +160,8 @@ public class AppConfigManager : Singleton<AppConfigManager>, IManager
         clouldDic.TryGetValue(cloudName, out clouldVO);
         return clouldVO;
     }
+    
+    /**
     /// <summary>
     /// 应用程序内部资源路径存放路径(www/webrequest专用)
     /// </summary>
@@ -134,9 +177,10 @@ public class AppConfigManager : Singleton<AppConfigManager>, IManager
                 return "jar:file://" + Application.dataPath + "!/assets" + "/" ;
 #endif
         }
-    }
+    }*/
 
     public List<string> CloudNameList { get => cloudNameList; set => cloudNameList = value; }
+    
 
     #endregion
     public void OnQuit()
@@ -154,7 +198,6 @@ public class ClouldVO
 {
     public string name;
     public string desc;
-    public string fileName;
     public string path;
     public Vector3 earthLocation;
     public float earthZoom;
@@ -180,4 +223,14 @@ public class ContinentVO
         }
         return info;
     }
+}
+
+
+public class EarthLabelVO
+{
+    public string name;
+    public string label;
+    public Vector3 position;
+    public Vector3 scale;
+    public Vector3 angles;  
 }
